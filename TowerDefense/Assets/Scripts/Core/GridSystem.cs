@@ -105,7 +105,7 @@ public class GridSystem : MonoBehaviour
             for (int z = 0; z < _height; z++)
             {
                 GridNode node = _grid[x, z];
-                Vector3 pos = node.WorldPosition + Vector3.up * 1f;
+                Vector3 pos = node.WorldPosition + Vector3.up * .5f;
                 Vector3 size = new Vector3(_cellSize * 0.85f, 0.05f, _cellSize * 0.85f);
 
                 Color faceColor;
