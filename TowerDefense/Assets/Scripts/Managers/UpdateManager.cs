@@ -10,30 +10,42 @@ public interface ITickable
 
 public interface IUnScaledTickable
 {
-    void UnScaledTick(float _unscaledDeltaTime);
+    void UnScaledTick(float _unScaledDeltaTime);
 }
+
+public interface ILateTickable
+{
+    void LateTick(float _lateDeltaTime);
+}
+
 public class UpdateManager : MonoBehaviour
 {
     private readonly HashSet<ITickable> tickables = new();
     private readonly HashSet<ITickable> toAdd = new();
     private readonly HashSet<ITickable> toRemove = new();
 
-
     private readonly HashSet<IUnScaledTickable> unScaledTickables = new();
     private readonly HashSet<IUnScaledTickable> unScaledToAdd = new();
     private readonly HashSet<IUnScaledTickable> unScaledToRemove = new();
 
+    private readonly HashSet<ILateTickable> lateTickables = new();
+    private readonly HashSet<ILateTickable> lateToAdd = new();
+    private readonly HashSet<ILateTickable> lateToRemove = new();
 
-    public void Register(ITickable _tickable = null, IUnScaledTickable _unScaledTickable = null)
+
+
+    public void Register(ITickable _tickable = null, IUnScaledTickable _unScaledTickable = null, ILateTickable _lateTickable = null)
     {
         if (_tickable != null) toAdd.Add(_tickable);
         if (_unScaledTickable != null) unScaledToAdd.Add(_unScaledTickable);
+        if (_lateTickable != null) lateToAdd.Add(_lateTickable);
     }
 
-    public void UnRegister(ITickable _tickable = null, IUnScaledTickable _unScaledTickable = null)
+    public void UnRegister(ITickable _tickable = null, IUnScaledTickable _unScaledTickable = null, ILateTickable _lateTickable = null)
     {
         if (_tickable != null) toRemove.Add(_tickable);
         if (_unScaledTickable != null) unScaledToRemove.Add(_unScaledTickable);
+        if (_lateTickable != null) lateToRemove.Add(_lateTickable);
     }
 
 
@@ -77,4 +89,27 @@ public class UpdateManager : MonoBehaviour
             tick.UnScaledTick(unscaledDeltaTime);
         }
     }
+
+    private void LateUpdate()
+    {
+        float lateDeltaTime = Time.deltaTime;
+
+        foreach (var t in lateToAdd)
+            lateTickables.Add(t);
+        lateToAdd.Clear();
+        foreach (var t in lateToRemove) lateTickables.Remove(t);
+        lateToRemove.Clear();
+
+        foreach (var tick in lateTickables)
+        {
+            if (tick is Component component && component == null)
+            {
+                lateToRemove.Add(tick);
+                continue;
+            }
+            tick.LateTick(lateDeltaTime);
+        }
+    }
+
+
 }
