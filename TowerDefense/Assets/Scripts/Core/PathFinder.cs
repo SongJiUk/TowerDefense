@@ -16,6 +16,9 @@ public class PathFinder
     /// </summary>
     public event Action OnPathChanged;
 
+    /// <summary>마지막으로 계산된 경로. GridSystem.OnDrawGizmos에서 시각화.</summary>
+    public List<Vector3> LastPath { get; private set; }
+
     /// <summary>
     /// 외부에서 경로 변경을 알릴 때 호출. OnPathChanged 이벤트를 발행한다.
     /// </summary>
@@ -65,6 +68,7 @@ public class PathFinder
             {
                 List<Vector3> path = TracePath(endNode);
                 ResetNodes(visited);
+                LastPath = path;
                 return path;
             }
 

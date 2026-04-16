@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Enemy_Runner
   enemyType: 2
+  coreDamage: 1
   baseHp: 50
   baseMoveSpeed: 5
   baseReward: 4

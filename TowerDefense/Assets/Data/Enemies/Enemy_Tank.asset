@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Enemy_Tank
   enemyType: 1
+  coreDamage: 1
   baseHp: 300
   baseMoveSpeed: 1.5
   baseReward: 8

@@ -25,14 +25,29 @@ public class TowerController : MonoBehaviour
     private Transform _currentTarget;
 
     private static int _enemyMask;
+    private RangeIndicator _rangeIndicator;
+    
+    private bool _isRangeVisible;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
     void Awake()
     {
-        // LayerMask.GetMask은 static readonly 필드에서 호출 불가 (클래스 로드 시점 이슈)
-        // Awake에서 호출해야 Unity가 준비된 이후에 실행됨
-        _enemyMask = LayerMask.GetMask("Enemy");
+        _enemyMask      = LayerMask.GetMask("Enemy");
+        _rangeIndicator = GetComponentInChildren<RangeIndicator>();
+    }
+
+
+    void OnMouseDown()
+    {
+        if (Data == null) return;
+
+        _isRangeVisible = !_isRangeVisible;
+
+        if (_isRangeVisible)
+            _rangeIndicator?.Show(transform.position, _currentRange);
+        else
+            _rangeIndicator?.Hide();
     }
 
     void Update()
@@ -108,13 +123,16 @@ public class TowerController : MonoBehaviour
     /// </summary>
     private Transform FindTarget()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, _currentRange, _enemyMask);
+        // Y축 무시: 수직 캡슐로 XZ 수평 거리만 체크
+        Vector3 bottom = new Vector3(transform.position.x, -50f, transform.position.z);
+        Vector3 top    = new Vector3(transform.position.x,  50f, transform.position.z);
+        Collider[] hits = Physics.OverlapCapsule(bottom, top, _currentRange, _enemyMask, QueryTriggerInteraction.Collide);
         if (hits.Length == 0) return null;
 
-        Transform best    = null;
-        float     minDist = float.MaxValue;
-        Vector3   corePos = Managers.Core != null
-                            ? Managers.Core.transform.position
+        Transform best = null;
+        float minDist = float.MaxValue;
+        Vector3 corePos = Managers.CoreTransform != null
+                            ? Managers.CoreTransform.position
                             : Vector3.zero;
 
         foreach (Collider col in hits)
@@ -123,7 +141,7 @@ public class TowerController : MonoBehaviour
             if (dist < minDist)
             {
                 minDist = dist;
-                best    = col.transform;
+                best = col.transform;
             }
         }
 
@@ -138,8 +156,8 @@ public class TowerController : MonoBehaviour
     {
         if (Data.projectilePrefab == null) return;
 
-        Vector3    spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up;
-        GameObject go       = Managers.PoolM.Pop(Data.projectilePrefab);
+        Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
+        GameObject go = Managers.PoolM.Pop(Data.projectilePrefab);
         go.transform.position = spawnPos;
 
         go.GetComponent<ProjectileController>()?.Init(target, _currentDamage, Data.projectileSpeed);

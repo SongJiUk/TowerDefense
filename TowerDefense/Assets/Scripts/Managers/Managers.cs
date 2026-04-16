@@ -10,27 +10,29 @@ public class Managers : MonoBehaviour
     static Managers instance;
     static bool init = false;
 
-    readonly PoolManager     poolManager      = new();
-    readonly ResourceManager resourceManager  = new();
-    readonly UIManager       uiManager        = new();
-    UpdateManager            updateManager    = null;
+    readonly PoolManager poolManager = new();
+    readonly ResourceManager resourceManager = new();
+    readonly UIManager uiManager = new();
+    UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
 
     /// <summary>현재 활성 씬의 GridSystem. GridSystem.OnEnable/OnDisable에서 자동 등록/해제.</summary>
-    public static GridSystem  Grid;
+    public static GridSystem Grid;
 
     /// <summary>A* 경로탐색 인스턴스. PathFinder.FindPath(), RecalculatePath()로 사용.</summary>
-    public static PathFinder  Path  { get; private set; } = new PathFinder();
+    public static PathFinder Path { get; private set; } = new PathFinder();
 
     /// <summary>웨이브 관리 인스턴스. WaveStarter.Start()에서 Init() 후 사용.</summary>
     public static WaveManager WaveM { get; private set; } = new WaveManager();
 
     /// <summary>적 스폰 위치. SpawnPoint.OnEnable/OnDisable에서 자동 등록/해제.</summary>
-    public static SpawnPoint  SpawnPoint;
+    public static SpawnPoint SpawnPoint;
+    public static EndPoint EndPoint;
 
     /// <summary>코어 오브젝트. Core.OnEnable/OnDisable에서 자동 등록/해제. Road 타일 위에 배치 필수.</summary>
-    public static Core        Core;
+    public static Transform CoreTransform;
+    public static IDamageable ICore;
 
     // ─── 골드 ────────────────────────────────────────────────────────────────
 
@@ -68,10 +70,10 @@ public class Managers : MonoBehaviour
 
     // ─── 매니저 접근자 ────────────────────────────────────────────────────────
 
-    public static PoolManager     PoolM     { get { return Instance?.poolManager; } }
+    public static PoolManager PoolM { get { return Instance?.poolManager; } }
     public static ResourceManager ResourceM { get { return Instance?.resourceManager; } }
-    public static UIManager       UIM       { get { return Instance?.uiManager; } }
-    public static UpdateManager   UpdateM   { get { return Instance?.updateManager; } }
+    public static UIManager UIM { get { return Instance?.uiManager; } }
+    public static UpdateManager UpdateM { get { return Instance?.updateManager; } }
 
     public static Managers Instance
     {

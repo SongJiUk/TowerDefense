@@ -13,8 +13,7 @@ public class Memo
     - Stage1_Forest / Stage2_Desert / Stage3_Winter / Stage4_Dungeon 각각 GameObject로 관리
     - 웨이브별 테마: 1~5웨이브 숲 → 6~10 사막 → 11~15 겨울 → 16~20 던전
 
-    [데이터]
-    - 타워/적 스탯 → ScriptableObject
-    - 웨이브 구성 (몇 웨이브에 뭐가 몇 마리) → CSV
+이게 한칸 밑에있는 타워를 클릭하면 원이 타일에 그려져서 안보여서 좀 높게 그리면, 위에있는 타워를 클릭하면 더
+  높게보이는데 근본적으로 해결할 수 있는 방법 없을까?
     */
 }

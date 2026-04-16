@@ -8,12 +8,14 @@ using UnityEngine;
 /// WaveManager.SpawnEnemy()에서 Init()으로 초기화되고 ObjectPool로 재사용된다.
 /// PathFinder.OnPathChanged 이벤트를 구독해 타워 설치 시 실시간으로 경로를 재계산한다.
 /// </summary>
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
+
     private EnemyData _data;
     private float     _hp;
     private float     _speed;
-
+    private bool _isDead;
+    
     private List<Vector3>        _path;
     private CancellationTokenSource _cts;
 
@@ -36,7 +38,7 @@ public class EnemyController : MonoBehaviour
         _hp            = data.baseHp * hpMultiplier;
         _speed         = data.baseMoveSpeed * speedMultiplier;
         _currentTarget = transform.position;
-
+        _isDead = false;
         RequestPath();
     }
 
@@ -60,6 +62,7 @@ public class EnemyController : MonoBehaviour
     /// <summary>타워의 ProjectileController가 충돌 시 호출. HP가 0 이하면 Die().</summary>
     public void TakeDamage(float damage)
     {
+        if (_isDead) return;
         _hp -= damage;
         if (_hp <= 0f) Die();
     }
@@ -71,6 +74,7 @@ public class EnemyController : MonoBehaviour
     private void Die()
     {
         // TODO: Managers.AddGold(_data.baseReward);
+        _isDead = true;
         Managers.WaveM.OnEnemyRemoved();
         Managers.ResourceM.Destroy(gameObject);
     }
@@ -86,7 +90,7 @@ public class EnemyController : MonoBehaviour
     {
         List<Vector3> newPath = Managers.Path.FindPath(
             _currentTarget,
-            Managers.Core.transform.position
+            Managers.EndPoint.transform.position
         );
         StartMove(newPath);
     }
@@ -97,11 +101,15 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     private void RequestPath()
     {
-        if (_data == null || Managers.Core == null) return;
+        if (_data == null || Managers.CoreTransform == null) return;
+
+        // 스폰 Y를 SpawnPoint 표면에 맞춤 (땅 박힘 방지)
+        if (Managers.SpawnPoint != null)
+            transform.position = new Vector3(transform.position.x, Managers.SpawnPoint.transform.position.y, transform.position.z);
 
         List<Vector3> path = Managers.Path.FindPath(
             transform.position,
-            Managers.Core.transform.position
+            Managers.EndPoint.transform.position
         );
         StartMove(path);
     }
@@ -129,7 +137,7 @@ public class EnemyController : MonoBehaviour
         foreach (Vector3 waypoint in _path)
         {
             _currentTarget = waypoint;
-            Vector3 target = new Vector3(waypoint.x, transform.position.y, waypoint.z);
+            Vector3 target = waypoint;
 
             while (Vector3.Distance(transform.position, target) > 0.05f)
             {
@@ -155,7 +163,7 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     private void OnReachCore()
     {
-        // TODO: Managers.CoreHP -= _data.attackDamage;
+        Managers.ICore?.TakeDamage(_data.coreDamage);
         Managers.WaveM.OnEnemyRemoved();
         Managers.ResourceM.Destroy(gameObject);
     }

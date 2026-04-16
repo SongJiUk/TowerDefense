@@ -10,8 +10,9 @@ public class ProjectileController : MonoBehaviour
     private Transform _target;
     private float     _damage;
     private float     _speed;
-
-    private const float HIT_DISTANCE = 0.3f;
+    private IDamageable _IDamage;
+    private const float HIT_DISTANCE    = 0.3f;
+    private const float AIM_HEIGHT_OFFSET = 0.8f;  // 적 루트가 발 위치라서 중심부로 보정
 
     /// <summary>
     /// 발사 직후 TowerController가 호출. 타겟·데미지·이동속도를 설정한다.
@@ -24,6 +25,7 @@ public class ProjectileController : MonoBehaviour
         _target = target;
         _damage = damage;
         _speed  = speed;
+        _IDamage = _target.GetComponent<IDamageable>();
     }
 
     void Update()
@@ -35,14 +37,15 @@ public class ProjectileController : MonoBehaviour
             return;
         }
 
-        Vector3 dir = (_target.position - transform.position).normalized;
+        Vector3 aimPos = _target.position + Vector3.up * AIM_HEIGHT_OFFSET;
+        Vector3 dir    = (aimPos - transform.position).normalized;
         transform.position += dir * _speed * Time.deltaTime;
         transform.forward   = dir;
 
         // HIT_DISTANCE 이내로 진입하면 데미지 후 풀 반환
-        if (Vector3.Distance(transform.position, _target.position) < HIT_DISTANCE)
+        if (Vector3.Distance(transform.position, aimPos) < HIT_DISTANCE)
         {
-            _target.GetComponent<EnemyController>()?.TakeDamage(_damage);
+            _IDamage?.TakeDamage(_damage);
             Managers.ResourceM.Destroy(gameObject);
         }
     }

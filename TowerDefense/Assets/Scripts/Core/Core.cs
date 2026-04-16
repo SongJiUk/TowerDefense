@@ -9,8 +9,35 @@ using UnityEngine;
 ///
 /// TODO: HP 시스템 추가 예정 (Phase 4)
 /// </summary>
-public class Core : MonoBehaviour
+public class Core : MonoBehaviour, IDamageable
 {
-    void OnEnable()  => Managers.Core = this;
-    void OnDisable() => Managers.Core = null;
+
+    private float maxHp = 10f;
+    private float currentHp = 10f;
+
+
+    private void Awake()
+    {
+        Managers.ICore = this;
+    }
+
+    private void OnEnable() => Managers.CoreTransform = this.transform;
+    private void OnDisable() => Managers.CoreTransform = null;
+
+    public void TakeDamage(float damage)
+    {
+        currentHp -= damage;
+        Debug.Log(currentHp);
+        if (currentHp <= 0f)
+        {
+            
+            currentHp = 0f;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+
+    }
 }
