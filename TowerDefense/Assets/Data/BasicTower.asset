@@ -16,10 +16,10 @@ MonoBehaviour:
   towerType: 0
   baseDamage: 10
   baseAttackSpeed: 2
-  baseRange: 10
-  upgradeSteps: []
-  buildCost: 0
+  baseRange: 5
   projectilePrefab: {fileID: 8215568205360093391, guid: 70d7e7f1d68975146ab0ade5e909277e, type: 3}
   projectileSpeed: 10
+  upgradeSteps: []
+  buildCost: 0
   prefab: {fileID: 2065753017525554874, guid: a56e1e6136bf2de4ea6ca1ceb776e037, type: 3}
   addressableKey: 

@@ -24,13 +24,13 @@ public class WaveManager
 
     // ─── 상태 ─────────────────────────────────────────────────────────────────
 
-    public int  CurrentWave => _currentWaveIndex + 1;
-    public int  TotalWaves  => _stageData?.totalWaves ?? 0;
-    public bool IsRunning   { get; private set; }
+    public int CurrentWave => _currentWaveIndex + 1;
+    public int TotalWaves => _stageData?.totalWaves ?? 0;
+    public bool IsRunning { get; private set; }
 
-    private StageData               _stageData;
-    private int                     _currentWaveIndex;
-    private int                     _aliveCount;
+    private StageData _stageData;
+    private int _currentWaveIndex;
+    private int _aliveCount;
     private CancellationTokenSource _cts;
 
     // ─── 공식 상수 ────────────────────────────────────────────────────────────
@@ -46,10 +46,10 @@ public class WaveManager
 
     public void Init(StageData stageData)
     {
-        _stageData        = stageData;
+        _stageData = stageData;
         _currentWaveIndex = 0;
-        _aliveCount       = 0;
-        IsRunning         = false;
+        _aliveCount = 0;
+        IsRunning = false;
     }
 
     public void StartNextWave()
@@ -100,7 +100,7 @@ public class WaveManager
     {
         _cts?.Cancel();
         _cts?.Dispose();
-        _cts      = null;
+        _cts = null;
         IsRunning = false;
     }
 
@@ -137,9 +137,9 @@ public class WaveManager
             cancellationToken: token
         );
 
-        float hpMult    = CalcHpMultiplier(waveIndex);
+        float hpMult = CalcHpMultiplier(waveIndex);
         float speedMult = CalcSpeedMultiplier(waveIndex);
-        int   waveNumber = waveIndex + 1;
+        int waveNumber = waveIndex + 1;
 
         if (isBossWave)
             await SpawnBossWave(hpMult, speedMult, token);

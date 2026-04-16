@@ -13,6 +13,7 @@ public class EnemyData : ScriptableObject
     public Define.EnemyType enemyType;
 
     [Header("기본 스탯")]
+    public int coreDamage = 1;
     public float baseHp;
     public float baseMoveSpeed;
 

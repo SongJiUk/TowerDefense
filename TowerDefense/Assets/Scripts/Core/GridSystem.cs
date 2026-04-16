@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 맵 전체를 32×11 격자로 관리.
+/// 맵 전체를 X x Y 격자로 관리.
 /// OnEnable 시 Raycast로 타일을 자동 인식하고 GridNode 배열을 초기화한다.
 /// Placeable 칸에는 마커 큐브를 자동 스폰.
 /// Managers.Grid에 자신을 등록해 PathFinder·TowerPlacer가 전역에서 접근 가능.
@@ -205,6 +206,21 @@ public class GridSystem : MonoBehaviour
                 Gizmos.color = edgeColor;
                 Gizmos.DrawWireCube(pos, size);
             }
+        }
+
+        // A* 마지막 경로 표시
+        List<Vector3> path = Managers.Path?.LastPath;
+        if (path != null && path.Count > 1)
+        {
+            Gizmos.color = Color.yellow;
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Vector3 a = path[i]     + Vector3.up * 0.8f;
+                Vector3 b = path[i + 1] + Vector3.up * 0.8f;
+                Gizmos.DrawLine(a, b);
+                Gizmos.DrawSphere(a, 0.2f);
+            }
+            Gizmos.DrawSphere(path[path.Count - 1] + Vector3.up * 0.8f, 0.2f);
         }
     }
 #endif
