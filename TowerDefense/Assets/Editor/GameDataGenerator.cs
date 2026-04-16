@@ -19,11 +19,11 @@ public static class GameDataGenerator
         EnsureFolder(STAGE_PATH);
 
         // ── 적 데이터 생성 ─────────────────────────────────────────────────
-        var basic  = CreateEnemy("Enemy_Basic",  Define.EnemyType.Basic,  hp: 80f,   speed: 2.5f, reward: 3);
-        var tank   = CreateEnemy("Enemy_Tank",   Define.EnemyType.Tank,   hp: 300f,  speed: 1.5f, reward: 8);
-        var runner = CreateEnemy("Enemy_Runner", Define.EnemyType.Runner, hp: 50f,   speed: 5.0f, reward: 4);
-        var flyer  = CreateEnemy("Enemy_Flyer",  Define.EnemyType.Flyer,  hp: 60f,   speed: 3.5f, reward: 5);
-        var boss   = CreateEnemy("Enemy_Boss",   Define.EnemyType.Boss,   hp: 1500f, speed: 1.8f, reward: 50);
+        var basic = CreateEnemy("Enemy_Basic", Define.EnemyType.Basic, hp: 80f, speed: 2.5f, reward: 3);
+        var tank = CreateEnemy("Enemy_Tank", Define.EnemyType.Tank, hp: 300f, speed: 1.5f, reward: 8);
+        var runner = CreateEnemy("Enemy_Runner", Define.EnemyType.Runner, hp: 50f, speed: 5.0f, reward: 4);
+        var flyer = CreateEnemy("Enemy_Flyer", Define.EnemyType.Split, hp: 60f, speed: 3.5f, reward: 5);
+        var boss = CreateEnemy("Enemy_Boss", Define.EnemyType.Boss, hp: 1500f, speed: 1.8f, reward: 50);
 
         // ── 스테이지 데이터 생성 ───────────────────────────────────────────
         // Stage 1 — 숲 (HP ×1.0) : Basic + Tank
@@ -92,11 +92,11 @@ public static class GameDataGenerator
         string path = $"{ENEMY_PATH}/{fileName}.asset";
         var data = LoadOrCreate<EnemyData>(path);
 
-        data.enemyName    = fileName;
-        data.enemyType    = type;
-        data.baseHp       = hp;
+        data.enemyName = fileName;
+        data.enemyType = type;
+        data.baseHp = hp;
         data.baseMoveSpeed = speed;
-        data.baseReward   = reward;
+        data.baseReward = reward;
 
         EditorUtility.SetDirty(data);
         return data;
@@ -110,13 +110,13 @@ public static class GameDataGenerator
         string path = $"{STAGE_PATH}/{fileName}.asset";
         var data = LoadOrCreate<StageData>(path);
 
-        data.totalWaves        = totalWaves;
+        data.totalWaves = totalWaves;
         data.stageHpMultiplier = hpMult;
-        data.spawnInterval     = spawnInterval;
-        data.waveStartDelay    = 3f;
-        data.enemyPool         = enemies;
-        data.bossEnemy         = bossEnemy;
-        data.bossWaveMinions   = bossMinions;
+        data.spawnInterval = spawnInterval;
+        data.waveStartDelay = 3f;
+        data.enemyPool = enemies;
+        data.bossEnemy = bossEnemy;
+        data.bossWaveMinions = bossMinions;
 
         EditorUtility.SetDirty(data);
     }

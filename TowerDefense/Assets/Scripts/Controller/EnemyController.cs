@@ -12,11 +12,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 {
 
     private EnemyData _data;
-    private float     _hp;
-    private float     _speed;
+    private float _hp;
+    private float _speed;
     private bool _isDead;
-    
-    private List<Vector3>        _path;
+
+    private List<Vector3> _path;
     private CancellationTokenSource _cts;
 
     /// <summary>
@@ -34,9 +34,9 @@ public class EnemyController : MonoBehaviour, IDamageable
     /// <param name="speedMultiplier">웨이브 공식으로 계산된 속도 배율</param>
     public void Init(EnemyData data, float hpMultiplier = 1f, float speedMultiplier = 1f)
     {
-        _data          = data;
-        _hp            = data.baseHp * hpMultiplier;
-        _speed         = data.baseMoveSpeed * speedMultiplier;
+        _data = data;
+        _hp = data.baseHp * hpMultiplier;
+        _speed = data.baseMoveSpeed * speedMultiplier;
         _currentTarget = transform.position;
         _isDead = false;
         RequestPath();
@@ -73,9 +73,10 @@ public class EnemyController : MonoBehaviour, IDamageable
     /// </summary>
     private void Die()
     {
-        // TODO: Managers.AddGold(_data.baseReward);
         _isDead = true;
         Managers.WaveM.OnEnemyRemoved();
+        Managers.AddGold(_data.baseReward);
+        Managers.AddExp(_data.rewardExp);
         Managers.ResourceM.Destroy(gameObject);
     }
 
@@ -148,6 +149,10 @@ public class EnemyController : MonoBehaviour, IDamageable
                     target,
                     _speed * Time.deltaTime
                 );
+
+                var dir = target - transform.position;
+                dir.y = 0;
+                transform.rotation = Quaternion.LookRotation(dir);
 
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }

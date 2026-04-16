@@ -18,5 +18,5 @@ MonoBehaviour:
   baseHp: 300
   baseMoveSpeed: 1.5
   baseReward: 8
-  prefab: {fileID: 0}
-  addressableKey: 
+  rewardExp: 0
+  addressableKey: Enemy_Tank

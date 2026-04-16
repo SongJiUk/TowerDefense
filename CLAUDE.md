@@ -61,19 +61,37 @@ TowerDefense/
 - [x] EnemyController (UniTask 경로 이동, 데미지/사망, 경로 재계산)
 - [x] WaveManager (공식 기반 스케일링, 보스 웨이브, UniTask 스폰)
 - [x] TowerPlacer (Marker 클릭 → 원형 팝업 → 설치)
-- [x] TowerController (타겟팅, 공격 타이머, 투사체 발사, 업그레이드 스탯)
+- [x] TowerController (타겟팅, 공격 타이머, 투사체 발사, 업그레이드 스탯, 포신 회전)
 - [x] ProjectileController (타겟 추적, 데미지 후 풀 반환)
 - [x] UI_TowerSelectPopup (DOTween 방사형 애니메이션, 호버 사거리 표시)
 - [x] GameDataGenerator (에디터 메뉴 → 적 5종 + 스테이지 4개 자동 생성)
+- [x] RangeIndicator (LineRenderer + Cylinder, 지형 따라가는 외곽선)
+- [x] 코어 HP (적 도달 시 차감 확인)
+- [x] 골드 보상 (EnemyController.Die() → Managers.AddGold, OnGoldChanged 이벤트)
+- [x] 카메라 핀치 줌 / 드래그 패닝 (모바일 대응)
+- [x] 모바일 터치 입력 대응 (IsPointerOverGameObject fingerId, GetMouseButtonUp)
+- [x] LevelData ScriptableObject (20레벨, 경험치 테이블)
+- [x] ResourceManager Addressable 로딩 구조 확인
+- [x] LoadingScene 구성 (LoadGroupAsync "Preload" → StartButton 활성화 → TitleScene)
 
 ### 다음 작업 (우선순위 순)
-- [ ] **코어 HP** — Core.cs에 HP 추가, 적 도달 시 차감, HUD 표시, 게임오버
-- [ ] **골드 보상** — EnemyController.Die()의 TODO 한 줄
-- [ ] **웨이브 클리어 로그라이크 UI** — 3택 1 스킬/타워 선택 팝업
+- [ ] **Addressable 전환** — EnemyData/TowerData prefab 제거 → addressableKey만 사용, PoolManager에 Pop(string) 추가, 프리팹 Preload 라벨 등록
+- [ ] **Managers 경험치/레벨** — AddExp(), OnLevelUp 이벤트 추가, LevelData 연결
+- [ ] **레벨업 3택1 팝업 UI** — 카테고리 A/B/C/D 카드 랜덤 선택
+- [ ] **SkillManager** — 스킬 5종, 쿨타임, 레벨(마스터 3), 교체 시 초기화
 - [ ] **타워 업그레이드 UI** — 배치된 타워 클릭 → 업그레이드 팝업
+- [ ] **챕터 구조** — 스테이지 1: 챕터 3개 × 웨이브 10개, 챕터 마지막 보스
+- [ ] **Enemy 추가** — 빠름/탱커/부활/분열/중간보스/최종보스 (총 7종)
 - [ ] 적 HP바 UI
 - [ ] 게임오버 화면 / DOTween 연출
 - [ ] 모바일 빌드 테스트 (Android)
+
+## 게임 설계 확정사항
+- **스테이지 구조:** 챕터 3개 × 웨이브 10개 = 30웨이브 / 스테이지
+- **레벨:** 최대 20레벨, 스테이지 초기화 없이 누적
+- **스킬:** 5종, 마스터 레벨 3, 최대 3개 보유 (교체 가능, 교체 시 레벨 초기화)
+- **선택 카테고리:** A(전투강화) / B(경제) / C(특수) / D(스킬)
+- **적 경험치:** 일반 8 / 빠름 6 / 탱커 15 / 부활 12 / 중간보스 50 / 최종보스 100
 
 ---
 

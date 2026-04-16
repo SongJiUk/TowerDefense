@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Prefabs
+  m_EditorClassIdentifier: 
+  m_GroupName: Prefabs
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 094e5c8b0a30a4b11a1eb477c60f0116
+  m_SerializeEntries:
+  - m_GUID: fc08121e90a0da24aabe619d18906092
+    m_Address: Enemy_Basic
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Prevload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ffe7f57ecdc474ef6804b7151dd1327a
+    m_Address: Enemy_Tank
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Prevload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f9312a415536444c39ebd503ef764189, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f39eecf7a237d4f048d4ceef0475b78f, type: 2}
+    - {fileID: 11400000, guid: 7372812b7bacc4776808ee3dcbad0e6a, type: 2}

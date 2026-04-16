@@ -18,7 +18,9 @@ public class Define
         Basic,
         Tank,
         Runner,
-        Flyer,
+        Split,
+        Revive,
+        MiddleBoss,
         Boss,
     }
 
@@ -30,5 +32,12 @@ public class Define
         Sniper,
         Poison,
         Lightning,
+    }
+
+    public enum SkillType
+    {
+        Block,
+        ArrowRain,
+        Freeze
     }
 }
