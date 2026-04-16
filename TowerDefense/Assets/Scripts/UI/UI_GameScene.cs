@@ -9,8 +9,8 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts   { Text_Gold, Text_Wave }
-    enum Buttons { Btn_StartWave }
+    enum Texts { Text_Gold, Text_Wave }
+    enum Buttons { StartWave_Button }
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -21,7 +21,7 @@ public class UI_GameScene : UI_Scene
 
     void OnDestroy()
     {
-        Managers.OnGoldChanged     -= RefreshGold;
+        Managers.OnGoldChanged -= RefreshGold;
         Managers.WaveM.OnWaveStart -= RefreshWave;
     }
 
@@ -34,10 +34,10 @@ public class UI_GameScene : UI_Scene
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        GetButton(typeof(Buttons), (int)Buttons.Btn_StartWave)
+        GetButton(typeof(Buttons), (int)Buttons.StartWave_Button)
             .onClick.AddListener(OnStartWaveClicked);
 
-        Managers.OnGoldChanged     += RefreshGold;
+        Managers.OnGoldChanged += RefreshGold;
         Managers.WaveM.OnWaveStart += RefreshWave;
         Managers.WaveM.OnWaveComplete += OnWaveComplete;
 

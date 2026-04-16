@@ -35,6 +35,7 @@ class Pool
     /// <summary>풀에서 오브젝트를 꺼낸다. 없으면 OnCreate로 새로 생성.</summary>
     public GameObject Pop() => pool.Get();
 
+
     /// <summary>오브젝트를 풀에 반환한다. SetActive(false) 처리됨.</summary>
     public void Push(GameObject _go) => pool.Release(_go);
 
@@ -92,6 +93,22 @@ public class PoolManager
         }
 
         return pool.Pop();
+    }
+    /// <summary>
+    /// Addressable로 사용해서 pop, 없으면 자동 생성
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public GameObject Pop(string key)
+    {
+        GameObject prefab = Managers.ResourceM.Load<GameObject>(key);
+        if (prefab == null)
+        {
+            Debug.LogError($"[PoolManager] 로드된 프리팹이 없음 : {key}");
+            return null;
+        }
+
+        return Pop(prefab);
     }
 
     /// <summary>

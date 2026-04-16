@@ -208,7 +208,7 @@ public class WaveManager
             return;
         }
 
-        GameObject go = Managers.PoolM.Pop(data.prefab);
+        GameObject go = Managers.PoolM.Pop(data.addressableKey);
         if (go == null) return;
 
         go.transform.position = Managers.SpawnPoint.transform.position;

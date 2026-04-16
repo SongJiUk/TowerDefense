@@ -8,10 +8,10 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
     private Transform _target;
-    private float     _damage;
-    private float     _speed;
+    private float _damage;
+    private float _speed;
     private IDamageable _IDamage;
-    private const float HIT_DISTANCE    = 0.3f;
+    private const float HIT_DISTANCE = 0.3f;
     private const float AIM_HEIGHT_OFFSET = 0.8f;  // 적 루트가 발 위치라서 중심부로 보정
 
     /// <summary>
@@ -24,7 +24,7 @@ public class ProjectileController : MonoBehaviour
     {
         _target = target;
         _damage = damage;
-        _speed  = speed;
+        _speed = speed;
         _IDamage = _target.GetComponent<IDamageable>();
     }
 
@@ -33,14 +33,16 @@ public class ProjectileController : MonoBehaviour
         // 타겟이 사망해서 null이 되면 그냥 풀 반환
         if (_target == null)
         {
+            _target = null;
+            _IDamage = null;
             Managers.ResourceM.Destroy(gameObject);
             return;
         }
 
         Vector3 aimPos = _target.position + Vector3.up * AIM_HEIGHT_OFFSET;
-        Vector3 dir    = (aimPos - transform.position).normalized;
+        Vector3 dir = (aimPos - transform.position).normalized;
         transform.position += dir * _speed * Time.deltaTime;
-        transform.forward   = dir;
+        transform.forward = dir;
 
         // HIT_DISTANCE 이내로 진입하면 데미지 후 풀 반환
         if (Vector3.Distance(transform.position, aimPos) < HIT_DISTANCE)

@@ -18,10 +18,10 @@ public class TowerPlacer : MonoBehaviour
 {
     public static TowerPlacer Instance { get; private set; }
 
-    [SerializeField] private Camera              _cam;
-    [SerializeField] private LayerMask           _markerLayer;
+    [SerializeField] private Camera _cam;
+    [SerializeField] private LayerMask _markerLayer;
     [SerializeField] private UI_TowerSelectPopup _popup;
-    [SerializeField] private TowerData[]         _allTowerData;   // 6종 ScriptableObject
+    [SerializeField] private TowerData[] _allTowerData;   // 6종 ScriptableObject
 
     private GridNode _pendingNode;
 
@@ -49,8 +49,14 @@ public class TowerPlacer : MonoBehaviour
 
     void Update()
     {
-        if (!Input.GetMouseButtonDown(0)) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return; // UI 위 클릭 무시
+        if (!Input.GetMouseButtonUp(0)) return;
+        if (CameraController.IsDragging) return;
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+#else
+        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
+#endif
 
         GridNode node = GetNodeFromScreen(Input.mousePosition);
 

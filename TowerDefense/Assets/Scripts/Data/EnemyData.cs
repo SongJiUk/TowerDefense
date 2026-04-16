@@ -9,7 +9,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "TowerDefense/EnemyData")]
 public class EnemyData : ScriptableObject
 {
-    public string           enemyName;
+    public string enemyName;
     public Define.EnemyType enemyType;
 
     [Header("기본 스탯")]
@@ -18,10 +18,12 @@ public class EnemyData : ScriptableObject
     public float baseMoveSpeed;
 
     /// <summary>처치 시 지급할 골드. EnemyController.Die()에서 Managers.AddGold()로 지급 예정.</summary>
-    public int   baseReward;
+    public int baseReward;
+    public float rewardExp;
 
     [Header("아트")]
-    /// <summary>적 GameObject 프리팹. EnemyController 컴포넌트 + Enemy 레이어 설정 필수.</summary>
-    public GameObject prefab;
-    public string     addressableKey;
+    /// <summary>
+    // Addressalbe로 가져올값 적용하면 됌
+    /// </summary>
+    public string addressableKey;
 }

@@ -1,45 +1,86 @@
 using UnityEngine;
 
 /// <summary>
-/// 타워 클릭 시 공격 범위를 반투명 디스크로 바닥에 표시.
-/// Cylinder 프리미티브를 납작하게 눌러 원형 면으로 사용.
+/// 타워 클릭 시 공격 범위 표시.
+/// - Cylinder: 반투명 채움 영역
+/// - LineRenderer: 외곽 원선 (각 점마다 지면 레이캐스트 → 타일 높낮이 따라감)
 /// </summary>
 public class RangeIndicator : MonoBehaviour
 {
-    [SerializeField] private Material _rangeMaterial;   // 반투명 머티리얼 (Inspector에서 연결)
-    [SerializeField] private float    _yOffset = 0.05f; // 바닥 z-fighting 방지 오프셋
+    [SerializeField] private Color _fillColor    = new Color(0.2f, 0.9f, 0.2f, 0.2f);
+    [SerializeField] private Color _outlineColor = new Color(0.2f, 0.9f, 0.2f, 1f);
+    [SerializeField] private float _lineWidth    = 0.08f;
+    [SerializeField] private int   _segments     = 64;
+    [SerializeField] private float _yOffset      = 0.3f; // 지면 위로 띄울 높이
 
-    private GameObject _disc;
+    private GameObject   _disc;
+    private LineRenderer _lr;
+    private static int   _groundMask;
 
     void Awake()
     {
+        _groundMask = LayerMask.GetMask("Road", "Placeable");
+
+        // ── 채움 디스크 ──────────────────────────────────────────
         _disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         _disc.transform.SetParent(transform);
         Destroy(_disc.GetComponent<Collider>());
 
-        var mr = _disc.GetComponent<MeshRenderer>();
-        if (_rangeMaterial != null)
-        {
-            mr.material = _rangeMaterial;
-        }
-        else
-        {
-            // 머티리얼 미연결 시 반투명 초록 자동 생성
-            Material mat = new Material(Shader.Find("Sprites/Default"));
-            mat.color   = new Color(0.2f, 0.9f, 0.2f, 0.25f);
-            mr.material = mat;
-        }
-
+        var fillMat = new Material(Shader.Find("Sprites/Default"));
+        fillMat.color = _fillColor;
+        _disc.GetComponent<MeshRenderer>().material = fillMat;
         _disc.SetActive(false);
+
+        // ── 외곽선 ───────────────────────────────────────────────
+        _lr = GetComponentInChildren<LineRenderer>();
+        if (_lr == null) _lr = gameObject.AddComponent<LineRenderer>();
+
+        _lr.loop          = true;
+        _lr.positionCount = _segments;
+        _lr.startWidth    = _lineWidth;
+        _lr.endWidth      = _lineWidth;
+        _lr.useWorldSpace = true;
+
+        var outlineMat = new Material(Shader.Find("Sprites/Default"));
+        outlineMat.color = _outlineColor;
+        _lr.material = outlineMat;
+        _lr.enabled  = false;
     }
 
-    /// <summary>타워 클릭 시 호출. 타워 위치 기준으로 반투명 원을 표시한다.</summary>
     public void Show(Vector3 center, float radius)
     {
+        // 타워 바로 아래 지면 Y
+        float centerGroundY = GetGroundY(center.x, center.y, center.z);
+
+        // 채움 디스크: 타워 중심 지면에 배치
         _disc.SetActive(true);
-        _disc.transform.position   = new Vector3(center.x, center.y + _yOffset, center.z);
+        _disc.transform.position   = new Vector3(center.x, centerGroundY + _yOffset, center.z);
         _disc.transform.localScale = new Vector3(radius * 2f, 0.01f, radius * 2f);
+
+        // 외곽선: 각 점마다 지면 Y를 구해 타일 높낮이 따라감
+        for (int i = 0; i < _segments; i++)
+        {
+            float angle = (float)i / _segments * Mathf.PI * 2f;
+            float x     = center.x + Mathf.Cos(angle) * radius;
+            float z     = center.z + Mathf.Sin(angle) * radius;
+            float y     = GetGroundY(x, center.y, z);
+            _lr.SetPosition(i, new Vector3(x, y + _yOffset, z));
+        }
+
+        _lr.enabled = true;
     }
 
-    public void Hide() => _disc.SetActive(false);
+    public void Hide()
+    {
+        _disc.SetActive(false);
+        _lr.enabled = false;
+    }
+
+    private float GetGroundY(float x, float fromY, float z)
+    {
+        Ray ray = new Ray(new Vector3(x, fromY + 5f, z), Vector3.down);
+        return Physics.Raycast(ray, out RaycastHit hit, 20f, _groundMask)
+            ? hit.point.y
+            : fromY;
+    }
 }

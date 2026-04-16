@@ -9,45 +9,59 @@ public class TowerController : MonoBehaviour
 {
     /// <summary>총구 위치. 없으면 자신 위치 + up에서 발사.</summary>
     [SerializeField] private Transform _firePoint;
+    [SerializeField] private GameObject _turnObject;
 
     // ─── 상태 ─────────────────────────────────────────────────────────────────
 
-    public TowerData Data         { get; private set; }
+    public TowerData Data { get; private set; }
 
     /// <summary>현재 레벨. 0 = 기본, 1 이상 = upgradeSteps[level-1] 적용.</summary>
-    public int       CurrentLevel { get; private set; } = 0;
+    public int CurrentLevel { get; private set; } = 0;
 
     private float _currentDamage;
     private float _currentAttackSpeed;
     private float _currentRange;
 
-    private float     _attackTimer;
+    private float _attackTimer;
     private Transform _currentTarget;
 
     private static int _enemyMask;
+    private static TowerController _selectedTower;
     private RangeIndicator _rangeIndicator;
-    
-    private bool _isRangeVisible;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
     void Awake()
     {
-        _enemyMask      = LayerMask.GetMask("Enemy");
+        _enemyMask = LayerMask.GetMask("Enemy");
         _rangeIndicator = GetComponentInChildren<RangeIndicator>();
     }
 
 
-    void OnMouseDown()
+    void OnMouseUp()
     {
+        if (CameraController.IsDragging) return;
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
+#else
+        if (Input.touchCount > 0 && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
+#endif
         if (Data == null) return;
 
-        _isRangeVisible = !_isRangeVisible;
+        // 다른 타워 선택 시 기존 범위 숨김
+        if (_selectedTower != null && _selectedTower != this)
+            _selectedTower.HideRange();
 
-        if (_isRangeVisible)
-            _rangeIndicator?.Show(transform.position, _currentRange);
+        if (_selectedTower == this)
+        {
+            HideRange();
+            _selectedTower = null;
+        }
         else
-            _rangeIndicator?.Hide();
+        {
+            _selectedTower = this;
+            _rangeIndicator?.Show(transform.position, _currentRange);
+        }
     }
 
     void Update()
@@ -55,10 +69,42 @@ public class TowerController : MonoBehaviour
         if (Data == null) return;
 
         _attackTimer -= Time.deltaTime;
-        if (_attackTimer > 0f) return;
 
-        _currentTarget = FindTarget();
+        if (_currentTarget == null)
+        {
+            _currentTarget = FindTarget();
+        }
+        else
+        {
+            float xzDist = Vector2.Distance(
+                new Vector2(_currentTarget.position.x, _currentTarget.position.z),
+                new Vector2(transform.position.x, transform.position.z));
+
+            if (!_currentTarget.gameObject.activeInHierarchy || xzDist > _currentRange)
+            {
+                _currentTarget = null;
+                return;
+            }
+
+            var dir = _currentTarget.transform.position - _turnObject.transform.position;
+            _turnObject.transform.rotation = Quaternion.RotateTowards(
+                _turnObject.transform.rotation,
+                Quaternion.LookRotation(dir),
+                Time.deltaTime * 360f);
+        }
+
+
+        if (_attackTimer > 0f) return;
         if (_currentTarget == null) return;
+
+        float distBeforeFire = Vector2.Distance(
+            new Vector2(_currentTarget.position.x, _currentTarget.position.z),
+            new Vector2(transform.position.x, transform.position.z));
+        if (distBeforeFire > _currentRange)
+        {
+            _currentTarget = null;
+            return;
+        }
 
         Fire(_currentTarget);
         _attackTimer = 1f / _currentAttackSpeed;
@@ -71,7 +117,7 @@ public class TowerController : MonoBehaviour
     /// </summary>
     public void Init(TowerData data)
     {
-        Data         = data;
+        Data = data;
         CurrentLevel = 0;
         ApplyStats();
     }
@@ -103,18 +149,30 @@ public class TowerController : MonoBehaviour
     /// </summary>
     private void ApplyStats()
     {
-        _currentDamage      = Data.baseDamage;
+        _currentDamage = Data.baseDamage;
         _currentAttackSpeed = Data.baseAttackSpeed;
-        _currentRange       = Data.baseRange;
+        _currentRange = Data.baseRange;
 
         if (CurrentLevel > 0 && Data.upgradeSteps != null
             && CurrentLevel <= Data.upgradeSteps.Length)
         {
             TowerUpgradeStep step = Data.upgradeSteps[CurrentLevel - 1];
-            _currentDamage      *= step.damageMultiplier;
+            _currentDamage *= step.damageMultiplier;
             _currentAttackSpeed *= step.attackSpeedMultiplier;
-            _currentRange       += step.rangeBonus;
+            _currentRange += step.rangeBonus;
         }
+    }
+
+    public void HideRange()
+    {
+        _rangeIndicator?.Hide();
+    }
+
+    public static void HideSelectedRange()
+    {
+        if (_selectedTower == null) return;
+        _selectedTower.HideRange();
+        _selectedTower = null;
     }
 
     /// <summary>
@@ -125,7 +183,7 @@ public class TowerController : MonoBehaviour
     {
         // Y축 무시: 수직 캡슐로 XZ 수평 거리만 체크
         Vector3 bottom = new Vector3(transform.position.x, -50f, transform.position.z);
-        Vector3 top    = new Vector3(transform.position.x,  50f, transform.position.z);
+        Vector3 top = new Vector3(transform.position.x, 50f, transform.position.z);
         Collider[] hits = Physics.OverlapCapsule(bottom, top, _currentRange, _enemyMask, QueryTriggerInteraction.Collide);
         if (hits.Length == 0) return null;
 
