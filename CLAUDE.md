@@ -73,6 +73,10 @@ TowerDefense/
 - [x] LevelData ScriptableObject (20레벨, 경험치 테이블)
 - [x] ResourceManager Addressable 로딩 구조 확인
 - [x] LoadingScene 구성 (LoadGroupAsync "Preload" → StartButton 활성화 → TitleScene)
+- [x] BuffSystem (IBuff, BuffEffect, BuffHandler, StatModifier, SlowEffect, PoisonEffect)
+- [x] SlowTowerController, PoisonTowerController, CannonTowerController, LightningTowerController
+- [x] 타워 프리팹 6종 제작
+- [x] 타워 UI Image 등록
 
 ### 다음 작업 (우선순위 순)
 - [ ] **Addressable 전환** — EnemyData/TowerData prefab 제거 → addressableKey만 사용, PoolManager에 Pop(string) 추가, 프리팹 Preload 라벨 등록
@@ -81,7 +85,7 @@ TowerDefense/
 - [ ] **SkillManager** — 스킬 5종, 쿨타임, 레벨(마스터 3), 교체 시 초기화
 - [ ] **타워 업그레이드 UI** — 배치된 타워 클릭 → 업그레이드 팝업
 - [ ] **챕터 구조** — 스테이지 1: 챕터 3개 × 웨이브 10개, 챕터 마지막 보스
-- [ ] **Enemy 추가** — 빠름/탱커/부활/분열/중간보스/최종보스 (총 7종)
+- [ ] **Enemy 추가** — 빠름/탱커/부활/분열/중간보스/최종보스 (총 7종) ← 다음 작업
 - [ ] 적 HP바 UI
 - [ ] 게임오버 화면 / DOTween 연출
 - [ ] 모바일 빌드 테스트 (Android)

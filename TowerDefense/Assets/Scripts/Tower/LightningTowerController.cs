@@ -38,7 +38,6 @@ public class LightningTowerController : TowerController
         {
             if (!_chainTargets.Contains(col.transform))
             {
-                Debug.Log($"  next={col.name} / IDamageable={col.GetComponent<IDamageable>()}");
                 return col.transform;
             }
 

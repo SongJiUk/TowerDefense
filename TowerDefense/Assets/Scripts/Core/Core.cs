@@ -28,7 +28,6 @@ public class Core : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         currentHp -= damage;
-        Debug.Log(currentHp);
         if (currentHp <= 0f)
         {
 
