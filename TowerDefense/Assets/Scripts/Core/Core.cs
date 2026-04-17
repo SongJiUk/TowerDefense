@@ -14,6 +14,7 @@ public class Core : MonoBehaviour, IDamageable
 
     private float maxHp = 10f;
     private float currentHp = 10f;
+    public float CurrentHp => currentHp;
 
 
     private void Awake()
@@ -30,7 +31,7 @@ public class Core : MonoBehaviour, IDamageable
         Debug.Log(currentHp);
         if (currentHp <= 0f)
         {
-            
+
             currentHp = 0f;
             Die();
         }

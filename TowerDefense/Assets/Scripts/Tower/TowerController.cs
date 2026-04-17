@@ -18,16 +18,21 @@ public class TowerController : MonoBehaviour
     /// <summary>현재 레벨. 0 = 기본, 1 이상 = upgradeSteps[level-1] 적용.</summary>
     public int CurrentLevel { get; private set; } = 0;
 
-    private float _currentDamage;
+    private float _baseDamage;
+    protected float _currentDamage;
+    private float _baseAttackSpeed;
     private float _currentAttackSpeed;
+    private float _baseRange;
     private float _currentRange;
 
     private float _attackTimer;
     private Transform _currentTarget;
 
-    private static int _enemyMask;
+    protected static int _enemyMask;
     private static TowerController _selectedTower;
     private RangeIndicator _rangeIndicator;
+    private BuffHandler _buffHandler;
+
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -35,9 +40,23 @@ public class TowerController : MonoBehaviour
     {
         _enemyMask = LayerMask.GetMask("Enemy");
         _rangeIndicator = GetComponentInChildren<RangeIndicator>();
+        _buffHandler = GetComponent<BuffHandler>();
     }
 
-
+    void OnEnable()
+    {
+        if (_buffHandler != null)
+        {
+            _buffHandler.OnModifiersChanged += ApplyStats;
+        }
+    }
+    void OnDisable()
+    {
+        if (_buffHandler != null)
+        {
+            _buffHandler.OnModifiersChanged -= ApplyStats;
+        }
+    }
     void OnMouseUp()
     {
         if (CameraController.IsDragging) return;
@@ -87,6 +106,7 @@ public class TowerController : MonoBehaviour
             }
 
             var dir = _currentTarget.transform.position - _turnObject.transform.position;
+            dir.y = 0;
             _turnObject.transform.rotation = Quaternion.RotateTowards(
                 _turnObject.transform.rotation,
                 Quaternion.LookRotation(dir),
@@ -115,7 +135,7 @@ public class TowerController : MonoBehaviour
     /// <summary>
     /// TowerPlacer가 타워를 설치할 때 호출. 데이터를 주입하고 스탯을 계산한다.
     /// </summary>
-    public void Init(TowerData data)
+    public virtual void Init(TowerData data)
     {
         Data = data;
         CurrentLevel = 0;
@@ -149,18 +169,30 @@ public class TowerController : MonoBehaviour
     /// </summary>
     private void ApplyStats()
     {
-        _currentDamage = Data.baseDamage;
-        _currentAttackSpeed = Data.baseAttackSpeed;
-        _currentRange = Data.baseRange;
+        _baseDamage = Data.baseDamage;
+        _baseAttackSpeed = Data.baseAttackSpeed;
+        _baseRange = Data.baseRange;
 
         if (CurrentLevel > 0 && Data.upgradeSteps != null
             && CurrentLevel <= Data.upgradeSteps.Length)
         {
             TowerUpgradeStep step = Data.upgradeSteps[CurrentLevel - 1];
-            _currentDamage *= step.damageMultiplier;
-            _currentAttackSpeed *= step.attackSpeedMultiplier;
-            _currentRange += step.rangeBonus;
+            _baseDamage *= step.damageMultiplier;
+            _baseAttackSpeed *= step.attackSpeedMultiplier;
+            _baseRange += step.rangeBonus;
         }
+
+        _currentDamage = _buffHandler != null
+        ? _buffHandler.GetStat(Define.StatType.Damage, _baseDamage)
+        : _baseDamage;
+
+        _currentAttackSpeed = _buffHandler != null
+        ? _buffHandler.GetStat(Define.StatType.AttackSpeed, _baseAttackSpeed)
+        : _baseAttackSpeed;
+
+        _currentRange = _buffHandler != null
+        ? _buffHandler.GetStat(Define.StatType.Range, _baseRange)
+        : _baseRange;
     }
 
     public void HideRange()
@@ -212,18 +244,20 @@ public class TowerController : MonoBehaviour
     /// </summary>
     private void Fire(Transform target)
     {
-        if (Data.projectilePrefab == null) return;
+        if (Data.projectilePrefabKey == null) return;
 
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
-        GameObject go = Managers.PoolM.Pop(Data.projectilePrefab);
+        GameObject go = Managers.PoolM.Pop(Data.projectilePrefabKey);
         go.transform.position = spawnPos;
 
-        go.GetComponent<ProjectileController>()?.Init(target, _currentDamage, Data.projectileSpeed);
+        go.GetComponent<ProjectileController>()?.Init(target, _currentDamage, Data.projectileSpeed, onHit: OnHit);
     }
+
+    protected virtual void OnHit(Transform target) { }
 
 #if UNITY_EDITOR
     /// <summary>씬 뷰에서 타워 선택 시 사거리를 파란 원으로 표시.</summary>
-    void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         if (Data == null) return;
         Gizmos.color = Color.cyan;

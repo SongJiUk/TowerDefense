@@ -176062,7 +176062,7 @@ MonoBehaviour:
     m_Bits: 512
   _popup: {fileID: 1938835035}
   _allTowerData:
-  - {fileID: 11400000, guid: 96e2335043e06fd45b4c823ee2d2608c, type: 2}
+  - {fileID: 11400000, guid: 251b52fb42c03495fa3957dbfdb7645d, type: 2}
 --- !u!1 &1285179394
 GameObject:
   m_ObjectHideFlags: 0

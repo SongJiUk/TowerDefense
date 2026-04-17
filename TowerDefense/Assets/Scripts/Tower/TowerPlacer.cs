@@ -106,7 +106,7 @@ public class TowerPlacer : MonoBehaviour
             return;
         }
 
-        if (data == null || data.prefab == null) return;
+        if (data == null || data.addressableKey == null) return;
 
         if (!Managers.SpendGold(data.buildCost))
         {
@@ -114,7 +114,7 @@ public class TowerPlacer : MonoBehaviour
             return;
         }
 
-        GameObject go = Managers.PoolM.Pop(data.prefab);
+        GameObject go = Managers.PoolM.Pop(data.addressableKey);
         go.transform.position = _pendingNode.WorldPosition;
         go.transform.rotation = Quaternion.identity;
 

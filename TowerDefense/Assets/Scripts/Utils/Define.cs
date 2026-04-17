@@ -40,4 +40,20 @@ public class Define
         ArrowRain,
         Freeze
     }
+
+    public enum StatType
+    {
+        Damage,
+        AttackSpeed,
+        Range,
+        Speed,
+        CriticalChance,
+        CiriticalDamage,
+    }
+
+    public enum ModifierType
+    {
+        Flat,
+        Percent,
+    }
 }
