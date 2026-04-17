@@ -8,18 +8,19 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "TowerDefense/TowerData")]
 public class TowerData : ScriptableObject
 {
-    public string            towerName;
-    public Define.TowerType  towerType;
+    public string towerName;
+    public Define.TowerType towerType;
 
     [Header("기본 스탯")]
     public float baseDamage;
     public float baseAttackSpeed;   // 초당 공격 횟수
     public float baseRange;         // 사거리 (유닛)
 
+
     [Header("투사체")]
-    /// <summary>발사할 투사체 프리팹. ProjectileController 컴포넌트 필수.</summary>
-    public GameObject projectilePrefab;
-    public float      projectileSpeed = 10f;
+    /// <summary>투사체 -> Addressalbe로 가져와서 Key로 가져옴.</summary>
+    public string projectilePrefabKey;
+    public float projectileSpeed = 10f;
 
     [Header("업그레이드")]
     /// <summary>레벨업 시 적용할 스탯 배율. [0]=Lv2, [1]=Lv3 순.</summary>
@@ -29,9 +30,8 @@ public class TowerData : ScriptableObject
     public int buildCost;
 
     [Header("아트")]
-    /// <summary>설치될 타워 GameObject 프리팹. TowerController 컴포넌트 필수.</summary>
-    public GameObject prefab;
-    public string     addressableKey;
+    /// <summary>해당 키로 설정</summary>
+    public string addressableKey;
 }
 
 /// <summary>
@@ -41,7 +41,7 @@ public class TowerData : ScriptableObject
 [System.Serializable]
 public class TowerUpgradeStep
 {
-    public int   upgradeCost;
+    public int upgradeCost;
     public float damageMultiplier;
     public float attackSpeedMultiplier;
     public float rangeBonus;

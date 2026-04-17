@@ -12,9 +12,12 @@ public class EnemyController : MonoBehaviour, IDamageable
 {
 
     private EnemyData _data;
-    private float _hp;
-    private float _speed;
+    [SerializeField] private float _hp;
+    public float CurrentHp => _hp;
+    private float _baseSpeed;
+    [SerializeField] private float _speed;
     private bool _isDead;
+    private BuffHandler _buffHandler;
 
     private List<Vector3> _path;
     private CancellationTokenSource _cts;
@@ -36,7 +39,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         _data = data;
         _hp = data.baseHp * hpMultiplier;
-        _speed = data.baseMoveSpeed * speedMultiplier;
+        _baseSpeed = data.baseMoveSpeed * speedMultiplier;
+        _speed = _baseSpeed;
         _currentTarget = transform.position;
         _isDead = false;
         RequestPath();
@@ -44,14 +48,21 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
+    void Awake()
+    {
+        if (_buffHandler == null) _buffHandler = GetComponent<BuffHandler>();
+    }
+
     void OnEnable()
     {
         Managers.Path.OnPathChanged += OnPathChanged;
+        if (_buffHandler != null) _buffHandler.OnModifiersChanged += RecalculateSpeed;
     }
 
     void OnDisable()
     {
         Managers.Path.OnPathChanged -= OnPathChanged;
+        if (_buffHandler != null) _buffHandler.OnModifiersChanged -= RecalculateSpeed;
         _cts?.Cancel();
         _cts?.Dispose();
         _cts = null;
@@ -64,6 +75,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (_isDead) return;
         _hp -= damage;
+
+        Debug.Log($"[EnemyController] Damage : {damage}");
         if (_hp <= 0f) Die();
     }
 
@@ -171,5 +184,12 @@ public class EnemyController : MonoBehaviour, IDamageable
         Managers.ICore?.TakeDamage(_data.coreDamage);
         Managers.WaveM.OnEnemyRemoved();
         Managers.ResourceM.Destroy(gameObject);
+    }
+
+    // ─── 스탯 변경 ─────────────────────────────────────────────────────────────────
+
+    public void RecalculateSpeed()
+    {
+        _speed = _buffHandler.GetStat(Define.StatType.Speed, _baseSpeed);
     }
 }

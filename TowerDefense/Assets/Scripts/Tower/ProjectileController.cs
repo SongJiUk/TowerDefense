@@ -7,12 +7,17 @@ using UnityEngine;
 /// </summary>
 public class ProjectileController : MonoBehaviour
 {
+    private const float HIT_DISTANCE = 0.3f;
+    private const float AIM_HEIGHT_OFFSET = 0.8f;  // 적 루트가 발 위치라서 중심부로 보정
     private Transform _target;
     private float _damage;
     private float _speed;
     private IDamageable _IDamage;
-    private const float HIT_DISTANCE = 0.3f;
-    private const float AIM_HEIGHT_OFFSET = 0.8f;  // 적 루트가 발 위치라서 중심부로 보정
+    private BuffHandler _buffHandler;
+    private BuffEffect _onHitEffect;
+
+    private System.Action<Transform> _onHit;
+
 
     /// <summary>
     /// 발사 직후 TowerController가 호출. 타겟·데미지·이동속도를 설정한다.
@@ -20,12 +25,15 @@ public class ProjectileController : MonoBehaviour
     /// <param name="target">추적할 적의 Transform</param>
     /// <param name="damage">명중 시 입힐 데미지</param>
     /// <param name="speed">이동 속도 (유닛/초)</param>
-    public void Init(Transform target, float damage, float speed)
+    public void Init(Transform target, float damage, float speed, BuffEffect onHitEffect = null, System.Action<Transform> onHit = null)
     {
         _target = target;
         _damage = damage;
         _speed = speed;
         _IDamage = _target.GetComponent<IDamageable>();
+        _buffHandler = _target.GetComponent<BuffHandler>();
+        _onHitEffect = onHitEffect;
+        _onHit = onHit;
     }
 
     void Update()
@@ -48,6 +56,8 @@ public class ProjectileController : MonoBehaviour
         if (Vector3.Distance(transform.position, aimPos) < HIT_DISTANCE)
         {
             _IDamage?.TakeDamage(_damage);
+            if (_onHitEffect != null) _buffHandler?.AddEffect(_onHitEffect);
+            _onHit?.Invoke(_target);
             Managers.ResourceM.Destroy(gameObject);
         }
     }

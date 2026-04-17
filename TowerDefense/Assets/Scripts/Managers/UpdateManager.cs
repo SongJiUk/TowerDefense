@@ -88,6 +88,7 @@ public class UpdateManager : MonoBehaviour
             }
             tick.UnScaledTick(unscaledDeltaTime);
         }
+
     }
 
     private void LateUpdate()
