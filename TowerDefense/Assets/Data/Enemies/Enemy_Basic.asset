@@ -18,5 +18,5 @@ MonoBehaviour:
   baseHp: 80
   baseMoveSpeed: 2.5
   baseReward: 3
-  rewardExp: 0
+  rewardExp: 8
   addressableKey: Enemy_Basic

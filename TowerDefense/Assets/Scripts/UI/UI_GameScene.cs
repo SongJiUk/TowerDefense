@@ -9,8 +9,9 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level }
     enum Buttons { StartWave_Button }
+    enum Images { Image_LevelFill }
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -21,7 +22,9 @@ public class UI_GameScene : UI_Scene
 
     void OnDestroy()
     {
-        Managers.OnGoldChanged -= RefreshGold;
+        Managers.GameM.OnGoldChanged -= RefreshGold;
+        Managers.GameM.OnExpChanged -= RefreshExp;
+        Managers.GameM.OnLevelUp -= LevelUp;
         Managers.WaveM.OnWaveStart -= RefreshWave;
     }
 
@@ -33,15 +36,18 @@ public class UI_GameScene : UI_Scene
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
+        BindImage(typeof(Images));
 
         GetButton(typeof(Buttons), (int)Buttons.StartWave_Button)
             .onClick.AddListener(OnStartWaveClicked);
 
-        Managers.OnGoldChanged += RefreshGold;
+        Managers.GameM.OnGoldChanged += RefreshGold;
+        Managers.GameM.OnExpChanged += RefreshExp;
+        Managers.GameM.OnLevelUp += LevelUp;
         Managers.WaveM.OnWaveStart += RefreshWave;
         Managers.WaveM.OnWaveComplete += OnWaveComplete;
 
-        RefreshGold(Managers.Gold);
+        RefreshGold(Managers.GameM.Gold);
         RefreshWave(Managers.WaveM.CurrentWave);
 
         return true;
@@ -51,13 +57,29 @@ public class UI_GameScene : UI_Scene
 
     private void RefreshGold(int gold)
     {
-        GetText(typeof(Texts), (int)Texts.Text_Gold).text = $"골드: {gold}G";
+        GetText(typeof(Texts), (int)Texts.Text_Gold).text = $"{gold}";
     }
 
     private void RefreshWave(int wave)
     {
         GetText(typeof(Texts), (int)Texts.Text_Wave).text =
-            $"웨이브: {wave} / {Managers.WaveM.TotalWaves}";
+            $"{wave} / {Managers.WaveM.TotalWaves}";
+    }
+
+    private void RefreshExp(int exp, int maxExp)
+    {
+        float amount = (float)exp / maxExp;
+        GetImage(typeof(Images), (int)Images.Image_LevelFill).fillAmount = amount;
+    }
+
+    private void LevelUp(int level, int currentExp)
+    {
+        GetText(typeof(Texts), (int)Texts.Text_Level).text = level.ToString();
+        int required = Managers.GameM.LevelData.GetRequiredExp(level);
+        float amount = required > 0 ? (float)currentExp / required : 0f;
+        GetImage(typeof(Images), (int)Images.Image_LevelFill).fillAmount = amount;
+
+        Managers.ObjectM.SpawnUI<UI_LevelUpPopup>("UI_LevelUpPopup", transform);
     }
 
     // ─── 버튼 핸들러 ─────────────────────────────────────────────────────────

@@ -108,7 +108,7 @@ public class TowerPlacer : MonoBehaviour
 
         if (data == null || data.addressableKey == null) return;
 
-        if (!Managers.SpendGold(data.buildCost))
+        if (!Managers.GameM.SpendGold(data.buildCost))
         {
             Debug.Log("[TowerPlacer] 골드 부족");
             return;

@@ -18,5 +18,5 @@ MonoBehaviour:
   baseHp: 300
   baseMoveSpeed: 1.5
   baseReward: 8
-  rewardExp: 0
+  rewardExp: 15
   addressableKey: Enemy_Tank

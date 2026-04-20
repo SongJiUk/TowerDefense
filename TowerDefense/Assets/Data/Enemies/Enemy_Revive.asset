@@ -18,6 +18,5 @@ MonoBehaviour:
   baseHp: 300
   baseMoveSpeed: 1.5
   baseReward: 8
-  rewardExp: 0
-  prefab: {fileID: 7635748090897780382, guid: ffe7f57ecdc474ef6804b7151dd1327a, type: 3}
+  rewardExp: 12
   addressableKey: 
