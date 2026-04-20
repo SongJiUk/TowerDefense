@@ -79,16 +79,27 @@ TowerDefense/
 - [x] 타워 UI Image 등록
 
 ### 다음 작업 (우선순위 순)
-- [ ] **Addressable 전환** — EnemyData/TowerData prefab 제거 → addressableKey만 사용, PoolManager에 Pop(string) 추가, 프리팹 Preload 라벨 등록
-- [ ] **Managers 경험치/레벨** — AddExp(), OnLevelUp 이벤트 추가, LevelData 연결
-- [ ] **레벨업 3택1 팝업 UI** — 카테고리 A/B/C/D 카드 랜덤 선택
-- [ ] **SkillManager** — 스킬 5종, 쿨타임, 레벨(마스터 3), 교체 시 초기화
+
+#### 🔴 즉시 할 것 (카드 시스템 마무리)
+- [ ] **UI_LevelUpPopup 프리팹 제작** — Canvas 하위 / Content_Horizontal(HorizontalLayoutGroup) 포함
+- [ ] **UI_CardItem 프리팹 제작** — Btn_Card(Button) > Image_Icon / Text_CardName / Text_Description / Text_Stack
+- [ ] **Addressable 등록** — `UI_LevelUpPopup`, `UI_CardItem` key로 등록 (Preload 라벨)
+- [ ] **CardData 에셋 생성** — CardEffectType 이름과 동일한 key로 각 CardData ScriptableObject 생성 후 Addressable 등록
+- [ ] **CardManager.Init() 호출** — LoadingSceneManager에서 Preload 완료 후 `Managers.CardM.Init()` 추가
+
+#### 🟡 글로벌 멀티플라이어 연결 (카드 효과 실제 반영)
+- [ ] **EnemyController.Die()** — `baseReward * Managers.GameM.killRewardMultiplier` 적용
+- [ ] **EnemyController.Init()** — `hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier` 적용
+- [ ] **TowerPlacer** — 타워 설치 비용에 `Managers.GameM.buildCostMultiplier` 곱하기
+- [ ] **WaveManager** — 웨이브 클리어 골드 보상에 `waveBonusMultiplier` 곱한 후 1f로 리셋
+- [ ] **치명타 시스템** — TowerController.Fire()에서 `criticalChanceBonus` 확률로 데미지 2배
+
+#### 🟢 그 다음
 - [ ] **타워 업그레이드 UI** — 배치된 타워 클릭 → 업그레이드 팝업
-- [ ] **챕터 구조** — 스테이지 1: 챕터 3개 × 웨이브 10개, 챕터 마지막 보스
-- [ ] **Enemy 추가** — 빠름/탱커/부활/분열/중간보스/최종보스 (총 7종) ← 다음 작업
-- [ ] 적 HP바 UI
-- [ ] 게임오버 화면 / DOTween 연출
-- [ ] 모바일 빌드 테스트 (Android)
+- [ ] **Enemy 추가** — 빠름/탱커/부활/분열/중간보스/최종보스 (총 7종)
+- [ ] **적 HP바 UI**
+- [ ] **게임오버 화면** / DOTween 연출
+- [ ] **모바일 빌드 테스트** (Android)
 
 ## 게임 설계 확정사항
 - **스테이지 구조:** 챕터 3개 × 웨이브 10개 = 30웨이브 / 스테이지
