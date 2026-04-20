@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 1253833c425234d93a6399de33c6fefb
-  m_SerializeEntries:
-  - m_GUID: 1e6dbf72f20a13f4aa6c92562ba87706
-    m_Address: Assets/Prefabs/LightningTower.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f9312a415536444c39ebd503ef764189, type: 2}
   m_SchemaSet:
