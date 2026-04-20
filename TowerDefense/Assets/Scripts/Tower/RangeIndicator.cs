@@ -7,11 +7,11 @@ using UnityEngine;
 /// </summary>
 public class RangeIndicator : MonoBehaviour
 {
-    [SerializeField] private Color _fillColor    = new Color(0.2f, 0.9f, 0.2f, 0.2f);
-    [SerializeField] private Color _outlineColor = new Color(0.2f, 0.9f, 0.2f, 1f);
-    [SerializeField] private float _lineWidth    = 0.08f;
+    [SerializeField] private Color _fillColor    = new Color(1f, 1f, 1f, 0.12f);
+    [SerializeField] private Color _outlineColor = new Color(0f, 0.85f, 1f, 1f);
+    [SerializeField] private float _lineWidth    = 0.1f;
     [SerializeField] private int   _segments     = 64;
-    [SerializeField] private float _yOffset      = 0.3f; // 지면 위로 띄울 높이
+    [SerializeField] private float _yOffset      = 0.25f;
 
     private GameObject   _disc;
     private LineRenderer _lr;
@@ -49,15 +49,16 @@ public class RangeIndicator : MonoBehaviour
 
     public void Show(Vector3 center, float radius)
     {
-        // 타워 바로 아래 지면 Y
         float centerGroundY = GetGroundY(center.x, center.y, center.z);
 
-        // 채움 디스크: 타워 중심 지면에 배치
+        // 부모 lossyScale 역산 → 세계 공간 기준 반지름이 정확히 radius가 되도록
+        Vector3 ps = transform.lossyScale;
         _disc.SetActive(true);
         _disc.transform.position   = new Vector3(center.x, centerGroundY + _yOffset, center.z);
-        _disc.transform.localScale = new Vector3(radius * 2f, 0.01f, radius * 2f);
+        _disc.transform.localScale = new Vector3(radius * 2f / ps.x, 0.01f, radius * 2f / ps.z);
 
         // 외곽선: 각 점마다 지면 Y를 구해 타일 높낮이 따라감
+
         for (int i = 0; i < _segments; i++)
         {
             float angle = (float)i / _segments * Mathf.PI * 2f;
