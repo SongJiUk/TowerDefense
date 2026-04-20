@@ -31,7 +31,6 @@ public class TowerController : MonoBehaviour
     protected static int _enemyMask;
     private static TowerController _selectedTower;
     private RangeIndicator _rangeIndicator;
-    private BuffHandler _buffHandler;
 
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
@@ -40,23 +39,20 @@ public class TowerController : MonoBehaviour
     {
         _enemyMask = LayerMask.GetMask("Enemy");
         _rangeIndicator = GetComponentInChildren<RangeIndicator>();
-        _buffHandler = GetComponent<BuffHandler>();
     }
 
     void OnEnable()
     {
-        if (_buffHandler != null)
-        {
-            _buffHandler.OnModifiersChanged += ApplyStats;
-        }
+        if (Managers.GameM != null)
+            Managers.GameM.OnCardApplied += ApplyStats;
     }
+
     void OnDisable()
     {
-        if (_buffHandler != null)
-        {
-            _buffHandler.OnModifiersChanged -= ApplyStats;
-        }
+        if (Managers.GameM != null)
+            Managers.GameM.OnCardApplied -= ApplyStats;
     }
+
     void OnMouseUp()
     {
         if (CameraController.IsDragging) return;
@@ -154,7 +150,7 @@ public class TowerController : MonoBehaviour
         if (CurrentLevel >= Data.upgradeSteps.Length) return false;
 
         int cost = Data.upgradeSteps[CurrentLevel].upgradeCost;
-        if (!Managers.SpendGold(cost)) return false;
+        if (!Managers.GameM.SpendGold(cost)) return false;
 
         CurrentLevel++;
         ApplyStats();
@@ -182,17 +178,9 @@ public class TowerController : MonoBehaviour
             _baseRange += step.rangeBonus;
         }
 
-        _currentDamage = _buffHandler != null
-        ? _buffHandler.GetStat(Define.StatType.Damage, _baseDamage)
-        : _baseDamage;
-
-        _currentAttackSpeed = _buffHandler != null
-        ? _buffHandler.GetStat(Define.StatType.AttackSpeed, _baseAttackSpeed)
-        : _baseAttackSpeed;
-
-        _currentRange = _buffHandler != null
-        ? _buffHandler.GetStat(Define.StatType.Range, _baseRange)
-        : _baseRange;
+        _currentDamage = _baseDamage * Managers.GameM.globalDamageMultiplier;
+        _currentAttackSpeed = _baseAttackSpeed * Managers.GameM.globalAttackSpeedMultiplier;
+        _currentRange = _baseRange + Managers.GameM.globalRangeBonus;
     }
 
     public void HideRange()

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
+  m_Name: SynergyAmp
+  m_EditorClassIdentifier: 
+  cardName: SynergyAmp
+  Description: "\uBC1C\uB3D9\uC911\uC778 \uC2DC\uB108\uC9C0\uC758 \uD6A8\uACFC\uB97C
+    30% \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
+  iconKey: SynergyAmp
+  category: 2
+  effectType: 11
+  effectValue: 0.3
+  weight: 0.8
+  maxStack: 2

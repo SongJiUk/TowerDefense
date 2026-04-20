@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System;
 /// <summary>
 /// 플레이어가 지켜야 할 코어 오브젝트.
 /// OnEnable에서 Managers.Core에 자신을 등록해 EnemyController·PathFinder가 참조할 수 있게 한다.
@@ -15,7 +15,7 @@ public class Core : MonoBehaviour, IDamageable
     private float maxHp = 10f;
     private float currentHp = 10f;
     public float CurrentHp => currentHp;
-
+    public event Action<float> OnHpChanged;
 
     private void Awake()
     {
@@ -28,12 +28,18 @@ public class Core : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         currentHp -= damage;
+        OnHpChanged?.Invoke(currentHp);
         if (currentHp <= 0f)
         {
 
             currentHp = 0f;
             Die();
         }
+    }
+    public void Heal(float amount)
+    {
+        currentHp = Mathf.Min(currentHp + amount, maxHp);
+        OnHpChanged?.Invoke(currentHp);
     }
 
     private void Die()

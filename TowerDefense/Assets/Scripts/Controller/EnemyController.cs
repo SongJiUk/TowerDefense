@@ -80,6 +80,11 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (_hp <= 0f) Die();
     }
 
+    public void Heal(float amount)
+    {
+
+    }
+
     /// <summary>
     /// 사망 처리.
     /// 골드 지급 → WaveManager에 제거 알림 → ObjectPool 반환.
@@ -88,8 +93,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         _isDead = true;
         Managers.WaveM.OnEnemyRemoved();
-        Managers.AddGold(_data.baseReward);
-        Managers.AddExp(_data.rewardExp);
+        Managers.GameM.AddGold(_data.baseReward);
+        Managers.GameM.AddExp(_data.rewardExp);
         Managers.ResourceM.Destroy(gameObject);
     }
 

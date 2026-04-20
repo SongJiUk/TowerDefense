@@ -56,4 +56,17 @@ public class Define
         Flat,
         Percent,
     }
+
+    public enum CardCategory { A, B, C, D }
+    public enum CardEffectType
+    {
+        //A
+        DamageUp, AttackSpeedUp, RangeUp, CriticalChanceUp,
+        //B
+        GoldInstant, KillRewardUp, BuildCostDown, WaveBonusDouble,
+        //C
+        FreeTower, EnemyHpDown, CoreHpUp, SynergyAmp,
+        //D
+        SkillSelect, SkillPointUp
+    }
 }

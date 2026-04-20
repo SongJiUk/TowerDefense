@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Datas
+  m_EditorClassIdentifier: 
+  m_GroupName: Datas
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 582d2624f3a6b4f0792042e910a72fb1
+  m_SerializeEntries:
+  - m_GUID: 1ffa5d16f52d1430096fdd98073845c8
+    m_Address: SkillSelect
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 74e6eaea6dc0d40cf9542b81772aff59
+    m_Address: EnemyHpDown
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 750bb8c1028364e39813ba6778c9e289
+    m_Address: SkillPointUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7690b52c5f36e47169449a03dcc5ad1a
+    m_Address: CoreHpUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f36c32b7cd7642c7a6528caa7d7397b
+    m_Address: DamageUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8b962b755aaf9447881f67586caff185
+    m_Address: RangeUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8bfd8f79fa83d4ce1b0df93c80b98cb6
+    m_Address: LevelData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a242d1122a7c498d96eff3c52d43984
+    m_Address: BuildCostDown
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9bc231cb74029452fb958fcc625923a8
+    m_Address: KillRewardUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b21b3839d6c0a46c19a03d15ec6ecafb
+    m_Address: SynergyAmp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b368e305f384d4013b47c48158b515e9
+    m_Address: FreeTower
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6149b6d6ff464c94aa5c38d5ce37468
+    m_Address: AttackSpeedUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dcdd224e7afb74d2d9a3b698025c4006
+    m_Address: CriticalChangeUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f2671bedc9e9349dab15364873ceef08
+    m_Address: GoldInstant
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fd38b335c6ab74526852b24df16bb7f4
+    m_Address: WaveBonusDouble
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f9312a415536444c39ebd503ef764189, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0a3db375d7df04cc3b7ba8620e89d763, type: 2}
+    - {fileID: 11400000, guid: 29c519f22acf74e9ebb24dd9b51c0474, type: 2}

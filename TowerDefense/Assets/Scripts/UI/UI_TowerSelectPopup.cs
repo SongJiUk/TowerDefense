@@ -53,7 +53,7 @@ public class UI_TowerSelectPopup : UI_Base
 
     void OnDestroy()
     {
-        Managers.OnGoldChanged -= RefreshButtonStates;
+        Managers.GameM.OnGoldChanged -= RefreshButtonStates;
     }
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────
@@ -81,7 +81,7 @@ public class UI_TowerSelectPopup : UI_Base
                       Define.UIEvent.OnPointerExit);
         }
 
-        Managers.OnGoldChanged += RefreshButtonStates;
+        Managers.GameM.OnGoldChanged += RefreshButtonStates;
 
         CalcRadialPositions();
 
@@ -99,7 +99,7 @@ public class UI_TowerSelectPopup : UI_Base
 
         PositionPopup(screenPos);
         PopulateButtons();
-        RefreshButtonStates(Managers.Gold);
+        RefreshButtonStates(Managers.GameM.Gold);
 
         gameObject.SetActive(true);
         PlayOpenAnim();

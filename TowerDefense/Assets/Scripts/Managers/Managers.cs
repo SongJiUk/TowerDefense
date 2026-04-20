@@ -13,16 +13,15 @@ public class Managers : MonoBehaviour
     readonly PoolManager poolManager = new();
     readonly ResourceManager resourceManager = new();
     readonly UIManager uiManager = new();
+    readonly GameManager gameManager = new();
+    readonly ObjectManager objectManager = new();
+    readonly CardManager cardManager = new();
     UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
 
     /// <summary>현재 활성 씬의 GridSystem. GridSystem.OnEnable/OnDisable에서 자동 등록/해제.</summary>
     public static GridSystem Grid;
-    public static LevelData LevelData;
-
-    public static int Level { get; private set; } = 1;
-    public static int CurrentExp { get; private set; } = 0;
 
     /// <summary>A* 경로탐색 인스턴스. PathFinder.FindPath(), RecalculatePath()로 사용.</summary>
     public static PathFinder Path { get; private set; } = new PathFinder();
@@ -38,78 +37,15 @@ public class Managers : MonoBehaviour
     public static Transform CoreTransform;
     public static IDamageable ICore;
 
-    // ─── 골드 ────────────────────────────────────────────────────────────────
-
-    /// <summary>현재 골드. UI_GameScene이 OnGoldChanged를 구독해 자동으로 HUD 갱신.</summary>
-    public static int Gold { get; private set; } = 150;
-
-    /// <summary>골드가 변경될 때 발행. 현재 골드값을 파라미터로 전달.</summary>
-    public static event Action<int> OnGoldChanged;
-
-    public static event Action<int> OnExpChanged;
-    public static event Action<int> OnLevelUp;
-
-    /// <summary>골드 획득. 적 사망 시 EnemyController.Die()에서 호출 예정.</summary>
-    public static void AddGold(int amount)
-    {
-        Gold += amount;
-        OnGoldChanged?.Invoke(Gold);
-    }
-
-    /// <summary>
-    /// 골드 소비. 타워 설치·업그레이드 시 호출.
-    /// 골드가 부족하면 false를 반환하고 차감하지 않는다.
-    /// </summary>
-    public static bool SpendGold(int amount)
-    {
-        if (Gold < amount) return false;
-        Gold -= amount;
-        OnGoldChanged?.Invoke(Gold);
-        return true;
-    }
-
-    /// <summary>씬 시작 시 골드 초기화.</summary>
-    public static void ResetGold(int startGold = 150)
-    {
-        Gold = startGold;
-        OnGoldChanged?.Invoke(Gold);
-    }
-    /// <summary>
-    /// 경험치 획득 코드 이벤트 두개 이용해서 사용
-    /// </summary>
-    /// <param name="amount"></param>
-    public static void AddExp(float amount)
-    {
-        if (LevelData == null) return;
-
-        if (Level >= LevelData.MaxLevel) return;
-
-        CurrentExp += (int)amount;
-        OnExpChanged?.Invoke(CurrentExp);
-
-        while (Level <= LevelData.MaxLevel)
-        {
-            int required = LevelData.GetRequiredExp(Level);
-            if (CurrentExp < required) break;
-
-            CurrentExp -= required;
-            Level++;
-            OnLevelUp?.Invoke(Level);
-        }
-    }
-
-    public static void ResetLevel()
-    {
-        Level = 1;
-        CurrentExp = 0;
-        OnExpChanged?.Invoke(CurrentExp);
-    }
     // ─── 매니저 접근자 ────────────────────────────────────────────────────────
 
     public static PoolManager PoolM { get { return Instance?.poolManager; } }
     public static ResourceManager ResourceM { get { return Instance?.resourceManager; } }
     public static UIManager UIM { get { return Instance?.uiManager; } }
     public static UpdateManager UpdateM { get { return Instance?.updateManager; } }
+    public static GameManager GameM { get { return Instance?.gameManager; } }
+    public static ObjectManager ObjectM { get { return Instance?.objectManager; } }
+    public static CardManager CardM { get { return Instance?.cardManager; } }
 
     public static Managers Instance
     {

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UI_Prefab
+  m_EditorClassIdentifier: 
+  m_GroupName: UI_Prefab
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 13012a2bdd7d5419fae850cc62bd28b9
+  m_SerializeEntries:
+  - m_GUID: 9a9144aedcb754c598dfc5e8158b382f
+    m_Address: UI_CardItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fcb96c7a373884bf3a93961afb09312d
+    m_Address: UI_LevelUpPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f9312a415536444c39ebd503ef764189, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: d8bd6a0c817c144249d9f1818ace9498, type: 2}
+    - {fileID: 11400000, guid: ffbf9cabfe7aa45fd97c860db472cd10, type: 2}
