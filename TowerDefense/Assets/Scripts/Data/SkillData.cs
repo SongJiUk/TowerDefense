@@ -36,4 +36,5 @@ public class SkillUpgradeStep
     public float damageMultiplier;
     public float rangeBonus;
     public float skillDuration;
+    public float cooldownReduction;
 }

@@ -15,20 +15,23 @@ MonoBehaviour:
   skillName: ArrowRain
   skillType: 1
   Description: 
-  baseDamage: 30
-  baseRange: 5
-  baseDuration: 3
-  cooldown: 30
-  effectValue: 0.3
+  baseDamage: 100
+  baseRange: 4
+  baseDuration: 0
+  cooldown: 20
+  effectValue: 0
   skillPrefabkey: ArrowRain
   isTargeted: 1
   upgradeSteps:
-  - damageMultiplier: 1.2
-    rangeBonus: 1
-    skillDuration: 3.5
+  - damageMultiplier: 1
+    rangeBonus: 0
+    skillDuration: 0
+    cooldownReduction: 0
   - damageMultiplier: 1.5
-    rangeBonus: 2
-    skillDuration: 4
+    rangeBonus: 1
+    skillDuration: 0
+    cooldownReduction: 3
   - damageMultiplier: 2
-    rangeBonus: 3
-    skillDuration: 5
+    rangeBonus: 2
+    skillDuration: 0
+    cooldownReduction: 6

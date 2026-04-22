@@ -14,19 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Block
   skillType: 0
+  Description: 
   baseDamage: 0
   baseRange: 0
-  baseDuration: 6
-  cooldown: 60
+  baseDuration: 1
+  cooldown: 45
   effectValue: 0
   skillPrefabkey: Block
+  isTargeted: 1
   upgradeSteps:
   - damageMultiplier: 1
     rangeBonus: 0
     skillDuration: 10
+    cooldownReduction: 0
   - damageMultiplier: 1
     rangeBonus: 0
-    skillDuration: 13
+    skillDuration: 15
+    cooldownReduction: 5
   - damageMultiplier: 1
     rangeBonus: 0
-    skillDuration: 17
+    skillDuration: 20
+    cooldownReduction: 10

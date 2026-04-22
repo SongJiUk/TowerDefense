@@ -14,19 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: Freeze
   skillType: 2
+  Description: 
   baseDamage: 0
-  baseRange: 999
-  baseDuration: 3
-  cooldown: 50
+  baseRange: 4
+  baseDuration: 1
+  cooldown: 30
   effectValue: 0
   skillPrefabkey: Freeze
+  isTargeted: 1
   upgradeSteps:
   - damageMultiplier: 1
     rangeBonus: 0
+    skillDuration: 3
+    cooldownReduction: 0
+  - damageMultiplier: 1
+    rangeBonus: 1
     skillDuration: 4
+    cooldownReduction: 4
   - damageMultiplier: 1
-    rangeBonus: 0
+    rangeBonus: 2
     skillDuration: 5
-  - damageMultiplier: 1
-    rangeBonus: 0
-    skillDuration: 7
+    cooldownReduction: 8

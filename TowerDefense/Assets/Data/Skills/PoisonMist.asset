@@ -14,19 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: PoisonMist
   skillType: 4
-  baseDamage: 10
-  baseRange: 999
-  baseDuration: 5
-  cooldown: 40
-  effectValue: 0.2
+  Description: 
+  baseDamage: 15
+  baseRange: 4
+  baseDuration: 1
+  cooldown: 18
+  effectValue: 0
   skillPrefabkey: PoisonMist
+  isTargeted: 1
   upgradeSteps:
-  - damageMultiplier: 1.2
+  - damageMultiplier: 1
     rangeBonus: 0
+    skillDuration: 5
+    cooldownReduction: 0
+  - damageMultiplier: 1.4
+    rangeBonus: 1
     skillDuration: 6
-  - damageMultiplier: 1.5
-    rangeBonus: 0
+    cooldownReduction: 3
+  - damageMultiplier: 1.8
+    rangeBonus: 2
     skillDuration: 8
-  - damageMultiplier: 2
-    rangeBonus: 0
-    skillDuration: 11
+    cooldownReduction: 6
