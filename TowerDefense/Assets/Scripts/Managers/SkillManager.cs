@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class SkillManager
 
     private SkillData[] _slots = new SkillData[MAX_SLOTS];
     private float[] _cooldowns = new float[MAX_SLOTS];
+    private CancellationTokenSource[] _cooldownCts = new CancellationTokenSource[MAX_SLOTS];
     private Dictionary<Define.SkillType, int> _skillLevels = new();
 
     public SkillData PendingReplaceSkill { get; set; }
@@ -30,8 +32,18 @@ public class SkillManager
 
     public float GetCooldownRatio(int index)
     {
-        if (_slots[index] == null || _slots[index].cooldown <= 0f) return 0f;
-        return _cooldowns[index] / _slots[index].cooldown;
+        float effective = GetEffectiveCooldown(index);
+        if (effective <= 0f) return 0f;
+        return _cooldowns[index] / effective;
+    }
+
+    private float GetEffectiveCooldown(int slotIndex)
+    {
+        var skill = _slots[slotIndex];
+        if (skill == null) return 0f;
+        if (skill.upgradeSteps == null || skill.upgradeSteps.Length == 0) return skill.cooldown;
+        int level = Mathf.Clamp(GetSkillLevel(skill) - 1, 0, skill.upgradeSteps.Length - 1);
+        return Mathf.Max(0f, skill.cooldown - skill.upgradeSteps[level].cooldownReduction);
     }
 
     public bool CanActivate(int index) => _slots[index] != null && _cooldowns[index] <= 0f;
@@ -98,16 +110,25 @@ public class SkillManager
 
     public void SetSlot(int slotIndex, SkillData skillData)
     {
+        CancelCooldown(slotIndex);
         _slots[slotIndex] = skillData;
-        _cooldowns[slotIndex] = 0f;
         OnSlotChanged?.Invoke(slotIndex, skillData);
     }
 
     public void RemoveSlot(int slotIndex)
     {
+        CancelCooldown(slotIndex);
         _slots[slotIndex] = null;
-        _cooldowns[slotIndex] = 0f;
         OnSlotChanged?.Invoke(slotIndex, null);
+    }
+
+    private void CancelCooldown(int slotIndex)
+    {
+        _cooldownCts[slotIndex]?.Cancel();
+        _cooldownCts[slotIndex]?.Dispose();
+        _cooldownCts[slotIndex] = null;
+        _cooldowns[slotIndex] = 0f;
+        OnCooldownChanged?.Invoke(slotIndex, 0f);
     }
 
     // ─── 스킬 발동 ────────────────────────────────────────────────────────────
@@ -149,22 +170,28 @@ public class SkillManager
     private void StartCooldownAndExecute(int slotIndex, Vector3 targetPos)
     {
         var skill = _slots[slotIndex];
-        _cooldowns[slotIndex] = skill.cooldown;
+        float effectiveCooldown = GetEffectiveCooldown(slotIndex);
+
+        _cooldownCts[slotIndex]?.Cancel();
+        _cooldownCts[slotIndex]?.Dispose();
+        _cooldownCts[slotIndex] = new CancellationTokenSource();
+
+        _cooldowns[slotIndex] = effectiveCooldown;
         ExecuteSkill(skill, targetPos);
-        CooldownAsync(slotIndex, skill).Forget();
+        CooldownAsync(slotIndex, effectiveCooldown, _cooldownCts[slotIndex].Token).Forget();
     }
 
-    private async UniTaskVoid CooldownAsync(int slotIndex, SkillData skill)
+    private async UniTaskVoid CooldownAsync(int slotIndex, float duration, CancellationToken token)
     {
         float elapsed = 0f;
-        float duration = skill.cooldown;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             _cooldowns[slotIndex] = Mathf.Max(0f, duration - elapsed);
             OnCooldownChanged?.Invoke(slotIndex, _cooldowns[slotIndex] / duration);
-            await UniTask.Yield(PlayerLoopTiming.Update);
+            bool cancelled = await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow();
+            if (cancelled) return;
         }
 
         _cooldowns[slotIndex] = 0f;
@@ -194,7 +221,10 @@ public class SkillManager
                 break;
 
             case Define.SkillType.Freeze:
-                // TODO: 범위 내 적 SlowEffect 적용
+                var freezeHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
+                Debug.Log($"[Freeze] targetPos={targetPos}, range={range}, hits={freezeHits.Length}");
+                foreach (var hit in freezeHits)
+                    hit.GetComponent<BuffHandler>()?.AddEffect(new FreezeEffect(skill.effectValue, duration));
                 break;
 
             case Define.SkillType.LightningStorm:
@@ -213,6 +243,9 @@ public class SkillManager
     {
         for (int i = 0; i < MAX_SLOTS; i++)
         {
+            _cooldownCts[i]?.Cancel();
+            _cooldownCts[i]?.Dispose();
+            _cooldownCts[i] = null;
             _slots[i] = null;
             _cooldowns[i] = 0f;
         }

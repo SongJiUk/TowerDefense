@@ -14,19 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: LightningStorm
   skillType: 3
-  baseDamage: 50
-  baseRange: 999
-  baseDuration: 10
-  cooldown: 45
-  effectValue: 6
+  Description: 
+  baseDamage: 80
+  baseRange: 5
+  baseDuration: 0
+  cooldown: 25
+  effectValue: 3
   skillPrefabkey: LightningStorm
+  isTargeted: 1
   upgradeSteps:
+  - damageMultiplier: 1
+    rangeBonus: 0
+    skillDuration: 0
+    cooldownReduction: 0
   - damageMultiplier: 1.3
-    rangeBonus: 0
+    rangeBonus: 1
     skillDuration: 0
+    cooldownReduction: 4
   - damageMultiplier: 1.6
-    rangeBonus: 0
+    rangeBonus: 2
     skillDuration: 0
-  - damageMultiplier: 2
-    rangeBonus: 0
-    skillDuration: 0
+    cooldownReduction: 8
