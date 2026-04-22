@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: RangeUp
   Description: "\uBAA8\uB4E0 \uD0C0\uC6CC\uC758 \uC0AC\uAC70\uB9AC\uB97C 1\uC99D\uAC00\uC2DC\uD0A8\uB2E4.
-    3\uD68C\uAE4C\uC9C0 \uC911\uCCA9 \uAC00\uB2A5\uD558\uB2E4."
+    \\n3\uD68C\uAE4C\uC9C0 \uC911\uCCA9 \uAC00\uB2A5\uD558\uB2E4."
   iconKey: RangeUp
   category: 0
   effectType: 2

@@ -234,11 +234,15 @@ public class TowerController : MonoBehaviour
     {
         if (Data.projectilePrefabKey == null) return;
 
+        float damage = _currentDamage;
+        if (UnityEngine.Random.value < Managers.GameM.criticalChanceBonus)
+            damage *= 2f;
+
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
         GameObject go = Managers.PoolM.Pop(Data.projectilePrefabKey);
         go.transform.position = spawnPos;
 
-        go.GetComponent<ProjectileController>()?.Init(target, _currentDamage, Data.projectileSpeed, onHit: OnHit);
+        go.GetComponent<ProjectileController>()?.Init(target, damage, Data.projectileSpeed, onHit: OnHit);
     }
 
     protected virtual void OnHit(Transform target) { }

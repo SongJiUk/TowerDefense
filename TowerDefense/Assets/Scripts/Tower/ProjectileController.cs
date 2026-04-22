@@ -39,7 +39,7 @@ public class ProjectileController : MonoBehaviour
     void Update()
     {
         // 타겟이 사망해서 null이 되면 그냥 풀 반환
-        if (_target == null)
+        if (_target == null || !_target.gameObject.activeInHierarchy)
         {
             _target = null;
             _IDamage = null;

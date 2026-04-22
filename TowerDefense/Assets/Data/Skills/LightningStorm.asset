@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ca7602735e8a4b8a9bcc6bccc2dee3e, type: 3}
+  m_Name: LightningStorm
+  m_EditorClassIdentifier: 
+  skillName: LightningStorm
+  skillType: 3
+  baseDamage: 50
+  baseRange: 999
+  baseDuration: 10
+  cooldown: 45
+  effectValue: 6
+  skillPrefabkey: LightningStorm
+  upgradeSteps:
+  - damageMultiplier: 1.3
+    rangeBonus: 0
+    skillDuration: 0
+  - damageMultiplier: 1.6
+    rangeBonus: 0
+    skillDuration: 0
+  - damageMultiplier: 2
+    rangeBonus: 0
+    skillDuration: 0

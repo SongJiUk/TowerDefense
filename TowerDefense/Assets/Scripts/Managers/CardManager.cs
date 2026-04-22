@@ -36,7 +36,7 @@ public class CardManager
         foreach (CardCategory category in Enum.GetValues(typeof(CardCategory)))
         {
             bool hasCandidate = _cardDatas[category]
-                .Any(card => GetStackCount(card) < card.maxStack);
+                .Any(card => GetStackCount(card) < card.maxStack && IsCardAvailable(card));
             if (hasCandidate) availableCategories.Add(category);
         }
 
@@ -53,12 +53,23 @@ public class CardManager
         for (int i = 0; i < drawCount; i++)
         {
             var candidates = _cardDatas[availableCategories[i]]
-                .Where(card => GetStackCount(card) < card.maxStack)
+                .Where(card => GetStackCount(card) < card.maxStack && IsCardAvailable(card))
                 .ToList();
             result.Add(PickWeighted(candidates));
         }
 
         return result;
+    }
+
+    private bool IsCardAvailable(CardData card)
+    {
+        if (card.effectType == CardEffectType.SkillPointUp)
+        {
+            for (int i = 0; i < 3; i++)
+                if (Managers.SkillM.GetSlot(i) != null) return true;
+            return false;
+        }
+        return true;
     }
 
     public int GetStackCount(CardData cardData)
@@ -132,9 +143,13 @@ public class CardManager
                 break;
 
             case CardEffectType.SkillSelect:
+                Managers.UIM.ShowPopup<UI_SkillSelectPopup>("UI_SkillSelectPopup");
+                break;
+            case CardEffectType.SkillPointUp:
+                Managers.SkillM.AddSkillPoint();
+                break;
             case CardEffectType.FreeTower:
             case CardEffectType.SynergyAmp:
-            case CardEffectType.SkillPointUp:
                 break;
         }
 

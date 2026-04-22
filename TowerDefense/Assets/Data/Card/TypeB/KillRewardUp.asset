@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: KillRewardUp
   Description: "\uD574\uB2F9 \uC2A4\uD14C\uC774\uC9C0 \uCC98\uCE58 \uBCF4\uC0C1\uC774
-    50% \uC99D\uAC00\uD55C\uB2E4. 3\uD68C \uC911\uCCA9 \uAC00\uB2A5\uD558\uB2E4."
+    50% \uC99D\uAC00\uD55C\uB2E4. \\n3\uD68C \uC911\uCCA9 \uAC00\uB2A5\uD558\uB2E4."
   iconKey: KillRewardUp
   category: 1
   effectType: 5

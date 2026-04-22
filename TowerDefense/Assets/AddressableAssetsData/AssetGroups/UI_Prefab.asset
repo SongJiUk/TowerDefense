@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 13012a2bdd7d5419fae850cc62bd28b9
   m_SerializeEntries:
-  - m_GUID: 9a9144aedcb754c598dfc5e8158b382f
-    m_Address: UI_CardItem
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fcb96c7a373884bf3a93961afb09312d
     m_Address: UI_LevelUpPopup
     m_ReadOnly: 0

@@ -38,7 +38,9 @@ public class Define
     {
         Block,
         ArrowRain,
-        Freeze
+        Freeze,
+        LightningStorm,
+        PoisonMist
     }
 
     public enum StatType

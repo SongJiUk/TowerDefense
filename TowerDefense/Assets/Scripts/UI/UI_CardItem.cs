@@ -17,14 +17,8 @@ public class UI_CardItem : UI_Base
     private CardData _cardData;
     private Action<CardData> _onSelected;
 
-    // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
-    async void Start()
-    {
-        await Init();
-        Refresh();
-    }
-
+   
     // ─── 초기화 ───────────────────────────────────────────────────────────────
 
     public override async UniTask<bool> Init()
@@ -65,7 +59,7 @@ public class UI_CardItem : UI_Base
         GetText(typeof(Texts), (int)Texts.Text_Stack).text = $"{current} / {_cardData.maxStack}";
 
         // 아이콘: Addressable 아틀라스에서 iconKey로 Sprite 로드
-        var sprite = Managers.ResourceM.Load<Sprite>(_cardData.iconKey);
+        var sprite = Managers.ResourceM.GetAtlas(_cardData.iconKey);
         if (sprite != null)
             GetImage(typeof(Images), (int)Images.Image_Icon).sprite = sprite;
     }

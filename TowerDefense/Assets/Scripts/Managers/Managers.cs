@@ -16,6 +16,7 @@ public class Managers : MonoBehaviour
     readonly GameManager gameManager = new();
     readonly ObjectManager objectManager = new();
     readonly CardManager cardManager = new();
+    readonly SkillManager skillManager = new();
     UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
@@ -46,6 +47,7 @@ public class Managers : MonoBehaviour
     public static GameManager GameM { get { return Instance?.gameManager; } }
     public static ObjectManager ObjectM { get { return Instance?.objectManager; } }
     public static CardManager CardM { get { return Instance?.cardManager; } }
+    public static SkillManager SkillM { get { return Instance?.skillManager; } }
 
     public static Managers Instance
     {

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,10 +10,15 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level }
-    enum Buttons { StartWave_Button }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp , Text_SkillPoint }
+    enum Buttons { Button_SkillUpgrade }
     enum Images { Image_LevelFill }
+    enum GameObjects { Content_SkillHorizontal }
 
+
+    Transform parent;
+    private RectTransform _skillBtnRect;
+    private Vector2 _skillBtnOriginPos;
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
     async void Start()
@@ -26,6 +32,9 @@ public class UI_GameScene : UI_Scene
         Managers.GameM.OnExpChanged -= RefreshExp;
         Managers.GameM.OnLevelUp -= LevelUp;
         Managers.WaveM.OnWaveStart -= RefreshWave;
+        Managers.SkillM.OnSlotChanged -= OnSkillSlotChanged;
+        Managers.SkillM.OnSkillPointsChanged -= RefreshSkillPoints;
+        _skillBtnRect?.DOKill();
     }
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────
@@ -37,18 +46,29 @@ public class UI_GameScene : UI_Scene
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
-        GetButton(typeof(Buttons), (int)Buttons.StartWave_Button)
-            .onClick.AddListener(OnStartWaveClicked);
+        //GetButton(typeof(Buttons), (int)Buttons.StartWave_Button).onClick.AddListener(OnStartWaveClicked);
+
+        parent = GetObject(typeof(GameObjects), (int)GameObjects.Content_SkillHorizontal).transform;
+
+        var skillBtn = GetButton(typeof(Buttons), (int)Buttons.Button_SkillUpgrade);
+        skillBtn.onClick.AddListener(OnSkillUpgradeClicked);
+        _skillBtnRect = skillBtn.GetComponent<RectTransform>();
+        _skillBtnOriginPos = _skillBtnRect.anchoredPosition;
+        skillBtn.gameObject.SetActive(false);
 
         Managers.GameM.OnGoldChanged += RefreshGold;
         Managers.GameM.OnExpChanged += RefreshExp;
         Managers.GameM.OnLevelUp += LevelUp;
         Managers.WaveM.OnWaveStart += RefreshWave;
         Managers.WaveM.OnWaveComplete += OnWaveComplete;
+        Managers.SkillM.OnSlotChanged += OnSkillSlotChanged;
+        Managers.SkillM.OnSkillPointsChanged += RefreshSkillPoints;
 
         RefreshGold(Managers.GameM.Gold);
         RefreshWave(Managers.WaveM.CurrentWave);
+        RefreshSkillPoints(Managers.SkillM.SkillPoints);
 
         return true;
     }
@@ -63,26 +83,79 @@ public class UI_GameScene : UI_Scene
     private void RefreshWave(int wave)
     {
         GetText(typeof(Texts), (int)Texts.Text_Wave).text =
-            $"{wave} / {Managers.WaveM.TotalWaves}";
+            $"{wave}";
     }
 
     private void RefreshExp(int exp, int maxExp)
     {
         float amount = (float)exp / maxExp;
+        GetText(typeof(Texts), (int)Texts.Text_Exp).text = $"{(int)(amount * 100)}%";
         GetImage(typeof(Images), (int)Images.Image_LevelFill).fillAmount = amount;
     }
 
-    private void LevelUp(int level, int currentExp)
+    private async void LevelUp(int level, int currentExp)
     {
         GetText(typeof(Texts), (int)Texts.Text_Level).text = level.ToString();
         int required = Managers.GameM.LevelData.GetRequiredExp(level);
         float amount = required > 0 ? (float)currentExp / required : 0f;
         GetImage(typeof(Images), (int)Images.Image_LevelFill).fillAmount = amount;
 
-        Managers.ObjectM.SpawnUI<UI_LevelUpPopup>("UI_LevelUpPopup", transform);
+        var popup  = Managers.ObjectM.SpawnUI<UI_LevelUpPopup>("UI_LevelUpPopup", transform);
+        await popup.Init();
+        popup.SetInfo();
+    }
+
+    private UI_SkillSlot[] _skillSlots = new UI_SkillSlot[3];
+
+    private async void OnSkillSlotChanged(int index, SkillData skill)
+    {
+        if (skill != null && _skillSlots[index] == null)
+        {
+            UI_SkillSlot slot = Managers.ObjectM.SpawnUI<UI_SkillSlot>("UI_SkillSlot", parent);
+            await slot.Init();
+            slot.SetSlotIndex(index);
+            _skillSlots[index] = slot;
+        }
+        else if (skill == null && _skillSlots[index] != null)
+        {
+            Managers.ObjectM.DespawnUI(_skillSlots[index].gameObject);
+            _skillSlots[index] = null;
+        }
+    }
+
+    private void RefreshSkillPoints(int points)
+    {
+        var btn = GetButton(typeof(Buttons), (int)Buttons.Button_SkillUpgrade);
+        GetText(typeof(Texts), (int)Texts.Text_SkillPoint).text = $"+{points}";
+
+        if (points <= 0)
+        {
+            btn.gameObject.SetActive(false);
+            return;
+        }
+
+        _skillBtnRect.DOKill();
+
+        if (!btn.gameObject.activeSelf)
+        {
+            // 0→1: 아래에서 올라오는 입장 애니메이션
+            btn.gameObject.SetActive(true);
+            _skillBtnRect.anchoredPosition = _skillBtnOriginPos + Vector2.down * 80f;
+            _skillBtnRect.DOAnchorPos(_skillBtnOriginPos, 0.45f).SetEase(Ease.OutBack);
+        }
+        else
+        {
+            // 이미 표시 중: 포인트 증가 강조 (펀치 스케일)
+            _skillBtnRect.DOPunchScale(Vector3.one * 0.25f, 0.35f, 6, 0.5f);
+        }
     }
 
     // ─── 버튼 핸들러 ─────────────────────────────────────────────────────────
+
+    private void OnSkillUpgradeClicked()
+    {
+        Managers.UIM.ShowPopup<UI_SkillUpgradePopup>("UI_SkillUpgradePopup");
+    }
 
     private void OnStartWaveClicked()
     {

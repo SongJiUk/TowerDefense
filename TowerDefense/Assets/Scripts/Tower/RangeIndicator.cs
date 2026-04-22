@@ -12,6 +12,7 @@ public class RangeIndicator : MonoBehaviour
     [SerializeField] private float _lineWidth    = 0.1f;
     [SerializeField] private int   _segments     = 64;
     [SerializeField] private float _yOffset      = 0.25f;
+    [SerializeField] private bool  _showOutline  = true;
 
     private GameObject   _disc;
     private LineRenderer _lr;
@@ -47,28 +48,25 @@ public class RangeIndicator : MonoBehaviour
         _lr.enabled  = false;
     }
 
-    public void Show(Vector3 center, float radius)
+    public void Show(Vector3 center, float radius, bool followTerrain = true)
     {
         float centerGroundY = GetGroundY(center.x, center.y, center.z);
 
-        // 부모 lossyScale 역산 → 세계 공간 기준 반지름이 정확히 radius가 되도록
         Vector3 ps = transform.lossyScale;
         _disc.SetActive(true);
         _disc.transform.position   = new Vector3(center.x, centerGroundY + _yOffset, center.z);
         _disc.transform.localScale = new Vector3(radius * 2f / ps.x, 0.01f, radius * 2f / ps.z);
-
-        // 외곽선: 각 점마다 지면 Y를 구해 타일 높낮이 따라감
 
         for (int i = 0; i < _segments; i++)
         {
             float angle = (float)i / _segments * Mathf.PI * 2f;
             float x     = center.x + Mathf.Cos(angle) * radius;
             float z     = center.z + Mathf.Sin(angle) * radius;
-            float y     = GetGroundY(x, center.y, z);
+            float y     = followTerrain ? GetGroundY(x, center.y, z) : centerGroundY;
             _lr.SetPosition(i, new Vector3(x, y + _yOffset, z));
         }
 
-        _lr.enabled = true;
+        _lr.enabled = _showOutline;
     }
 
     public void Hide()

@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "\uC2A4\uD0AC\uD3EC\uC778\uD2B8\uB97C 1\uD68D\uB4DD\uD55C\uB2E4."
   iconKey: SkillPointUp
   category: 3
-  effectType: 12
+  effectType: 13
   effectValue: 1
   weight: 1.2
   maxStack: 99

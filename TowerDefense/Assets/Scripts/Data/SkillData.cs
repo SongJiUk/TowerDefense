@@ -8,13 +8,22 @@ public class SkillData : ScriptableObject
 {
     public string skillName;
     public Define.SkillType skillType;
+    public string Description;
 
     [Header("스탯")]
     public float baseDamage;
     public float baseRange;
+    public float baseDuration;
+    public float cooldown;
+
+    [Header("부가효과")]
+    public float effectValue;
 
     [Header("오브젝트")]
-    public GameObject skillPrefab;
+    public string skillPrefabkey;
+
+    [Header("타겟팅")]
+    public bool isTargeted;
 
     [Header("업드레이드")]
     public SkillUpgradeStep[] upgradeSteps;
