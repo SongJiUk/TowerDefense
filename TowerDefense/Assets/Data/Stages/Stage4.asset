@@ -10,18 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d49259642bd15f4bb19a7384123b357, type: 3}
-  m_Name: Stage1_Forest
+  m_Name: Stage4
   m_EditorClassIdentifier: 
   totalWaves: 10
-  stageHpMultiplier: 1
-  spawnInterval: 1.5
+  stageHpMultiplier: 3.8
+  spawnInterval: 1.2
   waveStartDelay: 3
   enemyPool:
   - enemyData: {fileID: 11400000, guid: 3658b9d84ded3cd4c9247062b2778a33, type: 2}
     fromWave: 1
-    spawnWeight: 4
+    spawnWeight: 2
+  - enemyData: {fileID: 11400000, guid: cb5a66a7986591b4f8abba6818a1264b, type: 2}
+    fromWave: 1
+    spawnWeight: 2
   - enemyData: {fileID: 11400000, guid: 68e549e203ec7c34ba5f3b7db15c5383, type: 2}
-    fromWave: 4
-    spawnWeight: 1
+    fromWave: 1
+    spawnWeight: 2
+  - enemyData: {fileID: 11400000, guid: 59b49c79eca34f049a6706008f9befdc, type: 2}
+    fromWave: 3
+    spawnWeight: 2
   bossEnemy: {fileID: 11400000, guid: dc8f8743d59615a49b242c3912369983, type: 2}
-  bossWaveMinions: 5
+  bossWaveMinions: 8
+  uiBarBG: {r: 0.101960786, g: 0.039215688, b: 0.101960786, a: 1}
+  uiLineColor: {r: 0.54509807, g: 0, b: 0, a: 1}
+  uiAccentColor: {r: 0.8, g: 0, b: 0.2, a: 1}

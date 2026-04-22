@@ -30,6 +30,9 @@ public class Managers : MonoBehaviour
     /// <summary>웨이브 관리 인스턴스. WaveStarter.Start()에서 Init() 후 사용.</summary>
     public static WaveManager WaveM { get; private set; } = new WaveManager();
 
+    /// <summary>로딩씬에서 설정. 1~4 중 하나.</summary>
+    public static int SelectedStage = 1;
+
     /// <summary>적 스폰 위치. SpawnPoint.OnEnable/OnDisable에서 자동 등록/해제.</summary>
     public static SpawnPoint SpawnPoint;
     public static EndPoint EndPoint;

@@ -59,6 +59,8 @@ public class Define
         Percent,
     }
 
+    public enum UpgradeType { Damage, Range, Speed }
+
     public enum CardCategory { A, B, C, D }
     public enum CardEffectType
     {

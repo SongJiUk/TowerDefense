@@ -28,6 +28,9 @@ public class SkillData : ScriptableObject
     [Header("업드레이드")]
     public SkillUpgradeStep[] upgradeSteps;
 
+    [Header("UI")]
+    public Color color;
+
 }
 
 [System.Serializable]

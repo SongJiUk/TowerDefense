@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 public class UI_SkillSlot : UI_Base
 {
-    enum Images { Image_Skill, Image_CoolDown }
+    enum Images { Image_Skill, Image_CoolDown, Image_SlotGlow }
     enum Texts { Text_SkillName, Text_SkillLevel }
     enum Buttons { Button_Skill }
+    enum GameObjects { Object_ReadyDot }
 
     private int _slotIndex;
 
@@ -33,6 +34,7 @@ public class UI_SkillSlot : UI_Base
         BindImage(typeof(Images));
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
+        BindObject(typeof(GameObjects));
 
         BindEvent(
             GetButton(typeof(Buttons), (int)Buttons.Button_Skill).gameObject,
@@ -80,6 +82,8 @@ public class UI_SkillSlot : UI_Base
 
         GetImage(typeof(Images), (int)Images.Image_CoolDown).fillAmount =
             Managers.SkillM.GetCooldownRatio(_slotIndex);
+
+        GetImage(typeof(Images), (int)Images.Image_SlotGlow).color = skill.color;
     }
 
     // ─── 이벤트 ───────────────────────────────────────────────────────────────
@@ -95,6 +99,8 @@ public class UI_SkillSlot : UI_Base
         if (index != _slotIndex) return;
         if (!isInit) return;
         GetImage(typeof(Images), (int)Images.Image_CoolDown).fillAmount = ratio;
+
+        if (ratio == 0) GetObject(typeof(GameObjects), (int)GameObjects.Object_ReadyDot).SetActive(true);
     }
 
     private void OnSkillClicked()

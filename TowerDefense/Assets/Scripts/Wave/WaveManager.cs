@@ -27,6 +27,7 @@ public class WaveManager
     public int CurrentWave => _currentWaveIndex + 1;
     public int TotalWaves => _stageData?.totalWaves ?? 0;
     public bool IsRunning { get; private set; }
+    public StageData CurrentStage => _stageData;
 
     private StageData _stageData;
     private int _currentWaveIndex;

@@ -10,9 +10,13 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp , Text_SkillPoint }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint }
     enum Buttons { Button_SkillUpgrade }
-    enum Images { Image_LevelFill }
+    enum Images
+    {
+        Image_Top, Image_Bottom, Image_LevelFillBG, Image_LevelFill, Image_TopGlow, Image_BottomGlow
+    , Image_WaveSlotGlow, Image_WaveSlot, Image_WaveFillBG, Image_WaveFill, Top_Screen, Bottom_Screen, Image_SkillPointGlow, Image_SkillPointBG
+    }
     enum GameObjects { Content_SkillHorizontal }
 
 
@@ -70,7 +74,40 @@ public class UI_GameScene : UI_Scene
         RefreshWave(Managers.WaveM.CurrentWave);
         RefreshSkillPoints(Managers.SkillM.SkillPoints);
 
+        ApplyTheme(Managers.WaveM.CurrentStage);
+
         return true;
+    }
+    /// <summary>
+    /// </summary>
+    /// <param name="stage"></param> <summary>
+    /// 
+    /// </summary>
+    /// <param name="stage"></param>
+    public override void ApplyTheme(StageData stage)
+    {
+        if (stage == null) return;
+        GetImage(typeof(Images), (int)Images.Image_Top).color = stage.uiBarBG;
+        GetImage(typeof(Images), (int)Images.Image_Bottom).color = stage.uiBarBG;
+
+        GetImage(typeof(Images), (int)Images.Image_TopGlow).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Image_BottomGlow).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Image_WaveSlotGlow).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Image_LevelFillBG).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Image_WaveFillBG).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Top_Screen).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Bottom_Screen).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Image_SkillPointGlow).color = stage.uiLineColor;
+        GetText(typeof(Texts), (int)Texts.Text_Wave).color = stage.uiLineColor;
+        GetText(typeof(Texts), (int)Texts.Text_SkillPoint).color = stage.uiLineColor;
+        GetText(typeof(Texts), (int)Texts.Text_Level).color = stage.uiLineColor;
+
+
+        GetImage(typeof(Images), (int)Images.Image_WaveSlot).color = stage.uiAccentColor;
+        GetImage(typeof(Images), (int)Images.Image_LevelFill).color = stage.uiAccentColor;
+        GetImage(typeof(Images), (int)Images.Image_WaveFill).color = stage.uiAccentColor;
+        GetImage(typeof(Images), (int)Images.Image_SkillPointBG).color = stage.uiAccentColor;
+
     }
 
     // ─── 갱신 ─────────────────────────────────────────────────────────────────
@@ -100,7 +137,7 @@ public class UI_GameScene : UI_Scene
         float amount = required > 0 ? (float)currentExp / required : 0f;
         GetImage(typeof(Images), (int)Images.Image_LevelFill).fillAmount = amount;
 
-        var popup  = Managers.ObjectM.SpawnUI<UI_LevelUpPopup>("UI_LevelUpPopup", transform);
+        var popup = Managers.ObjectM.SpawnUI<UI_LevelUpPopup>("UI_LevelUpPopup", transform);
         await popup.Init();
         popup.SetInfo();
     }
@@ -121,6 +158,8 @@ public class UI_GameScene : UI_Scene
             Managers.ObjectM.DespawnUI(_skillSlots[index].gameObject);
             _skillSlots[index] = null;
         }
+
+        RefreshSkillPoints(Managers.SkillM.SkillPoints);
     }
 
     private void RefreshSkillPoints(int points)
@@ -128,7 +167,17 @@ public class UI_GameScene : UI_Scene
         var btn = GetButton(typeof(Buttons), (int)Buttons.Button_SkillUpgrade);
         GetText(typeof(Texts), (int)Texts.Text_SkillPoint).text = $"+{points}";
 
-        if (points <= 0)
+        bool hasUpgradable = false;
+        for (int i = 0; i < 3; i++)
+        {
+            if (Managers.SkillM.GetSlot(i) != null && Managers.SkillM.CanUpgrade(i))
+            {
+                hasUpgradable = true;
+                break;
+            }
+        }
+
+        if (points <= 0 || !hasUpgradable)
         {
             btn.gameObject.SetActive(false);
             return;

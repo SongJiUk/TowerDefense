@@ -1,13 +1,7 @@
 using UnityEngine;
 
-/// <summary>
-/// 배치된 타워 하나의 타겟팅·공격·업그레이드를 담당.
-/// TowerPlacer.HandleTowerSelected()에서 Init(data)로 초기화된다.
-/// 매 프레임 공격 타이머를 감소시키고, 사거리 내 적을 탐색해 투사체를 발사한다.
-/// </summary>
 public class TowerController : MonoBehaviour
 {
-    /// <summary>총구 위치. 없으면 자신 위치 + up에서 발사.</summary>
     [SerializeField] private Transform _firePoint;
     [SerializeField] private GameObject _turnObject;
 
@@ -15,23 +9,25 @@ public class TowerController : MonoBehaviour
 
     public TowerData Data { get; private set; }
 
-    /// <summary>현재 레벨. 0 = 기본, 1 이상 = upgradeSteps[level-1] 적용.</summary>
-    public int CurrentLevel { get; private set; } = 0;
+    public int DamageLevel { get; private set; }
+    public int RangeLevel  { get; private set; }
+    public int SpeedLevel  { get; private set; }
 
-    private float _baseDamage;
-    protected float _currentDamage;
-    private float _baseAttackSpeed;
+    private float _currentDamage;
     private float _currentAttackSpeed;
-    private float _baseRange;
     private float _currentRange;
+
+    protected float CurrentRange => _currentRange;
+    protected float CurrentDamage => _currentDamage;
 
     private float _attackTimer;
     private Transform _currentTarget;
 
     protected static int _enemyMask;
     private static TowerController _selectedTower;
-    private RangeIndicator _rangeIndicator;
+    private static UI_TowerUpgradePopup _upgradePopup;
 
+    private RangeIndicator _rangeIndicator;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -51,6 +47,12 @@ public class TowerController : MonoBehaviour
     {
         if (Managers.GameM != null)
             Managers.GameM.OnCardApplied -= ApplyStats;
+
+        if (_selectedTower == this)
+        {
+            HideUpgradePopupInternal();
+            _selectedTower = null;
+        }
     }
 
     void OnMouseUp()
@@ -63,19 +65,23 @@ public class TowerController : MonoBehaviour
 #endif
         if (Data == null) return;
 
-        // 다른 타워 선택 시 기존 범위 숨김
         if (_selectedTower != null && _selectedTower != this)
+        {
             _selectedTower.HideRange();
+            HideUpgradePopupInternal();
+        }
 
         if (_selectedTower == this)
         {
             HideRange();
+            HideUpgradePopupInternal();
             _selectedTower = null;
         }
         else
         {
             _selectedTower = this;
             _rangeIndicator?.Show(transform.position, _currentRange);
+            ShowUpgradePopup();
         }
     }
 
@@ -101,7 +107,7 @@ public class TowerController : MonoBehaviour
                 return;
             }
 
-            var dir = _currentTarget.transform.position - _turnObject.transform.position;
+            var dir = _currentTarget.position - _turnObject.transform.position;
             dir.y = 0;
             _turnObject.transform.rotation = Quaternion.RotateTowards(
                 _turnObject.transform.rotation,
@@ -109,9 +115,7 @@ public class TowerController : MonoBehaviour
                 Time.deltaTime * 360f);
         }
 
-
-        if (_attackTimer > 0f) return;
-        if (_currentTarget == null) return;
+        if (_attackTimer > 0f || _currentTarget == null) return;
 
         float distBeforeFire = Vector2.Distance(
             new Vector2(_currentTarget.position.x, _currentTarget.position.z),
@@ -128,65 +132,59 @@ public class TowerController : MonoBehaviour
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// TowerPlacer가 타워를 설치할 때 호출. 데이터를 주입하고 스탯을 계산한다.
-    /// </summary>
     public virtual void Init(TowerData data)
     {
         Data = data;
-        CurrentLevel = 0;
+        DamageLevel = 0;
+        RangeLevel  = 0;
+        SpeedLevel  = 0;
         ApplyStats();
     }
 
     // ─── 업그레이드 ───────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// 업그레이드 시도. 골드가 부족하거나 최대 레벨이면 false 반환.
-    /// 성공 시 CurrentLevel 증가 후 ApplyStats()로 스탯을 재계산한다.
-    /// </summary>
-    public bool TryUpgrade()
+    public bool CanUpgrade(Define.UpgradeType type)
     {
-        if (Data.upgradeSteps == null) return false;
-        if (CurrentLevel >= Data.upgradeSteps.Length) return false;
+        TowerStatUpgrade[] steps = GetUpgradeSteps(type);
+        return steps != null && GetLevel(type) < steps.Length;
+    }
 
-        int cost = Data.upgradeSteps[CurrentLevel].upgradeCost;
+    public bool TryUpgrade(Define.UpgradeType type)
+    {
+        TowerStatUpgrade[] steps = GetUpgradeSteps(type);
+        int level = GetLevel(type);
+        if (steps == null || level >= steps.Length) return false;
+
+        int cost = steps[level].cost;
         if (!Managers.GameM.SpendGold(cost)) return false;
 
-        CurrentLevel++;
+        SetLevel(type, level + 1);
         ApplyStats();
         return true;
     }
 
-    // ─── 내부 로직 ────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// 현재 레벨에 따라 데미지·공격속도·사거리를 계산해 적용.
-    /// 레벨 0이면 baseStats 그대로, 이상이면 upgradeSteps의 배율 적용.
-    /// </summary>
-    private void ApplyStats()
+    public int GetSellPrice()
     {
-        _baseDamage = Data.baseDamage;
-        _baseAttackSpeed = Data.baseAttackSpeed;
-        _baseRange = Data.baseRange;
-
-        if (CurrentLevel > 0 && Data.upgradeSteps != null
-            && CurrentLevel <= Data.upgradeSteps.Length)
-        {
-            TowerUpgradeStep step = Data.upgradeSteps[CurrentLevel - 1];
-            _baseDamage *= step.damageMultiplier;
-            _baseAttackSpeed *= step.attackSpeedMultiplier;
-            _baseRange += step.rangeBonus;
-        }
-
-        _currentDamage = _baseDamage * Managers.GameM.globalDamageMultiplier;
-        _currentAttackSpeed = _baseAttackSpeed * Managers.GameM.globalAttackSpeedMultiplier;
-        _currentRange = _baseRange + Managers.GameM.globalRangeBonus;
+        int total = Data.buildCost;
+        total += SumSpentCost(Data.damageUpgrades, DamageLevel);
+        total += SumSpentCost(Data.rangeUpgrades,  RangeLevel);
+        total += SumSpentCost(Data.speedUpgrades,  SpeedLevel);
+        return total / 2;
     }
 
-    public void HideRange()
+    public void Sell()
     {
-        _rangeIndicator?.Hide();
+        Managers.GameM.AddGold(GetSellPrice());
+        Managers.Grid.SetOccupied(transform.position, false);
+        HideRange();
+        HideUpgradePopupInternal();
+        if (_selectedTower == this) _selectedTower = null;
+        Managers.ResourceM.Destroy(gameObject);
     }
+
+    // ─── 공개 유틸 ────────────────────────────────────────────────────────────
+
+    public void HideRange() => _rangeIndicator?.Hide();
 
     public static void HideSelectedRange()
     {
@@ -195,41 +193,69 @@ public class TowerController : MonoBehaviour
         _selectedTower = null;
     }
 
-    /// <summary>
-    /// 사거리 내 Enemy 레이어 오브젝트를 탐색해 코어에 가장 가까운 적을 반환.
-    /// 코어에 가장 가까운 적 = 경로를 가장 많이 진행한 적 = 가장 위험한 적.
-    /// </summary>
-    private Transform FindTarget()
+    // ─── 팝업 관리 (static) ──────────────────────────────────────────────────
+
+    private void ShowUpgradePopup()
     {
-        // Y축 무시: 수직 캡슐로 XZ 수평 거리만 체크
+        if (_upgradePopup == null)
+        {
+            GameObject go = Managers.ResourceM.Instantiate("UI_TowerUpgradePopup", _pooling: false);
+            go.transform.SetParent(Managers.UIM.Root.transform, false);
+            _upgradePopup = go.GetOrAddComponent<UI_TowerUpgradePopup>();
+        }
+        _upgradePopup.gameObject.SetActive(true);
+        _upgradePopup.Show(this);
+    }
+
+    private static void HideUpgradePopupInternal()
+    {
+        if (_upgradePopup != null)
+            _upgradePopup.gameObject.SetActive(false);
+    }
+
+    // ─── 내부 로직 ────────────────────────────────────────────────────────────
+
+    private void ApplyStats()
+    {
+        if (Data == null) return;
+
+        float damage = Data.baseDamage;
+        float speed  = Data.baseAttackSpeed;
+        float range  = Data.baseRange;
+
+        if (DamageLevel > 0 && Data.damageUpgrades != null && DamageLevel <= Data.damageUpgrades.Length)
+            damage *= Data.damageUpgrades[DamageLevel - 1].multiplier;
+
+        if (SpeedLevel > 0 && Data.speedUpgrades != null && SpeedLevel <= Data.speedUpgrades.Length)
+            speed *= Data.speedUpgrades[SpeedLevel - 1].multiplier;
+
+        if (RangeLevel > 0 && Data.rangeUpgrades != null && RangeLevel <= Data.rangeUpgrades.Length)
+            range *= Data.rangeUpgrades[RangeLevel - 1].multiplier;
+
+        _currentDamage      = damage * Managers.GameM.globalDamageMultiplier;
+        _currentAttackSpeed = speed  * Managers.GameM.globalAttackSpeedMultiplier;
+        _currentRange       = range  + Managers.GameM.globalRangeBonus;
+    }
+
+    protected virtual Transform FindTarget()
+    {
         Vector3 bottom = new Vector3(transform.position.x, -50f, transform.position.z);
-        Vector3 top = new Vector3(transform.position.x, 50f, transform.position.z);
+        Vector3 top    = new Vector3(transform.position.x,  50f, transform.position.z);
         Collider[] hits = Physics.OverlapCapsule(bottom, top, _currentRange, _enemyMask, QueryTriggerInteraction.Collide);
         if (hits.Length == 0) return null;
 
         Transform best = null;
         float minDist = float.MaxValue;
-        Vector3 corePos = Managers.CoreTransform != null
-                            ? Managers.CoreTransform.position
-                            : Vector3.zero;
+        Vector3 corePos = Managers.CoreTransform != null ? Managers.CoreTransform.position : Vector3.zero;
 
         foreach (Collider col in hits)
         {
             float dist = Vector3.Distance(col.transform.position, corePos);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                best = col.transform;
-            }
+            if (dist < minDist) { minDist = dist; best = col.transform; }
         }
-
         return best;
     }
 
-    /// <summary>
-    /// _firePoint 위치에서 투사체를 스폰하고 타겟·데미지·속도를 전달한다.
-    /// projectilePrefab이 null이면 아무것도 하지 않는다.
-    /// </summary>
     private void Fire(Transform target)
     {
         if (Data.projectilePrefabKey == null) return;
@@ -241,19 +267,54 @@ public class TowerController : MonoBehaviour
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
         GameObject go = Managers.PoolM.Pop(Data.projectilePrefabKey);
         go.transform.position = spawnPos;
-
         go.GetComponent<ProjectileController>()?.Init(target, damage, Data.projectileSpeed, onHit: OnHit);
     }
 
     protected virtual void OnHit(Transform target) { }
 
+    // ─── 헬퍼 ────────────────────────────────────────────────────────────────
+
+    private TowerStatUpgrade[] GetUpgradeSteps(Define.UpgradeType type) => type switch
+    {
+        Define.UpgradeType.Damage => Data?.damageUpgrades,
+        Define.UpgradeType.Range  => Data?.rangeUpgrades,
+        Define.UpgradeType.Speed  => Data?.speedUpgrades,
+        _ => null
+    };
+
+    private int GetLevel(Define.UpgradeType type) => type switch
+    {
+        Define.UpgradeType.Damage => DamageLevel,
+        Define.UpgradeType.Range  => RangeLevel,
+        Define.UpgradeType.Speed  => SpeedLevel,
+        _ => 0
+    };
+
+    private void SetLevel(Define.UpgradeType type, int value)
+    {
+        switch (type)
+        {
+            case Define.UpgradeType.Damage: DamageLevel = value; break;
+            case Define.UpgradeType.Range:  RangeLevel  = value; break;
+            case Define.UpgradeType.Speed:  SpeedLevel  = value; break;
+        }
+    }
+
+    private static int SumSpentCost(TowerStatUpgrade[] steps, int level)
+    {
+        if (steps == null) return 0;
+        int sum = 0;
+        for (int i = 0; i < level && i < steps.Length; i++)
+            sum += steps[i].cost;
+        return sum;
+    }
+
 #if UNITY_EDITOR
-    /// <summary>씬 뷰에서 타워 선택 시 사거리를 파란 원으로 표시.</summary>
     protected virtual void OnDrawGizmosSelected()
     {
         if (Data == null) return;
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, _currentRange);
+        Gizmos.DrawWireSphere(transform.position, Data.baseRange);
     }
 #endif
 }

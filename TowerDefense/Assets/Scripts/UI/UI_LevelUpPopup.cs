@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 레벨업 시 표시되는 카드 선택 팝업.
@@ -10,6 +11,7 @@ using UnityEngine;
 public class UI_LevelUpPopup : UI_Base
 {
     enum Objects { Content_Horizontal }
+    enum Images  { Image_Background }  // 팝업 배경 이미지 이름에 맞게 조정
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -28,6 +30,7 @@ public class UI_LevelUpPopup : UI_Base
         if (!await base.Init()) return false;
 
         BindObject(typeof(Objects));
+        BindImage(typeof(Images));
 
         Transform parent = GetObject(typeof(Objects), (int)Objects.Content_Horizontal).transform;
 
@@ -39,7 +42,16 @@ public class UI_LevelUpPopup : UI_Base
             item.SetInfo(cardData, OnCardSelected);
         }
 
+        ApplyTheme(Managers.WaveM.CurrentStage);
+
         return true;
+    }
+
+    public override void ApplyTheme(StageData stage)
+    {
+        if (stage == null) return;
+        GetImage(typeof(Images), (int)Images.Image_Background).color = stage.uiBarBG;
+        // 필요한 오브젝트 추가
     }
 
     // ─── 카드 선택 ────────────────────────────────────────────────────────────

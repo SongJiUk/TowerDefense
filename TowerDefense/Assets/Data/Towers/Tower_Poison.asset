@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 165fb32f199bc40dfb7fa5422c4d41c9, type: 3}
+  m_Name: Tower_Poison
+  m_EditorClassIdentifier: 
+  towerName: "\uB3C5\uD0D1"
+  towerType: 4
+  baseDamage: 8
+  baseAttackSpeed: 1.2
+  baseRange: 5
+  projectilePrefabKey: Fire
+  projectileSpeed: 10
+  damageUpgrades:
+  - upgradeName: "\uB18D\uCD95 \uB3C5"
+    description: "+25% \uACF5\uACA9\uB825"
+    cost: 60
+    multiplier: 1.25
+  - upgradeName: "\uB9F9\uB3C5"
+    description: "+55% \uACF5\uACA9\uB825"
+    cost: 120
+    multiplier: 1.55
+  - upgradeName: "\uCE58\uC0AC \uB3C5\uC18C"
+    description: "+100% \uACF5\uACA9\uB825"
+    cost: 240
+    multiplier: 2
+  rangeUpgrades:
+  - upgradeName: "\uB3C5 \uBD84\uC0AC"
+    description: "+25% \uC0AC\uAC70\uB9AC"
+    cost: 70
+    multiplier: 1.25
+  - upgradeName: "\uAD11\uC5ED \uC624\uC5FC"
+    description: "+55% \uC0AC\uAC70\uB9AC"
+    cost: 140
+    multiplier: 1.55
+  - upgradeName: "\uB3C5\uAE30 \uC9C0\uBC30"
+    description: "+100% \uC0AC\uAC70\uB9AC"
+    cost: 280
+    multiplier: 2
+  speedUpgrades:
+  - upgradeName: "\uB3C5 \uC8FC\uC0AC\uAE30"
+    description: "+35% \uC18D\uB3C4"
+    cost: 80
+    multiplier: 1.35
+  - upgradeName: "\uC5F0\uC18D \uAC10\uC5FC"
+    description: "+70% \uC18D\uB3C4"
+    cost: 160
+    multiplier: 1.7
+  - upgradeName: "\uC804\uC5FC \uD3ED\uD48D"
+    description: "+130% \uC18D\uB3C4"
+    cost: 320
+    multiplier: 2.3
+  buildCost: 1
+  addressableKey: PoisonTower
+  iconKey: PoisonTower
+  poisonDps: 0.03
+  poisonDuration: 4

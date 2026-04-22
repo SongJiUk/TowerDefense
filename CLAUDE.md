@@ -34,12 +34,12 @@
 
 ## 스테이지 테마
 
-| # | 테마 | 에셋 |
-|---|------|------|
-| 1 | 숲 | Forest Low Poly Toon Battle Arena |
-| 2 | 사막 | Desert Low Poly Toon Battle Arena |
-| 3 | 겨울 | Winter Forest Low Poly Toon Battle Arena |
-| 4 | 던전 | Dungeon Low Poly Toon Battle Arena |
+| # | 테마 | 에셋 | 바 배경 | 라인 색 | 강조 색 |
+|---|------|------|---------|---------|---------|
+| 1 | 🌲 숲 | Forest Low Poly Toon Battle Arena | `#1C2E0A` | `#5A8A1A` | `#8BC34A` |
+| 2 | 🏜️ 사막 | Desert Low Poly Toon Battle Arena | `#2E1A08` | `#C8860A` | `#FFB300` |
+| 3 | ❄️ 겨울 | Winter Forest Low Poly Toon Battle Arena | `#0A1A2E` | `#4A90C8` | `#80D8FF` |
+| 4 | 🏰 악마성 | Dungeon Low Poly Toon Battle Arena | `#1A0A1A` | `#8B0000` | `#CC0033` |
 
 ---
 

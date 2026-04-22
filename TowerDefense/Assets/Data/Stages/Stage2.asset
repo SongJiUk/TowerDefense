@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d49259642bd15f4bb19a7384123b357, type: 3}
-  m_Name: Stage2_Desert
+  m_Name: Stage2
   m_EditorClassIdentifier: 
   totalWaves: 10
   stageHpMultiplier: 1.6
@@ -28,3 +28,6 @@ MonoBehaviour:
     spawnWeight: 1
   bossEnemy: {fileID: 11400000, guid: dc8f8743d59615a49b242c3912369983, type: 2}
   bossWaveMinions: 6
+  uiBarBG: {r: 0.18039216, g: 0.101960786, b: 0.03137255, a: 1}
+  uiLineColor: {r: 0.78431374, g: 0.5254902, b: 0.039215688, a: 1}
+  uiAccentColor: {r: 1, g: 0.7019608, b: 0, a: 1}

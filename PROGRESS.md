@@ -1,6 +1,6 @@
 # 개발 진행 현황
 
-> 마지막 업데이트: 2026-04-21
+> 마지막 업데이트: 2026-04-22
 
 ---
 
@@ -54,13 +54,24 @@
 
 ## 🔴 즉시 할 것
 
-- [ ] **스킬 실제 로직 구현** — `SkillManager.ExecuteSkill()` 5종 효과
+- [x] **스킬 실제 로직 구현** — `SkillManager.ExecuteSkill()` 5종 효과
   - `Block` — 임시 장애물 생성 (경로 재계산 트리거)
   - `ArrowRain` — 범위 내 모든 적에게 대미지
   - `Freeze` — 범위 내 적에게 SlowEffect 적용
-  - `LightningStorm` — 연쇄 번개 (적 3마리 연속 대미지)
-  - `PoisonMist` — 범위 내 적에게 PoisonEffect 적용
-- [ ] **타워 업그레이드 UI** — 배치된 타워 클릭 → 업그레이드/판매 팝업
+  - `LightningStorm` — 범위 내 **모든 적**에게 번개 (연쇄 제거)
+  - `PoisonMist` — 지속 도트존 생성 (PoisonMistZone 유니태스크 루프)
+- [x] **타워 업그레이드 UI** — 클릭 시 공격력/사거리/속도 3열 독립 업그레이드 팝업
+  - TowerController: DamageLevel/RangeLevel/SpeedLevel 독립 관리
+  - TowerController: TryUpgrade/GetSellPrice/Sell 구현
+  - UI_TowerUpgradePopup: Binding 패턴 (Txts/Btns/GO enum + 2D 인덱스 테이블)
+  - PoisonTowerController: 독 미적용 적 우선 타겟 (HasEffect<PoisonEffect> 활용)
+- [x] **TowerData ScriptableObject 자동 생성** — TowerDataGenerator (에디터 메뉴)
+- [x] **Addressables PrevLoad 전환** — TowerPlacer/TowerController Inspector 의존 제거
+
+⚠️ **Unity Editor 작업 필요**
+- UI_TowerUpgradePopup 프리팹 제작 (오브젝트 이름: Card_D0~S2, Done_D0~S2, Btn_D0~S2, Txt_*_Name/Desc/Cost)
+- TowerDefense → 타워 데이터 자동 생성 실행 후 addressableKey/projectilePrefabKey/iconKey 연결
+- Addressables에 UI_TowerSelectPopup + UI_TowerUpgradePopup + TowerData 6종 → PrevLoad 레이블 추가
 
 ## 🟡 콘텐츠 추가
 

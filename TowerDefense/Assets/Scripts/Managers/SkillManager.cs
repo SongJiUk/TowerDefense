@@ -19,6 +19,7 @@ public class SkillManager
     private int _pendingTargetSlot = -1;
     public bool IsTargeting => _pendingTargetSlot >= 0;
     public float TargetingRange { get; private set; }
+    public SkillData PendingSkill => IsTargeting ? _slots[_pendingTargetSlot] : null;
 
     public event Action<int, SkillData> OnSlotChanged;
     public event Action<int, float> OnCooldownChanged;  // (slotIndex, ratio 0~1)
@@ -217,22 +218,38 @@ public class SkillManager
                 break;
 
             case Define.SkillType.Block:
-                // TODO: 경로에 장애물 스폰
+                GridNode blockNode = Managers.Grid?.GetNode(targetPos);
+                if (blockNode == null || blockNode.NodeType != NodeType.Road || !blockNode.CanWalk) break;
+
+                GameObject blockGo = Managers.PoolM.Pop(skill.skillPrefabkey);
+                if (blockGo == null) break;
+
+                blockGo.transform.position = blockNode.WorldPosition;
+                if (blockGo.TryGetComponent(out BlockObstacle obstacle))
+                    obstacle.Init(duration > 0f ? duration : 10f);
+
+                Managers.Grid.SetOccupied(blockNode.WorldPosition, true);
                 break;
 
             case Define.SkillType.Freeze:
                 var freezeHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[Freeze] targetPos={targetPos}, range={range}, hits={freezeHits.Length}");
                 foreach (var hit in freezeHits)
-                    hit.GetComponent<BuffHandler>()?.AddEffect(new FreezeEffect(skill.effectValue, duration));
+                    hit.GetComponent<BuffHandler>()?.AddEffect(new FreezeEffect(duration));
                 break;
 
             case Define.SkillType.LightningStorm:
-                // TODO: 연쇄 번개 (int)effectValue 회
+                var stormHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
+                foreach (var hit in stormHits)
+                    hit.GetComponent<IDamageable>()?.TakeDamage(damage);
                 break;
 
             case Define.SkillType.PoisonMist:
-                // TODO: 범위 내 적 PoisonEffect 적용
+                GameObject mistGo = Managers.PoolM.Pop(skill.skillPrefabkey);
+                if (mistGo == null) break;
+                mistGo.transform.position = targetPos;
+                if (mistGo.TryGetComponent(out PoisonMistZone mistZone))
+                    mistZone.Init(range, skill.effectValue, duration > 0f ? duration : 10f);
                 break;
         }
     }
@@ -241,6 +258,12 @@ public class SkillManager
 
     public void Clear()
     {
+        if (IsTargeting)
+        {
+            _pendingTargetSlot = -1;
+            OnTargetingCancelled?.Invoke();
+        }
+
         for (int i = 0; i < MAX_SLOTS; i++)
         {
             _cooldownCts[i]?.Cancel();
