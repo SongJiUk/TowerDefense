@@ -8,6 +8,20 @@ public class UIManager
 {
     public readonly Stack<UI_Base> popupStack = new();
 
+    private int _pauseCount = 0;
+
+    public void RequestPause()
+    {
+        _pauseCount++;
+        Time.timeScale = 0f;
+    }
+
+    public void ReleasePause()
+    {
+        _pauseCount = Mathf.Max(0, _pauseCount - 1);
+        if (_pauseCount == 0) Time.timeScale = 1f;
+    }
+
     UI_Scene sceneUI = null;
     public UI_Scene SceneUI => sceneUI;
 
@@ -95,6 +109,7 @@ public class UIManager
         popupStack.Push(popup);
         go.transform.SetAsLastSibling();
         popup.Init().Forget();
+        RequestPause();
 
         return popup;
     }
@@ -104,6 +119,7 @@ public class UIManager
         if (popupStack.Count == 0) return;
         UI_Base popup = popupStack.Pop();
         Managers.ResourceM.Destroy(popup.gameObject);
+        ReleasePause();
     }
 
     public void CloseAllPopup()
@@ -118,6 +134,8 @@ public class UIManager
     public void Clear()
     {
         CloseAllPopup();
+        _pauseCount = 0;
+        Time.timeScale = 1f;
         if (sceneUI != null)
         {
             Managers.ResourceM.Destroy(sceneUI.gameObject);

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: AttackSpeedUp
   Description: "\uD2B9\uC815 \uD0C0\uC6CC \uC885\uB958\uC758 \uACF5\uACA9\uC18D\uB3C4\uB97C
-    25\uD37C \uC99D\uAC00\uC2DC\uD0A8\uB2E4. 3\uD68C\uAE4C\uC9C0 \uC911\uCCA9 \uAC00\uB2A5\uD558\uB2E4."
+    25\uD37C \uC99D\uAC00\uC2DC\uD0A8\uB2E4. \\n3\uD68C\uAE4C\uC9C0 \uC911\uCCA9
+    \uAC00\uB2A5\uD558\uB2E4."
   iconKey: AttackSpeedUp
   category: 0
   effectType: 1

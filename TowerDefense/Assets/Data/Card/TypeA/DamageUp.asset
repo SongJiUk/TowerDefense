@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: DamageUp
   Description: "\uBAA8\uB4E0 \uD0C0\uC6CC\uC758 \uACF5\uACA9\uB825\uC744 12% \uC0C1\uC2B9\uC2DC\uD0A8\uB2E4.
-    3\uD68C \uC911\uCCA9 \uAC00\uB2A5"
+    \\n3\uD68C \uC911\uCCA9 \uAC00\uB2A5"
   iconKey: DamageUp
   category: 0
   effectType: 0

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: BuildCostDown
   Description: "\uC2A4\uD14C\uC774\uC9C0\uAC00 \uC885\uB8CC\uB420\uB54C\uAE4C\uC9C0
-    \uD0C0\uC6CC \uC124\uCE58\uBE44\uAC00 20%\uC800\uB834\uD574\uC9C4\uB2E4. 2\uD68C
+    \uD0C0\uC6CC \uC124\uCE58\uBE44\uAC00 20%\uC800\uB834\uD574\uC9C4\uB2E4. \\n2\uD68C
     \uC911\uCCA9 \uAC00\uB2A5\uD558\uB2E4."
-  iconKey: DamageUp
+  iconKey: BuildCostDown
   category: 1
   effectType: 6
   effectValue: 0.2

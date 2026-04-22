@@ -4,6 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.U2D;
 using Object = UnityEngine.Object;
 
 public class ResourceManager
@@ -11,6 +12,13 @@ public class ResourceManager
     Dictionary<string, Object> resourceDic = new();
     Dictionary<string, string> keyToLabelDic = new();
 
+    public SpriteAtlas atlas;
+    public Sprite GetAtlas(string _temp)
+    {
+        if (atlas == null) atlas = Managers.ResourceM.Load<SpriteAtlas>("Atlas");
+
+        return atlas.GetSprite(_temp);
+    }
     public T Load<T>(string _key) where T : Object
     {
         if (resourceDic.TryGetValue(_key, out Object resource))

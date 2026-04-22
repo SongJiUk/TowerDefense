@@ -18,6 +18,9 @@ public class UI_LevelUpPopup : UI_Base
         await Init();
     }
 
+    void OnEnable()  => Managers.UIM.RequestPause();
+    void OnDisable() => Managers.UIM.ReleasePause();
+
     // ─── 초기화 ───────────────────────────────────────────────────────────────
 
     public override async UniTask<bool> Init()
@@ -32,6 +35,7 @@ public class UI_LevelUpPopup : UI_Base
         foreach (CardData cardData in cards)
         {
             UI_CardItem item = Managers.ObjectM.SpawnUI<UI_CardItem>("UI_CardItem", parent);
+            await item.Init();
             item.SetInfo(cardData, OnCardSelected);
         }
 

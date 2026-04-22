@@ -90,6 +90,10 @@ public class WaveManager
         int cleared = CurrentWave;
         _currentWaveIndex++;
 
+        int waveBonus = Mathf.RoundToInt(cleared * 10 * Managers.GameM.waveBonusMultiplier);
+        Managers.GameM.AddGold(waveBonus);
+        Managers.GameM.waveBonusMultiplier = 1f;
+
         OnWaveComplete?.Invoke(cleared);
 
         if (_currentWaveIndex >= _stageData.totalWaves)

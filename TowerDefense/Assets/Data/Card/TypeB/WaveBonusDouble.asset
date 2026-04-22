@@ -15,7 +15,7 @@ MonoBehaviour:
   cardName: WaveBonusDouble
   Description: "\uB2E4\uC74C \uC6E8\uC774\uBE0C \uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4\uAC00
     2\uBC30\uAC00\uB41C\uB2E4."
-  iconKey: DamageUp
+  iconKey: WaveBonusDouble
   category: 1
   effectType: 7
   effectValue: 2

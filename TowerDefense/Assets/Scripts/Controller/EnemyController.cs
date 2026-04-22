@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public void Init(EnemyData data, float hpMultiplier = 1f, float speedMultiplier = 1f)
     {
         _data = data;
-        _hp = data.baseHp * hpMultiplier;
+        _hp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier;
         _baseSpeed = data.baseMoveSpeed * speedMultiplier;
         _speed = _baseSpeed;
         _currentTarget = transform.position;
@@ -75,8 +75,6 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (_isDead) return;
         _hp -= damage;
-
-        Debug.Log($"[EnemyController] Damage : {damage}");
         if (_hp <= 0f) Die();
     }
 
@@ -93,7 +91,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         _isDead = true;
         Managers.WaveM.OnEnemyRemoved();
-        Managers.GameM.AddGold(_data.baseReward);
+        Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));
         Managers.GameM.AddExp(_data.rewardExp);
         Managers.ResourceM.Destroy(gameObject);
     }
@@ -181,11 +179,12 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     /// <summary>
     /// 코어 도달 처리.
-    /// TODO: 코어 HP 차감 연결 필요.
     /// WaveManager에 제거 알림 후 풀 반환.
     /// </summary>
     private void OnReachCore()
     {
+        if (_isDead) return;
+        _isDead = true;
         Managers.ICore?.TakeDamage(_data.coreDamage);
         Managers.WaveM.OnEnemyRemoved();
         Managers.ResourceM.Destroy(gameObject);
