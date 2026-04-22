@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,7 +13,9 @@ using UnityEngine.EventSystems;
 ///   → 골드 차감 → PoolM.Pop(prefab) → TowerController.Init(data) → SetOccupied
 ///
 /// Inspector 연결 필수:
-///   _cam(Main Camera), _markerLayer(Marker), _popup(UI_TowerSelectPopup), _allTowerData[6]
+///   _cam(Main Camera), _markerLayer(Marker)
+/// Addressable PrevLoad 필수:
+///   UI_TowerSelectPopup 프리팹, TowerData 6종
 /// </summary>
 public class TowerPlacer : MonoBehaviour
 {
@@ -20,9 +23,9 @@ public class TowerPlacer : MonoBehaviour
 
     [SerializeField] private Camera _cam;
     [SerializeField] private LayerMask _markerLayer;
-    [SerializeField] private UI_TowerSelectPopup _popup;
-    [SerializeField] private TowerData[] _allTowerData;   // 6종 ScriptableObject
 
+    private UI_TowerSelectPopup _popup;
+    private TowerData[] _allTowerData;
     private GridNode _pendingNode;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
@@ -33,8 +36,19 @@ public class TowerPlacer : MonoBehaviour
         if (_cam == null) _cam = Camera.main;
     }
 
-    void Start()
+    async void Start()
     {
+        // 팝업 프리팹 인스턴스 생성 (PrevLoad로 미리 로드된 상태)
+        GameObject popupGo = Managers.ResourceM.Instantiate("UI_TowerSelectPopup", _pooling: false);
+        popupGo.transform.SetParent(Managers.UIM.Root.transform, false);
+        _popup = popupGo.GetOrAddComponent<UI_TowerSelectPopup>();
+        await _popup.Init();
+
+        // TowerData 6종 — TowerType 순서대로 정렬 (팝업 버튼 순서와 일치)
+        var loaded = Managers.ResourceM.GetAllLoaded<TowerData>();
+        loaded.Sort((a, b) => a.towerType.CompareTo(b.towerType));
+        _allTowerData = loaded.ToArray();
+
         _popup.OnTowerSelected += HandleTowerSelected;
         _popup.Hide();
     }
@@ -49,6 +63,7 @@ public class TowerPlacer : MonoBehaviour
 
     void Update()
     {
+        if (_popup == null) return;
         if (!Input.GetMouseButtonUp(0)) return;
         if (CameraController.IsDragging) return;
 
@@ -66,27 +81,18 @@ public class TowerPlacer : MonoBehaviour
             return;
         }
 
-        // Placeable이 아닌 곳 클릭 → 팝업 닫기
         _popup.Hide();
     }
 
     // ─── 내부 로직 ────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Marker 레이어에만 Physics.Raycast를 쏴서 클릭한 GridNode를 반환.
-    /// 마커 큐브는 부피가 있어 쿼터뷰(45도)에서도 정확하게 클릭 감지 가능.
-    /// (이전: Plane.Raycast 방식은 얇은 타일 콜라이더로 정확도가 낮았음)
-    /// </summary>
     private GridNode GetNodeFromScreen(Vector3 screenPos)
     {
         Ray ray = _cam.ScreenPointToRay(screenPos);
-
         if (!Physics.Raycast(ray, out RaycastHit hit, 200f, _markerLayer)) return null;
-
         return Managers.Grid?.GetNode(hit.transform.position);
     }
 
-    /// <summary>팝업을 열고 _pendingNode를 저장한다.</summary>
     private void OpenPopup(GridNode node)
     {
         _pendingNode = node;
@@ -94,10 +100,6 @@ public class TowerPlacer : MonoBehaviour
         _popup.Show(screenPos, node.WorldPosition, _allTowerData);
     }
 
-    /// <summary>
-    /// UI_TowerSelectPopup.OnTowerSelected 이벤트 수신 시 호출.
-    /// 골드 차감 → 타워 스폰 → Init → SetOccupied(마커 숨김 + 경로 재계산).
-    /// </summary>
     private void HandleTowerSelected(TowerData data)
     {
         if (_pendingNode == null || _pendingNode.IsOccupied)
@@ -116,6 +118,13 @@ public class TowerPlacer : MonoBehaviour
         }
 
         GameObject go = Managers.PoolM.Pop(data.addressableKey);
+        if (go == null)
+        {
+            Debug.LogError($"[TowerPlacer] 타워 프리팹 로드 실패: {data.addressableKey}");
+            Managers.GameM.AddGold(buildCost);
+            return;
+        }
+
         go.transform.position = _pendingNode.WorldPosition;
         go.transform.rotation = Quaternion.identity;
 

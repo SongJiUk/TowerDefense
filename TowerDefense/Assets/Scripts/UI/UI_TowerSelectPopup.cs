@@ -84,8 +84,20 @@ public class UI_TowerSelectPopup : UI_Base
         Managers.GameM.OnGoldChanged += RefreshButtonStates;
 
         CalcRadialPositions();
+        ApplyTheme(Managers.WaveM.CurrentStage);
 
         return true;
+    }
+
+    public override void ApplyTheme(StageData stage)
+    {
+        if (stage == null) return;
+        // 버튼 이미지에 강조 색 적용 — 필요한 오브젝트 추가
+        for (int i = 0; i < TOWER_COUNT; i++)
+        {
+            var btn = GetButton(typeof(Buttons), (int)Buttons.Tower_Basic + i);
+            btn.GetComponent<Image>().color = stage.uiAccentColor;
+        }
     }
 
     // ─── 공개 API ─────────────────────────────────────────────────────────────

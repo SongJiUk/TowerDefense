@@ -25,7 +25,7 @@ public class LightningTowerController : TowerController
             Transform next = FindChainTarget(last);
             if (next == null) break;
 
-            float damage = _currentDamage * Mathf.Pow(_lightningTowerData.chainDamageFalloff, i);
+            float damage = CurrentDamage * Mathf.Pow(_lightningTowerData.chainDamageFalloff, i);
             next.GetComponent<IDamageable>()?.TakeDamage(damage);
             _chainTargets.Add(next);
         }

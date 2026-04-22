@@ -165,6 +165,14 @@ public class ResourceManager
 
     #endregion
 
+    public List<T> GetAllLoaded<T>() where T : Object
+    {
+        var result = new List<T>();
+        foreach (var obj in resourceDic.Values)
+            if (obj is T typed) result.Add(typed);
+        return result;
+    }
+
     public void Clear()
     {
         UnLoadAll();

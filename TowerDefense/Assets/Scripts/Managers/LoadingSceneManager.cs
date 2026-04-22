@@ -17,6 +17,9 @@ public class LoadingSceneManager : MonoBehaviour
         Managers.GameM.LevelData = Managers.ResourceM.Load<LevelData>("LevelData");
         Managers.CardM.Init();
 
+        string stageKey = $"Stage{Managers.SelectedStage}";
+        StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
+        Managers.WaveM.Init(stageData);
 
         _ui.SetStartButton(true);
     }

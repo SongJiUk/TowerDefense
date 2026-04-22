@@ -35,3 +35,4 @@ MonoBehaviour:
     rangeBonus: 2
     skillDuration: 5
     cooldownReduction: 8
+  color: {r: 0.16078432, g: 0.7137255, b: 0.9647059, a: 1}

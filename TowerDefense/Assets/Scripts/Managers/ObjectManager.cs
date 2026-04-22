@@ -50,17 +50,19 @@ public class ObjectManager
     // ─── UI ───────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// UI 팝업 생성. parent가 null이면 Canvas 루트에 생성.
-    /// 팝업은 풀링하지 않고 매번 Instantiate.
+    /// 풀에서 UI 오브젝트를 꺼내 parent 아래 배치 후 컴포넌트 반환.
     /// </summary>
     public T SpawnUI<T>(string addressableKey, Transform parent = null) where T : MonoBehaviour
     {
-        GameObject go = Managers.ResourceM.Instantiate(addressableKey, parent);
+        GameObject go = Managers.PoolM.Pop(addressableKey);
         if (go == null)
         {
             Debug.LogError($"[ObjectManager] SpawnUI 실패: {addressableKey}");
             return null;
         }
+
+        if (parent != null)
+            go.transform.SetParent(parent, false);
 
         T component = go.GetComponent<T>();
         if (component == null)
@@ -70,12 +72,12 @@ public class ObjectManager
     }
 
     /// <summary>
-    /// UI 팝업 파괴.
+    /// UI 오브젝트를 풀에 반환. 풀 미등록 시 Destroy.
     /// </summary>
     public void DespawnUI(GameObject go)
     {
         if (go == null) return;
-        Object.Destroy(go);
+        Managers.ResourceM.Destroy(go);
     }
 
     // ─── 씬 전환 초기화 ───────────────────────────────────────────────────────

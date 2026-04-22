@@ -20,7 +20,7 @@ MonoBehaviour:
   baseDuration: 1
   cooldown: 45
   effectValue: 0
-  skillPrefabkey: Block
+  skillPrefabkey: Box
   isTargeted: 1
   upgradeSteps:
   - damageMultiplier: 1
@@ -35,3 +35,4 @@ MonoBehaviour:
     rangeBonus: 0
     skillDuration: 20
     cooldownReduction: 10
+  color: {r: 0.3962264, g: 0.16730182, b: 0, a: 1}

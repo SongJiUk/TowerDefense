@@ -98,4 +98,11 @@ public class BuffHandler : MonoBehaviour, ITickable
         _modifiers.Remove(modifier);
         OnModifiersChanged?.Invoke();
     }
+
+    public bool HasEffect<T>() where T : BuffEffect
+    {
+        foreach (var e in _effects)
+            if (e is T) return true;
+        return false;
+    }
 }

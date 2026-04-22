@@ -37,6 +37,12 @@ public class UI_Base : MonoBehaviour
 
     public virtual void SetInfo() { }
 
+    /// <summary>
+    /// 스테이지 테마 색상 적용. Init() 완료 후 호출.
+    /// 서브클래스에서 override해 바인딩된 Image·Text에 색상 적용.
+    /// </summary>
+    public virtual void ApplyTheme(StageData stage) { }
+
     #region 바인딩
 
     protected Dictionary<Type, UnityEngine.Object[]> objs_Dic = new();

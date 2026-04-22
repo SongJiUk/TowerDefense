@@ -32,6 +32,11 @@ public class StageData : ScriptableObject
 
     [Tooltip("보스 등장 2초 후 함께 스폰될 잡몹 수")]
     public int bossWaveMinions = 5;
+
+    [Header("UI 테마")]
+    public Color uiBarBG;
+    public Color uiLineColor;
+    public Color uiAccentColor;
 }
 
 /// <summary>

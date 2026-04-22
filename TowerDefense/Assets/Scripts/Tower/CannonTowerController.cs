@@ -17,7 +17,7 @@ public class CannonTowerController : TowerController
         {
             if (col.transform == target) continue;
 
-            col.GetComponent<IDamageable>()?.TakeDamage(_currentDamage * 0.4f);
+            col.GetComponent<IDamageable>()?.TakeDamage(CurrentDamage * 0.4f);
         }
     }
 

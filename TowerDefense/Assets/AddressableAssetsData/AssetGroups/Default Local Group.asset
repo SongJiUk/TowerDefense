@@ -29,6 +29,42 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0c098e51945cde347bfba397ffa36006
+    m_Address: Stage1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1b5d1a6deebd81e4bba2448d18378844
+    m_Address: Box
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a73cc5a7fc711545bb04cc397f93f35
+    m_Address: Stage3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c2844bc7e15d49cda8bf7f3d368f685
+    m_Address: Tower_Cannon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4679c7e36106f49a6838e5cd88f39691
+    m_Address: Tower_Sniper
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 499bebea951c5461594c298d4c24f143
+    m_Address: Tower_Slow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 52ad0a0c5a1d13d4ebb43803cbc746b3
     m_Address: LightningStorm
     m_ReadOnly: 0
@@ -43,6 +79,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6098628b22dd09a4aa13e8728529d462
     m_Address: Atlas
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a22bdfadf3804a66a502114128fb4c4
+    m_Address: Tower_Poison
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -71,8 +113,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b970048a912734748ab85b580d8d4b75
+    m_Address: Stage4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c433fae415ba97347a6b83cf6ece6837
     m_Address: UI_SkillReplacePopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5113b0765ddb48aebc6660a2622732f
+    m_Address: UI_TowerSelectPopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -83,8 +137,26 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f72f3515f9e454240954600c7c2a0178
+    m_Address: Tower_Lightning
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f91850d1e267e487ea2666fca438c932
+    m_Address: Tower_Basic
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fb3f9ef0c655f2e4ba6e8219638f07d1
     m_Address: UI_SkillItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc2ef017ba495ee469645e53914c70e4
+    m_Address: Stage2
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
