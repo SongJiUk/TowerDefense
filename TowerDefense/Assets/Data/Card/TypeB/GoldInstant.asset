@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: GoldInstant
   m_EditorClassIdentifier: 
-  cardName: GoldInstant
-  Description: "80\uACE8\uB4DC\uB97C \uC989\uC2DC \uD68D\uB4DD\uD55C\uB2E4."
+  cardName: "\uACE8\uB4DC \uD68D\uB4DD"
+  Description: "80\uACE8\uB4DC \uD68D\uB4DD"
   iconKey: GoldInstant
   category: 1
   effectType: 4

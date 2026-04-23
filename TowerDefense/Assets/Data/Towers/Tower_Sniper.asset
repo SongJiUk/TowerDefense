@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tower_Sniper
   m_EditorClassIdentifier: 
   towerName: "\uC2A4\uB098\uC774\uD37C\uD0D1"
+  Description: "\uC7A5\uAC70\uB9AC \uACE0\uB370\uBBF8\uC9C0 \uB2E8\uC77C \uACF5\uACA9 "
   towerType: 3
   baseDamage: 60
   baseAttackSpeed: 0.5

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: SkillSelect
   m_EditorClassIdentifier: 
-  cardName: SkillSelect
-  Description: "\uC2A4\uD0AC\uC744 1\uC885 \uC120\uD0DD\uD55C\uB2E4."
+  cardName: "\uC2A4\uD0AC \uC120\uD0DD"
+  Description: "\uC2A4\uD0AC 1\uC885 \uC120\uD0DD"
   iconKey: SkillSelect
   category: 3
   effectType: 12

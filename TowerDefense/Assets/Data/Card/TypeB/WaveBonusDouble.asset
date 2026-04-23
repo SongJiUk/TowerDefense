@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: WaveBonusDouble
   m_EditorClassIdentifier: 
-  cardName: WaveBonusDouble
-  Description: "\uB2E4\uC74C \uC6E8\uC774\uBE0C \uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4\uAC00
-    2\uBC30\uAC00\uB41C\uB2E4."
+  cardName: "\uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4"
+  Description: "\uC6E8\uC774\uBE0C \uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4 50% \uC99D\uAC00"
   iconKey: WaveBonusDouble
   category: 1
   effectType: 7

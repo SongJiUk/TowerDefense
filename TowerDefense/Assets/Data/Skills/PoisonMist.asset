@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca7602735e8a4b8a9bcc6bccc2dee3e, type: 3}
   m_Name: PoisonMist
   m_EditorClassIdentifier: 
-  skillName: PoisonMist
+  skillName: "\uB3C5 \uC548\uAC1C"
   skillType: 4
-  Description: 
+  Description: "\uC9C0\uC815 \uC704\uCE58\uC5D0 \uB3C5 \uC548\uAC1C\uB97C \uC0DD\uC131\uD574
+    \uBA38\uBB34\uB294 \uC801\uC5D0\uAC8C \uC9C0\uC18D \uD53C\uD574\uB97C \uC785\uD78C\uB2E4"
   baseDamage: 15
   baseRange: 4
   baseDuration: 1

@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: SynergyAmp
   m_EditorClassIdentifier: 
-  cardName: SynergyAmp
-  Description: "\uBC1C\uB3D9\uC911\uC778 \uC2DC\uB108\uC9C0\uC758 \uD6A8\uACFC\uB97C
-    30% \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
+  cardName: "\uC2DC\uB108\uC9C0 Up"
+  Description: "\uD0C0\uC6CC \uC2DC\uB108\uC9C0 \uD6A8\uACFC 50% \uC99D\uAC00"
   iconKey: SynergyAmp
   category: 2
   effectType: 11

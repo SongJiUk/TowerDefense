@@ -17,6 +17,60 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 13012a2bdd7d5419fae850cc62bd28b9
   m_SerializeEntries:
+  - m_GUID: 1b5d1a6deebd81e4bba2448d18378844
+    m_Address: Box
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6174df268ea4c5c4990e0cd7f74a9ec2
+    m_Address: UI_TowerUpgradePopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9447741af424f634586e706afefcd9b7
+    m_Address: UI_SkillUpgradePopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95fddded90e3437448ef67d6724988aa
+    m_Address: UI_SkillSlot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a9144aedcb754c598dfc5e8158b382f
+    m_Address: UI_CardItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a95dafcd815fd8840b315387c4e25ca1
+    m_Address: UI_SkillSelectPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c433fae415ba97347a6b83cf6ece6837
+    m_Address: UI_SkillReplacePopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5113b0765ddb48aebc6660a2622732f
+    m_Address: UI_TowerSelectPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb3f9ef0c655f2e4ba6e8219638f07d1
+    m_Address: UI_SkillItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fcb96c7a373884bf3a93961afb09312d
     m_Address: UI_LevelUpPopup
     m_ReadOnly: 0

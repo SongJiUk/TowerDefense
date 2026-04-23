@@ -139,7 +139,7 @@ public class UI_GameScene : UI_Scene
 
         var popup = Managers.ObjectM.SpawnUI<UI_LevelUpPopup>("UI_LevelUpPopup", transform);
         await popup.Init();
-        popup.SetInfo();
+        popup.SetInfo().Forget();
     }
 
     private UI_SkillSlot[] _skillSlots = new UI_SkillSlot[3];

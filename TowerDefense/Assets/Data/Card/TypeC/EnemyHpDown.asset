@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: EnemyHpDown
   m_EditorClassIdentifier: 
-  cardName: EnemyHpDown
-  Description: "\uB2E4\uC74C \uC6E8\uC774\uBE0C \uC801 HP -20%\uB85C \uC2DC\uC791\uD55C\uB2E4."
+  cardName: "\uCCB4\uB825 \uAC10\uC18C"
+  Description: "\uC801 HP 20% \uAC10\uC18C"
   iconKey: EnemyHpDown
   category: 2
   effectType: 9
   effectValue: 0.2
   weight: 1
-  maxStack: 99
+  maxStack: 2

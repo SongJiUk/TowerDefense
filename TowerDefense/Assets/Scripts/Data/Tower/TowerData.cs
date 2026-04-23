@@ -4,6 +4,7 @@ using UnityEngine;
 public class TowerData : ScriptableObject
 {
     public string towerName;
+    public string Description;
     public Define.TowerType towerType;
 
     [Header("기본 스탯")]
