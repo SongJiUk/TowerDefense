@@ -1,5 +1,5 @@
-using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,11 +13,6 @@ public class UI_SkillSlot : UI_Base
     private int _slotIndex;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
-
-    async void Start()
-    {
-        await Init();
-    }
 
     void OnDestroy()
     {
@@ -36,10 +31,18 @@ public class UI_SkillSlot : UI_Base
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
-        BindEvent(
-            GetButton(typeof(Buttons), (int)Buttons.Button_Skill).gameObject,
-            OnSkillClicked
-        );
+        var btn = GetButton(typeof(Buttons), (int)Buttons.Button_Skill);
+        BindEvent(btn.gameObject, OnSkillClicked);
+
+        BindEvent(btn.gameObject, () =>
+        {
+            if (Managers.SkillM.GetCooldownRatio(_slotIndex) <= 0f)
+                transform.DOScale(1.12f, 0.12f).SetEase(Ease.OutBack).SetUpdate(true);
+        }, _type: Define.UIEvent.PointerEnter);
+
+        BindEvent(btn.gameObject, null,
+            _ => transform.DOScale(1f, 0.12f).SetEase(Ease.OutQuad).SetUpdate(true),
+            Define.UIEvent.OnPointerExit);
 
         Managers.SkillM.OnSlotChanged += OnSlotChanged;
         Managers.SkillM.OnCooldownChanged += OnCooldownChanged;
@@ -74,14 +77,18 @@ public class UI_SkillSlot : UI_Base
         }
 
         GetText(typeof(Texts), (int)Texts.Text_SkillName).text = skill.skillName;
+        GetText(typeof(Texts), (int)Texts.Text_SkillName).color = skill.color;
         GetText(typeof(Texts), (int)Texts.Text_SkillLevel).text = $"Lv.{Managers.SkillM.GetSkillLevel(skill)}";
 
         var sprite = Managers.ResourceM.GetAtlas(skill.skillType.ToString());
         if (sprite != null)
             GetImage(typeof(Images), (int)Images.Image_Skill).sprite = sprite;
 
-        GetImage(typeof(Images), (int)Images.Image_CoolDown).fillAmount =
-            Managers.SkillM.GetCooldownRatio(_slotIndex);
+        float ratio = Managers.SkillM.GetCooldownRatio(_slotIndex);
+        var cooldownImg = GetImage(typeof(Images), (int)Images.Image_CoolDown);
+        cooldownImg.fillAmount = ratio;
+        cooldownImg.gameObject.SetActive(ratio > 0f);
+        GetObject(typeof(GameObjects), (int)GameObjects.Object_ReadyDot).SetActive(ratio <= 0f);
 
         GetImage(typeof(Images), (int)Images.Image_SlotGlow).color = skill.color;
     }
@@ -98,9 +105,11 @@ public class UI_SkillSlot : UI_Base
     {
         if (index != _slotIndex) return;
         if (!isInit) return;
-        GetImage(typeof(Images), (int)Images.Image_CoolDown).fillAmount = ratio;
+        var cooldownImg = GetImage(typeof(Images), (int)Images.Image_CoolDown);
+        cooldownImg.fillAmount = ratio;
+        cooldownImg.gameObject.SetActive(ratio > 0f);
 
-        if (ratio == 0) GetObject(typeof(GameObjects), (int)GameObjects.Object_ReadyDot).SetActive(true);
+        GetObject(typeof(GameObjects), (int)GameObjects.Object_ReadyDot).SetActive(ratio <= 0f);
     }
 
     private void OnSkillClicked()

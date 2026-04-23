@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca7602735e8a4b8a9bcc6bccc2dee3e, type: 3}
   m_Name: ArrowRain
   m_EditorClassIdentifier: 
-  skillName: ArrowRain
+  skillName: "\uD654\uC0B4\uBE44"
   skillType: 1
-  Description: 
+  Description: "\uC9C0\uC815 \uBC94\uC704\uC5D0 \uD654\uC0B4\uC744 \uD37C\uBD80\uC5B4
+    \uC989\uC2DC \uD53C\uD574\uB97C \uC785\uD78C\uB2E4"
   baseDamage: 100
   baseRange: 4
   baseDuration: 0

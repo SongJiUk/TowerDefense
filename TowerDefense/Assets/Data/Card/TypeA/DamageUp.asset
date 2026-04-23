@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: DamageUp
   m_EditorClassIdentifier: 
-  cardName: DamageUp
-  Description: "\uBAA8\uB4E0 \uD0C0\uC6CC\uC758 \uACF5\uACA9\uB825\uC744 12% \uC0C1\uC2B9\uC2DC\uD0A8\uB2E4.
-    \\n3\uD68C \uC911\uCCA9 \uAC00\uB2A5"
+  cardName: "\uACF5\uACA9\uB825 Up"
+  Description: "\uD0C0\uC6CC \uACF5\uACA9\uB825\uC744 12% \uC99D\uAC00"
   iconKey: DamageUp
   category: 0
   effectType: 0

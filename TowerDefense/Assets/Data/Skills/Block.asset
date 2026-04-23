@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca7602735e8a4b8a9bcc6bccc2dee3e, type: 3}
   m_Name: Block
   m_EditorClassIdentifier: 
-  skillName: Block
+  skillName: "\uBE14\uB77D"
   skillType: 0
-  Description: 
+  Description: "\uAE38 \uC704\uC5D0 \uC7A5\uC560\uBB3C\uC744 \uC124\uCE58\uD574 \uC801\uC758
+    \uACBD\uB85C\uB97C \uBC29\uD574\uD55C\uB2E4"
   baseDamage: 0
   baseRange: 0
   baseDuration: 1

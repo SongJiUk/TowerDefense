@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tower_Poison
   m_EditorClassIdentifier: 
   towerName: "\uB3C5\uD0D1"
+  Description: "\uACF5\uACA9 \uD0C0\uAC9F \uC9C0\uC18D \uD53C\uD574"
   towerType: 4
   baseDamage: 8
   baseAttackSpeed: 1.2

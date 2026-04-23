@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tower_Lightning
   m_EditorClassIdentifier: 
   towerName: "\uBC88\uAC1C\uD0D1"
+  Description: "\uC5F0\uC1C4 \uBC88\uAC1C\uB85C \uB2E4\uC218 \uD0C0\uAC9F \uACF5\uACA9"
   towerType: 5
   baseDamage: 25
   baseAttackSpeed: 1
@@ -61,6 +62,6 @@ MonoBehaviour:
   buildCost: 1
   addressableKey: LightningTower
   iconKey: LightningTower
-  chainCount: 0
-  chainRange: 0
-  chainDamageFalloff: 0
+  chainCount: 3
+  chainRange: 3
+  chainDamageFalloff: 0.65

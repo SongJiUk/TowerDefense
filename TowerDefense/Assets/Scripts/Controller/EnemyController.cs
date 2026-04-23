@@ -11,8 +11,12 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour, IDamageable
 {
 
+    private EnemyHPBar _hpBar;
+    private GameObject _hpBarGo;
+
     private EnemyData _data;
     [SerializeField] private float _hp;
+    private float _maxHp;
     public float CurrentHp => _hp;
     private float _baseSpeed;
     [SerializeField] private float _speed;
@@ -38,11 +42,13 @@ public class EnemyController : MonoBehaviour, IDamageable
     public void Init(EnemyData data, float hpMultiplier = 1f, float speedMultiplier = 1f)
     {
         _data = data;
-        _hp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier;
+        _maxHp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier;
+        _hp = _maxHp;
         _baseSpeed = data.baseMoveSpeed * speedMultiplier;
         _speed = _baseSpeed;
         _currentTarget = transform.position;
         _isDead = false;
+        _hpBar?.SetHP(_hp, _maxHp);
         RequestPath();
     }
 
@@ -57,6 +63,13 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         Managers.Path.OnPathChanged += OnPathChanged;
         if (_buffHandler != null) _buffHandler.OnModifiersChanged += RecalculateSpeed;
+
+        _hpBarGo = Managers.ResourceM.Instantiate("EnemyHPBar", null, true);
+        if (_hpBarGo != null)
+        {
+            _hpBar = _hpBarGo.GetComponent<EnemyHPBar>();
+            _hpBar.Follow(transform, new Vector3(0f, 2f, 0f));
+        }
     }
 
     void OnDisable()
@@ -66,6 +79,13 @@ public class EnemyController : MonoBehaviour, IDamageable
         _cts?.Cancel();
         _cts?.Dispose();
         _cts = null;
+
+        if (_hpBarGo != null)
+        {
+            Managers.ResourceM.Destroy(_hpBarGo);
+            _hpBarGo = null;
+            _hpBar = null;
+        }
     }
 
     // ─── 전투 ─────────────────────────────────────────────────────────────────
@@ -75,6 +95,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (_isDead) return;
         _hp -= damage;
+        _hpBar?.SetHP(_hp, _maxHp);
         if (_hp <= 0f) Die();
     }
 

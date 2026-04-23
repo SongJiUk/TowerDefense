@@ -11,8 +11,6 @@ public class UI_SkillReplacePopup : UI_Base
 
     private bool _bindDone = false;
 
-    async void Start() => await Init();
-
     void OnEnable()
     {
         if (!_bindDone) return;

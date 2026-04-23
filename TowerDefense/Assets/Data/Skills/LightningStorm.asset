@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca7602735e8a4b8a9bcc6bccc2dee3e, type: 3}
   m_Name: LightningStorm
   m_EditorClassIdentifier: 
-  skillName: LightningStorm
+  skillName: "\uBC88\uAC1C \uD3ED\uD48D"
   skillType: 3
-  Description: 
+  Description: "\uBC94\uC704 \uB0B4 \uBAA8\uB4E0 \uC801\uC5D0\uAC8C \uBC88\uAC1C\uB85C
+    \uC989\uC2DC \uD53C\uD574\uB97C \uC785\uD78C\uB2E4"
   baseDamage: 80
   baseRange: 5
   baseDuration: 0

@@ -5,6 +5,11 @@ public class TowerController : MonoBehaviour
     [SerializeField] private Transform _firePoint;
     [SerializeField] private GameObject _turnObject;
 
+    [Header("업그레이드 이펙트 (점수 1~3 / 4~6 / 7~9)")]
+    [SerializeField] private GameObject _effectLow;
+    [SerializeField] private GameObject _effectMid;
+    [SerializeField] private GameObject _effectHigh;
+
     // ─── 상태 ─────────────────────────────────────────────────────────────────
 
     public TowerData Data { get; private set; }
@@ -17,8 +22,9 @@ public class TowerController : MonoBehaviour
     private float _currentAttackSpeed;
     private float _currentRange;
 
-    protected float CurrentRange => _currentRange;
-    protected float CurrentDamage => _currentDamage;
+    public float CurrentRange  => _currentRange;
+    public float CurrentDamage => _currentDamage;
+    public float CurrentSpeed  => _currentAttackSpeed;
 
     private float _attackTimer;
     private Transform _currentTarget;
@@ -169,7 +175,7 @@ public class TowerController : MonoBehaviour
         total += SumSpentCost(Data.damageUpgrades, DamageLevel);
         total += SumSpentCost(Data.rangeUpgrades,  RangeLevel);
         total += SumSpentCost(Data.speedUpgrades,  SpeedLevel);
-        return total / 2;
+        return Mathf.RoundToInt(total * 0.8f);
     }
 
     public void Sell()
@@ -235,6 +241,28 @@ public class TowerController : MonoBehaviour
         _currentDamage      = damage * Managers.GameM.globalDamageMultiplier;
         _currentAttackSpeed = speed  * Managers.GameM.globalAttackSpeedMultiplier;
         _currentRange       = range  + Managers.GameM.globalRangeBonus;
+
+        UpdateVisualEffect();
+    }
+
+    protected int UniqueEffectStage
+    {
+        get
+        {
+            int score = DamageLevel + RangeLevel + SpeedLevel;
+            if (score >= 7) return 3;
+            if (score >= 4) return 2;
+            if (score >= 1) return 1;
+            return 0;
+        }
+    }
+
+    private void UpdateVisualEffect()
+    {
+        int score = DamageLevel + RangeLevel + SpeedLevel;
+        _effectLow?.SetActive(score >= 1 && score <= 3);
+        _effectMid?.SetActive(score >= 4 && score <= 6);
+        _effectHigh?.SetActive(score >= 7);
     }
 
     protected virtual Transform FindTarget()

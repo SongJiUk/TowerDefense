@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tower_Basic
   m_EditorClassIdentifier: 
   towerName: "\uC18C\uCD1D\uD0D1"
+  Description: "\uC6D0\uAC70\uB9AC \uB2E8\uC77C \uD0C0\uAC9F \uACF5\uACA9"
   towerType: 0
   baseDamage: 15
   baseAttackSpeed: 1.2
@@ -59,5 +60,5 @@ MonoBehaviour:
     cost: 320
     multiplier: 2.2
   buildCost: 1
-  addressableKey: SniperTower
-  iconKey: SniperTower
+  addressableKey: BasicTower
+  iconKey: BasicTower

@@ -46,11 +46,6 @@ public class UI_TowerSelectPopup : UI_Base
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
-    async void Start()
-    {
-        await Init();
-    }
-
     void OnDestroy()
     {
         Managers.GameM.OnGoldChanged -= RefreshButtonStates;

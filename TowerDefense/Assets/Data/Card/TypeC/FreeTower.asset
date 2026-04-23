@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e2c40c38eb14f3abb0b57a55dfc913, type: 3}
   m_Name: FreeTower
   m_EditorClassIdentifier: 
-  cardName: FreeTower
-  Description: "\uD0C0\uC6CC 1\uC885\uC744 \uC989\uC2DC \uBB34\uB8CC \uC124\uCE58\uD560
-    \uC218 \uC788\uB2E4."
+  cardName: "\uD0C0\uC6CC \uC124\uCE58"
+  Description: "\uD0C0\uC6CC 1\uC885 \uBB34\uB8CC \uC124\uCE58"
   iconKey: FreeTower
   category: 2
   effectType: 8
