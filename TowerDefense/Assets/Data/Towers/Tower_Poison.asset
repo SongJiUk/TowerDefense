@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerName: "\uB3C5\uD0D1"
   Description: "\uACF5\uACA9 \uD0C0\uAC9F \uC9C0\uC18D \uD53C\uD574"
-  towerType: 4
+  towerType: 2
   baseDamage: 8
   baseAttackSpeed: 1.2
   baseRange: 5
@@ -59,8 +59,24 @@ MonoBehaviour:
     description: "+130% \uC18D\uB3C4"
     cost: 320
     multiplier: 2.3
-  buildCost: 1
+  buildCost: 80
   addressableKey: PoisonTower
   iconKey: PoisonTower
+  towerUIColor: {r: 0.46274510, g: 1, b: 0.01176471, a: 1}
+  towerBorderColor: {r: 0.46274510, g: 1, b: 0.01176471, a: 1}
+  towerBGColor: {r: 0.05882353, g: 0.13333333, b: 0, a: 1}
+  synergies:
+  - "\uC911\uB3C5 \uC2DC\uB108\uC9C0"
+  - "\uB3C4\uD2B8\uB51C \uC2DC\uB108\uC9C0"
   poisonDps: 0.03
   poisonDuration: 4
+  stageDpsMultiplier:
+  - 1
+  - 1.3
+  - 1.6
+  - 2
+  stageDurationBonus:
+  - 0
+  - 0.5
+  - 1
+  - 2

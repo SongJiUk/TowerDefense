@@ -23,12 +23,12 @@ public class UI_TowerUpgradePopup : UI_Base
 {
     // ─── Enum ─────────────────────────────────────────────────────────────────
 
-    enum GameObjects { BG, Content_Upgrade, Content_Sell, Tower_Unique_Object }
+    enum GameObjects { BG, Content_Upgrade, Content_Sell }
     enum Texts
     {
         Text_TowerName, Text_Description, Text_SellPrice, Text_SellPriceWord,
         Text_CurrentDamage, Text_CurrentRange, Text_CurrentAttackSpeed,
-        Text_UniqueName, Text_UniqueEffect, Text_UniqueCondition,
+        Text_UniqueName, Text_UniqueEffect,
         Text_D1_Name, Text_D1_Description, Text_D1_Price,
         Text_D2_Name, Text_D2_Description, Text_D2_Price,
         Text_D3_Name, Text_D3_Description, Text_D3_Price,
@@ -40,9 +40,9 @@ public class UI_TowerUpgradePopup : UI_Base
         Text_S3_Name, Text_S3_Description, Text_S3_Price,
     }
 
-    enum Buttons    
+    enum Buttons
     {
-        Button_Close, Button_Upgrade, Button_Sell, Button_Cancel, Button_RealSell,
+        Button_Close, Button_Sell, Button_Cancel, Button_RealSell,
         Button_D1, Button_D2, Button_D3,
         Button_R1, Button_R2, Button_R3,
         Button_S1, Button_S2, Button_S3,
@@ -98,7 +98,7 @@ public class UI_TowerUpgradePopup : UI_Base
 
     // ─── 색상 상수 ────────────────────────────────────────────────────────────
 
-    private static readonly Color COLOR_LOCKED_BG   = new Color(0.25f, 0.25f, 0.25f, 0.80f);
+    private static readonly Color COLOR_LOCKED_BG = new Color(0.25f, 0.25f, 0.25f, 0.80f);
     private static readonly Color COLOR_DONE_BORDER = new Color(0.20f, 0.85f, 0.20f, 1.00f);
 
     // ─── 내부 상태 ────────────────────────────────────────────────────────────
@@ -108,10 +108,11 @@ public class UI_TowerUpgradePopup : UI_Base
     private RectTransform _rect;
     private Vector2 _originPos;
     private Color _themeAccent = Color.white;
-
-    private Button[,]   _cachedBtns;
-    private Image[,]    _cachedBgImgs;
-    private Image[,]    _cachedBorderImgs;
+    TowerData data;
+    private Vector2 _sellOriginPos;
+    private Button[,] _cachedBtns;
+    private Image[,] _cachedBgImgs;
+    private Image[,] _cachedBorderImgs;
     private TMP_Text[,] _cachedNameTexts;
     private TMP_Text[,] _cachedDescTexts;
     private TMP_Text[,] _cachedPriceTexts;
@@ -129,34 +130,32 @@ public class UI_TowerUpgradePopup : UI_Base
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
-        
+
         GetButton(typeof(Buttons), (int)Buttons.Button_Close).onClick.AddListener(OnCloseClicked);
-        GetButton(typeof(Buttons), (int)Buttons.Button_Upgrade).onClick.AddListener(() => SwitchTab(true));
         GetButton(typeof(Buttons), (int)Buttons.Button_Sell).onClick.AddListener(() => SwitchTab(false));
         GetButton(typeof(Buttons), (int)Buttons.Button_Cancel).onClick.AddListener(() => SwitchTab(true));
         GetButton(typeof(Buttons), (int)Buttons.Button_RealSell).onClick.AddListener(OnRealSellClicked);
 
-        AddHoverAnimation(GetButton(typeof(Buttons), (int)Buttons.Button_Upgrade));
         AddHoverAnimation(GetButton(typeof(Buttons), (int)Buttons.Button_Sell));
         AddHoverAnimation(GetButton(typeof(Buttons), (int)Buttons.Button_Cancel));
         AddHoverAnimation(GetButton(typeof(Buttons), (int)Buttons.Button_RealSell));
 
-        _cachedBtns        = new Button[3, 3];
-        _cachedBgImgs      = new Image[3, 3];
-        _cachedBorderImgs  = new Image[3, 3];
-        _cachedNameTexts   = new TMP_Text[3, 3];
-        _cachedDescTexts   = new TMP_Text[3, 3];
-        _cachedPriceTexts  = new TMP_Text[3, 3];
+        _cachedBtns = new Button[3, 3];
+        _cachedBgImgs = new Image[3, 3];
+        _cachedBorderImgs = new Image[3, 3];
+        _cachedNameTexts = new TMP_Text[3, 3];
+        _cachedDescTexts = new TMP_Text[3, 3];
+        _cachedPriceTexts = new TMP_Text[3, 3];
 
         for (int col = 0; col < 3; col++)
         {
             for (int i = 0; i < 3; i++)
             {
-                _cachedBtns[col, i]       = GetButton(typeof(Buttons), _btnIdx[col, i]);
-                _cachedBgImgs[col, i]     = GetImage(typeof(Images), _bgImgIdx[col, i]);
+                _cachedBtns[col, i] = GetButton(typeof(Buttons), _btnIdx[col, i]);
+                _cachedBgImgs[col, i] = GetImage(typeof(Images), _bgImgIdx[col, i]);
                 _cachedBorderImgs[col, i] = GetImage(typeof(Images), _borderImgIdx[col, i]);
-                _cachedNameTexts[col, i]  = GetText(typeof(Texts), _nameIdx[col, i]);
-                _cachedDescTexts[col, i]  = GetText(typeof(Texts), _descIdx[col, i]);
+                _cachedNameTexts[col, i] = GetText(typeof(Texts), _nameIdx[col, i]);
+                _cachedDescTexts[col, i] = GetText(typeof(Texts), _descIdx[col, i]);
                 _cachedPriceTexts[col, i] = GetText(typeof(Texts), _priceIdx[col, i]);
 
                 AddHoverAnimation(_cachedBtns[col, i]);
@@ -167,6 +166,9 @@ public class UI_TowerUpgradePopup : UI_Base
 
         _rect = GetComponent<RectTransform>();
         _originPos = _rect.anchoredPosition;
+
+        var sellRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Sell).GetComponent<RectTransform>();
+        _sellOriginPos = sellRect.anchoredPosition;
 
         _initialized = true;
         return true;
@@ -184,7 +186,7 @@ public class UI_TowerUpgradePopup : UI_Base
     {
         if (stage == null) return;
         _themeAccent = stage.uiAccentColor;
-        GetImage(typeof(Images), (int)Images.Image_Main_BG).color     = stage.uiBarBG;
+        GetImage(typeof(Images), (int)Images.Image_Main_BG).color = stage.uiBarBG;
         GetImage(typeof(Images), (int)Images.Image_Main_Border).color = stage.uiLineColor;
 
         GetImage(typeof(Images), (int)Images.Image_Sell_BG).color = stage.uiBarBG;
@@ -204,7 +206,7 @@ public class UI_TowerUpgradePopup : UI_Base
 
         // 업그레이드 탭 기본 표시
         var upgradeContent = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade);
-        var sellContent    = GetObject(typeof(GameObjects), (int)GameObjects.Content_Sell);
+        var sellContent = GetObject(typeof(GameObjects), (int)GameObjects.Content_Sell);
         upgradeContent.SetActive(true);
         upgradeContent.GetComponent<RectTransform>().localScale = Vector3.one;
         sellContent.SetActive(false);
@@ -222,14 +224,16 @@ public class UI_TowerUpgradePopup : UI_Base
     {
         if (_tower == null || _tower.Data == null) return;
 
-        TowerData data = _tower.Data;
+        data = _tower.Data;
+        GetImage(typeof(Images), (int)Images.Image_Tower_BG).color = data.towerBGColor;
+        GetImage(typeof(Images), (int)Images.Image_Tower_Border).color = data.towerBorderColor;
         GetImage(typeof(Images), (int)Images.Image_Tower).sprite = Managers.ResourceM.GetAtlas(data.iconKey);
         GetText(typeof(Texts), (int)Texts.Text_TowerName).text = $"{data.towerName} 업그레이드";
         int sellPrice = _tower.GetSellPrice();
-        GetText(typeof(Texts), (int)Texts.Text_SellPrice).text          = $"{sellPrice}";
-        GetText(typeof(Texts), (int)Texts.Text_SellPriceWord).text      = $"판매 시 {sellPrice} 골드 환급";
-        GetText(typeof(Texts), (int)Texts.Text_CurrentDamage).text      = $"{_tower.CurrentDamage:F1}";
-        GetText(typeof(Texts), (int)Texts.Text_CurrentRange).text       = $"{_tower.CurrentRange:F1}";
+        GetText(typeof(Texts), (int)Texts.Text_SellPrice).text = $"{sellPrice}";
+        GetText(typeof(Texts), (int)Texts.Text_SellPriceWord).text = $"+{sellPrice}";
+        GetText(typeof(Texts), (int)Texts.Text_CurrentDamage).text = $"{_tower.CurrentDamage:F1}";
+        GetText(typeof(Texts), (int)Texts.Text_CurrentRange).text = $"{_tower.CurrentRange:F1}";
         GetText(typeof(Texts), (int)Texts.Text_CurrentAttackSpeed).text = $"{_tower.CurrentSpeed:F2}/s";
 
         RefreshColumn(0, data.damageUpgrades, _tower.DamageLevel, Define.UpgradeType.Damage);
@@ -248,17 +252,10 @@ public class UI_TowerUpgradePopup : UI_Base
         string effectText = _tower.GetUniqueEffectText();
         bool hasEffect = !string.IsNullOrEmpty(effectText);
 
-        GetObject(typeof(GameObjects), (int)GameObjects.Tower_Unique_Object).SetActive(hasEffect);
         if (!hasEffect) return;
 
-        int stage = _tower.UniqueEffectStage;
-        GetText(typeof(Texts), (int)Texts.Text_UniqueName).text = stage < 3
-            ? $"고유효과  {stage}단계"
-            : "고유효과  3단계 (MAX)";
-        GetText(typeof(Texts), (int)Texts.Text_UniqueEffect).text = effectText;
-        GetText(typeof(Texts), (int)Texts.Text_UniqueCondition).text = stage < 3
-            ? $"전 스탯 {stage + 1}강 달성 시"
-            : "";
+        GetText(typeof(Texts), (int)Texts.Text_UniqueName).color = data.towerUIColor;
+        GetText(typeof(Texts), (int)Texts.Text_UniqueEffect).text = $"- {effectText}";
     }
 
     private void RefreshColumn(int col, TowerStatUpgrade[] upgrades,
@@ -266,16 +263,16 @@ public class UI_TowerUpgradePopup : UI_Base
     {
         for (int i = 0; i < 3; i++)
         {
-            bool hasData  = upgrades != null && i < upgrades.Length;
-            bool isDone   = i < currentLevel;
-            bool isNext   = i == currentLevel && hasData;
+            bool hasData = upgrades != null && i < upgrades.Length;
+            bool isDone = i < currentLevel;
+            bool isNext = i == currentLevel && hasData;
             bool isLocked = !isDone && !isNext;
 
-            var btn       = _cachedBtns[col, i];
-            var bgImg     = _cachedBgImgs[col, i];
+            var btn = _cachedBtns[col, i];
+            var bgImg = _cachedBgImgs[col, i];
             var borderImg = _cachedBorderImgs[col, i];
-            borderImg.color                    = isDone ? COLOR_DONE_BORDER : Color.white;
-            _cachedNameTexts[col, i].color     = isDone ? COLOR_DONE_BORDER : Color.white;
+            borderImg.color = isDone ? COLOR_DONE_BORDER : Color.white;
+            _cachedNameTexts[col, i].color = isDone ? COLOR_DONE_BORDER : Color.white;
 
             if (isDone || !hasData)
             {
@@ -284,18 +281,18 @@ public class UI_TowerUpgradePopup : UI_Base
             }
 
             btn.gameObject.SetActive(true);
-            _cachedNameTexts[col, i].text  = upgrades[i].upgradeName;
-            _cachedDescTexts[col, i].text  = upgrades[i].description;
+            _cachedNameTexts[col, i].text = upgrades[i].upgradeName;
+            _cachedDescTexts[col, i].text = upgrades[i].description;
             _cachedPriceTexts[col, i].text = $"{upgrades[i].cost}";
 
             if (isLocked)
             {
-                bgImg.color      = COLOR_LOCKED_BG;
+                bgImg.color = COLOR_LOCKED_BG;
                 btn.interactable = false;
             }
             else
             {
-                bgImg.color      = _themeAccent;
+                bgImg.color = _themeAccent;
                 btn.interactable = Managers.GameM.Gold >= upgrades[i].cost;
 
                 Define.UpgradeType capturedType = type;
@@ -339,24 +336,32 @@ public class UI_TowerUpgradePopup : UI_Base
 
     private void SwitchTab(bool toUpgrade)
     {
-        var upgradeContent = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade);
-        var sellContent    = GetObject(typeof(GameObjects), (int)GameObjects.Content_Sell);
+        var sellContent = GetObject(typeof(GameObjects), (int)GameObjects.Content_Sell);
+        bool isSellOpen = sellContent.activeSelf;
 
-        var showObj = toUpgrade ? upgradeContent : sellContent;
-        var hideObj = toUpgrade ? sellContent    : upgradeContent;
+        if (toUpgrade == !isSellOpen) return;
 
-        if (!hideObj.activeSelf && showObj.activeSelf) return;
+        var sellRect = sellContent.GetComponent<RectTransform>();
+        sellRect.DOKill();
 
-        var hideRect = hideObj.GetComponent<RectTransform>();
-        hideRect.DOKill();
-        hideRect.DOScale(0.85f, 0.12f).SetEase(Ease.InBack).SetUpdate(true)
-            .OnComplete(() => hideObj.SetActive(false));
-
-        showObj.SetActive(true);
-        var showRect = showObj.GetComponent<RectTransform>();
-        showRect.DOKill();
-        showRect.localScale = Vector3.one * 0.85f;
-        showRect.DOScale(1f, 0.22f).SetEase(Ease.OutBack).SetUpdate(true);
+        if (toUpgrade)
+        {
+            // 판매창 아래로 슬라이드 아웃
+            sellRect.DOAnchorPosY(_sellOriginPos.y - 600f, 0.2f)
+                .SetEase(Ease.InCubic).SetUpdate(true)
+                .OnComplete(() =>
+                {
+                    sellContent.SetActive(false);
+                    sellRect.anchoredPosition = _sellOriginPos;
+                });
+        }
+        else
+        {
+            // 판매창 아래에서 슬라이드 인 (업그레이드창 그대로)
+            sellRect.anchoredPosition = _sellOriginPos + Vector2.down * 600f;
+            sellContent.SetActive(true);
+            sellRect.DOAnchorPos(_sellOriginPos, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true);
+        }
     }
 
     private void OnRealSellClicked()

@@ -147,6 +147,22 @@ public static class TowerDataGenerator
 
     // ─── 헬퍼 ─────────────────────────────────────────────────────────────────
 
+    private static readonly (Color border, Color bg)[] TOWER_COLORS =
+    {
+        (HexColor("8BC34A"), HexColor("1A2E0A")), // Basic     녹색
+        (HexColor("80D8FF"), HexColor("0A1A2E")), // Slow      하늘
+        (HexColor("76FF03"), HexColor("0F2200")), // Poison    라임
+        (HexColor("FF6D00"), HexColor("2E1200")), // Cannon    주황
+        (HexColor("607D8B"), HexColor("1A2226")), // Sniper    회청
+        (HexColor("FFD600"), HexColor("2A2000")), // Lightning 노랑
+    };
+
+    private static Color HexColor(string hex)
+    {
+        ColorUtility.TryParseHtmlString("#" + hex, out Color c);
+        return c;
+    }
+
     private static void SetBase(TowerData d, string towerName, Define.TowerType type,
         float damage, float speed, float range, int buildCost)
     {
@@ -156,6 +172,10 @@ public static class TowerDataGenerator
         d.baseAttackSpeed = speed;
         d.baseRange       = range;
         d.buildCost       = buildCost;
+
+        var (border, bg) = TOWER_COLORS[(int)type];
+        d.towerBorderColor = border;
+        d.towerBGColor     = bg;
     }
 
     private static TowerStatUpgrade[] Upgrades(

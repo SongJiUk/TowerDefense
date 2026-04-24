@@ -59,12 +59,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c5113b0765ddb48aebc6660a2622732f
-    m_Address: UI_TowerSelectPopup
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fb3f9ef0c655f2e4ba6e8219638f07d1
     m_Address: UI_SkillItem
     m_ReadOnly: 0

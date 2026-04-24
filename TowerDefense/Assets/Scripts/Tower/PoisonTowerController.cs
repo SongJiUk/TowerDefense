@@ -53,16 +53,9 @@ public class PoisonTowerController : TowerController
     public override string GetUniqueEffectText()
     {
         if (_poisonTowerData == null) return "";
-        int stage    = UniqueEffectStage;
-        float dps    = _poisonTowerData.poisonDps * _poisonTowerData.stageDpsMultiplier[stage];
-        float dur    = _poisonTowerData.poisonDuration + _poisonTowerData.stageDurationBonus[stage];
-        if (stage < 3)
-        {
-            float nextDps = _poisonTowerData.poisonDps * _poisonTowerData.stageDpsMultiplier[stage + 1];
-            float nextDur = _poisonTowerData.poisonDuration + _poisonTowerData.stageDurationBonus[stage + 1];
-            return $"독 {dps:F1}dmg/s | {dur:F1}초  ->  {nextDps:F1}dmg/s | {nextDur:F1}초";
-        }
-        return $"독 {dps:F1}dmg/s | {dur:F1}초  (최대)";
+        float dps = _poisonTowerData.poisonDps * _poisonTowerData.stageDpsMultiplier[UniqueEffectStage];
+        float dur = _poisonTowerData.poisonDuration + _poisonTowerData.stageDurationBonus[UniqueEffectStage];
+        return $"독  {dps:F1}dmg/s  |  {dur:F1}초";
     }
 
     protected override void OnHit(Transform target)

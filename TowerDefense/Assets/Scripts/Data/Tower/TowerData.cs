@@ -27,6 +27,12 @@ public class TowerData : ScriptableObject
     [Header("아트")]
     public string addressableKey;
     public string iconKey;
+    public Color towerUIColor;
+    public Color towerBorderColor;
+    public Color towerBGColor;
+
+    [Header("시너지 태그")]
+    public string[] synergies;
 }
 
 [System.Serializable]
