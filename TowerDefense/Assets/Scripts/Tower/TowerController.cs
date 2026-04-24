@@ -245,24 +245,17 @@ public class TowerController : MonoBehaviour
         UpdateVisualEffect();
     }
 
-    protected int UniqueEffectStage
-    {
-        get
-        {
-            int score = DamageLevel + RangeLevel + SpeedLevel;
-            if (score >= 7) return 3;
-            if (score >= 4) return 2;
-            if (score >= 1) return 1;
-            return 0;
-        }
-    }
+    // 세 스탯을 균등하게 올려야 단계 상승 (한 스탯 몰빵 방지)
+    public int UniqueEffectStage => Mathf.Min(DamageLevel, RangeLevel, SpeedLevel);
+
+    public virtual string GetUniqueEffectText() => "";
 
     private void UpdateVisualEffect()
     {
-        int score = DamageLevel + RangeLevel + SpeedLevel;
-        _effectLow?.SetActive(score >= 1 && score <= 3);
-        _effectMid?.SetActive(score >= 4 && score <= 6);
-        _effectHigh?.SetActive(score >= 7);
+        //int stage = UniqueEffectStage;
+        //_effectLow?.SetActive(stage == 1);
+        //_effectMid?.SetActive(stage == 2);
+        //_effectHigh?.SetActive(stage == 3);
     }
 
     protected virtual Transform FindTarget()
@@ -289,7 +282,7 @@ public class TowerController : MonoBehaviour
         if (Data.projectilePrefabKey == null) return;
 
         float damage = _currentDamage;
-        if (UnityEngine.Random.value < Managers.GameM.criticalChanceBonus)
+        if (UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance())
             damage *= 2f;
 
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
@@ -299,6 +292,8 @@ public class TowerController : MonoBehaviour
     }
 
     protected virtual void OnHit(Transform target) { }
+
+    protected virtual float GetBonusCritChance() => 0f;
 
     // ─── 헬퍼 ────────────────────────────────────────────────────────────────
 

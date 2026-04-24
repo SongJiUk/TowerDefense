@@ -23,11 +23,12 @@ public class UI_TowerUpgradePopup : UI_Base
 {
     // ─── Enum ─────────────────────────────────────────────────────────────────
 
-    enum GameObjects {BG, Content_Upgrade, Content_Sell }
+    enum GameObjects { BG, Content_Upgrade, Content_Sell, Tower_Unique_Object }
     enum Texts
     {
         Text_TowerName, Text_Description, Text_SellPrice, Text_SellPriceWord,
         Text_CurrentDamage, Text_CurrentRange, Text_CurrentAttackSpeed,
+        Text_UniqueName, Text_UniqueEffect, Text_UniqueCondition,
         Text_D1_Name, Text_D1_Description, Text_D1_Price,
         Text_D2_Name, Text_D2_Description, Text_D2_Price,
         Text_D3_Name, Text_D3_Description, Text_D3_Price,
@@ -234,11 +235,30 @@ public class UI_TowerUpgradePopup : UI_Base
         RefreshColumn(0, data.damageUpgrades, _tower.DamageLevel, Define.UpgradeType.Damage);
         RefreshColumn(1, data.rangeUpgrades, _tower.RangeLevel, Define.UpgradeType.Range);
         RefreshColumn(2, data.speedUpgrades, _tower.SpeedLevel, Define.UpgradeType.Speed);
+        RefreshUniqueEffect();
 
         var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+    }
+
+    private void RefreshUniqueEffect()
+    {
+        string effectText = _tower.GetUniqueEffectText();
+        bool hasEffect = !string.IsNullOrEmpty(effectText);
+
+        GetObject(typeof(GameObjects), (int)GameObjects.Tower_Unique_Object).SetActive(hasEffect);
+        if (!hasEffect) return;
+
+        int stage = _tower.UniqueEffectStage;
+        GetText(typeof(Texts), (int)Texts.Text_UniqueName).text = stage < 3
+            ? $"고유효과  {stage}단계"
+            : "고유효과  3단계 (MAX)";
+        GetText(typeof(Texts), (int)Texts.Text_UniqueEffect).text = effectText;
+        GetText(typeof(Texts), (int)Texts.Text_UniqueCondition).text = stage < 3
+            ? $"전 스탯 {stage + 1}강 달성 시"
+            : "";
     }
 
     private void RefreshColumn(int col, TowerStatUpgrade[] upgrades,

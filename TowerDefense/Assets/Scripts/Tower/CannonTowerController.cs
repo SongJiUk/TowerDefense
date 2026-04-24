@@ -6,17 +6,26 @@ public class CannonTowerController : TowerController
 {
     private CannonTowerData _cannonTowerData;
 
+    public override string GetUniqueEffectText()
+    {
+        if (_cannonTowerData == null) return "";
+        int stage     = UniqueEffectStage;
+        float radius  = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[stage];
+        if (stage < 3)
+        {
+            float nextRadius = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[stage + 1];
+            return $"스플래시 {radius:F1}  ->  {nextRadius:F1}";
+        }
+        return $"스플래시 {radius:F1}  (최대)";
+    }
+
     protected override void OnHit(Transform target)
     {
-        Collider[] cols = Physics.OverlapSphere(
-        target.position,
-        _cannonTowerData.splashRadius,
-        _enemyMask);
-
+        float radius = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[UniqueEffectStage];
+        Collider[] cols = Physics.OverlapSphere(target.position, radius, _enemyMask);
         foreach (var col in cols)
         {
             if (col.transform == target) continue;
-
             col.GetComponent<IDamageable>()?.TakeDamage(CurrentDamage * 0.4f);
         }
     }
