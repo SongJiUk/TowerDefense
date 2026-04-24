@@ -31,8 +31,18 @@ public class LightningTowerController : TowerController
         _chainTargets.Clear();
         _chainTargets.Add(target);
 
-
         int totalChains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[UniqueEffectStage];
+
+        // 도체: 슬로우 걸린 첫 타겟 명중 시 체인 +1
+        if (Managers.SynergyM != null && Managers.SynergyM.Conductor)
+        {
+            var buff = target.GetComponent<BuffHandler>();
+            if (buff != null && buff.HasEffect<SlowEffect>())
+                totalChains += 1;
+        }
+
+        bool conductivePoison = Managers.SynergyM != null && Managers.SynergyM.ConductivePoison;
+
         for (int i = 1; i <= totalChains; i++)
         {
             Transform last = _chainTargets[_chainTargets.Count - 1];
@@ -40,6 +50,15 @@ public class LightningTowerController : TowerController
             if (next == null) break;
 
             float damage = CurrentDamage * Mathf.Pow(_lightningTowerData.chainDamageFalloff, i);
+
+            // 전도성 독: 체인 타겟이 독 걸려있으면 데미지 1.5배
+            if (conductivePoison)
+            {
+                var buff = next.GetComponent<BuffHandler>();
+                if (buff != null && buff.HasEffect<PoisonEffect>())
+                    damage *= 1.5f;
+            }
+
             next.GetComponent<IDamageable>()?.TakeDamage(damage);
             _chainTargets.Add(next);
         }
