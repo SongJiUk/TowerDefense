@@ -59,9 +59,14 @@ MonoBehaviour:
     description: "+120% \uC18D\uB3C4"
     cost: 400
     multiplier: 2.2
-  buildCost: 1
+  buildCost: 130
   addressableKey: LightningTower
   iconKey: LightningTower
+  towerUIColor: {r: 1, g: 0.83921569, b: 0, a: 1}
+  towerBorderColor: {r: 1, g: 0.83921569, b: 0, a: 1}
+  towerBGColor: {r: 0.16470588, g: 0.12549020, b: 0, a: 1}
+  synergies:
+  - "\uC5F0\uC1C4 \uC2DC\uB108\uC9C0"
   chainCount: 2
   chainRange: 3
   chainDamageFalloff: 0.65

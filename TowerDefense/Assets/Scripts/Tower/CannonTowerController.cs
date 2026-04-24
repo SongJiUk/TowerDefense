@@ -9,14 +9,8 @@ public class CannonTowerController : TowerController
     public override string GetUniqueEffectText()
     {
         if (_cannonTowerData == null) return "";
-        int stage     = UniqueEffectStage;
-        float radius  = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[stage];
-        if (stage < 3)
-        {
-            float nextRadius = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[stage + 1];
-            return $"스플래시 {radius:F1}  ->  {nextRadius:F1}";
-        }
-        return $"스플래시 {radius:F1}  (최대)";
+        float radius = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[UniqueEffectStage];
+        return $"폭발 공격  반경 {radius:F1}";
     }
 
     protected override void OnHit(Transform target)

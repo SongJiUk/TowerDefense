@@ -26,13 +26,7 @@ public class SniperTowerController : TowerController
     public override string GetUniqueEffectText()
     {
         if (_sniperData == null) return "";
-        int stage      = UniqueEffectStage;
-        float crit     = _sniperData.stageCritBonus[stage];
-        if (stage < 3)
-        {
-            float nextCrit = _sniperData.stageCritBonus[stage + 1];
-            return $"크리티컬 +{crit * 100:F0}%  ->  +{nextCrit * 100:F0}%";
-        }
-        return $"크리티컬 +{crit * 100:F0}%  (최대)";
+        float crit = _sniperData.stageCritBonus[UniqueEffectStage];
+        return $"크리티컬 확률 +{crit * 100:F0}%";
     }
 }

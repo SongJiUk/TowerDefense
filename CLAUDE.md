@@ -36,10 +36,10 @@
 
 | # | 테마 | 에셋 | 바 배경 | 라인 색 | 강조 색 |
 |---|------|------|---------|---------|---------|
-| 1 | 🌲 숲 | Forest Low Poly Toon Battle Arena | `#1C2E0A` | `#5A8A1A` | `#8BC34A` |
-| 2 | 🏜️ 사막 | Desert Low Poly Toon Battle Arena | `#2E1A08` | `#C8860A` | `#FFB300` |
-| 3 | ❄️ 겨울 | Winter Forest Low Poly Toon Battle Arena | `#0A1A2E` | `#4A90C8` | `#80D8FF` |
-| 4 | 🏰 악마성 | Dungeon Low Poly Toon Battle Arena | `#1A0A1A` | `#8B0000` | `#CC0033` |
+| 1 | 🌲 숲 | Forest Low Poly Toon Battle Arena | `#232004` | `#5A8A1A` | `#8BC34A` |
+| 2 | 🏜️ 사막 | Desert Low Poly Toon Battle Arena | `#341F02` | `#C8860A` | `#FFB300` |
+| 3 | ❄️ 겨울 | Winter Forest Low Poly Toon Battle Arena | `#21211F` | `#4A90C8` | `#80D8FF` |
+| 4 | 🏰 악마성 | Dungeon Low Poly Toon Battle Arena | `#2B0A00` | `#8B0000` | `#CC0033` |
 
 ---
 

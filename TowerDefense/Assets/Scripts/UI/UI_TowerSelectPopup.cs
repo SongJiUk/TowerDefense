@@ -1,236 +1,261 @@
 using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Placeable 마커 클릭 시 마커 위치 기준으로 6개 타워 버튼을 방사형으로 펼쳐 표시.
+/// 타워 배치 팝업.
+///
+/// Bind 오브젝트 이름 규칙:
+///   Buttons : Button_BasicTower ~ Button_LightningTower, Button_Close, Button_Cancle, Button_Construction
+///   Texts   : Text_Gold, Text_Construction, Text_TowerName, Text_TowerDescription, Text_CardCategory,
+///             Text_Synergy1, Text_Synergy2, Text_Damage, Text_Range, Text_AttackSpeed
+///   Images  : Image_BasicTower_Border ~ Image_LightningTower_Border (인덱스 0~5 = 타워 순서),
+///             Image_Tower, Image_Category_BG, Image_Synergy1_Border, Image_Synergy2_Border
+///   Objects : GameObject_BeforeClick, GameObject_AfterClick
+///
+/// 각 타워 컨테이너 하위 (Find로 캐싱):
+///   PriceObject/Text (TMP)
 /// </summary>
 public class UI_TowerSelectPopup : UI_Base
 {
-    // ─── Enum (자식 오브젝트 이름과 정확히 일치) ──────────────────────────────
+    // ─── Enum ─────────────────────────────────────────────────────────────────
 
     enum Buttons
     {
-        Tower_Basic, Tower_Cannon, Tower_Slow,
-        Tower_Sniper, Tower_Poison, Tower_Lighting,
+        Button_BasicTower, Button_SlowTower, Button_PoisonTower,
+        Button_CannonTower, Button_SniperTower, Button_LightningTower,
+        Button_Close, Button_Cancle, Button_Construction,
     }
 
-    private const int   TOWER_COUNT   = 6;
-    private const float ANIM_DURATION = 0.25f;
+    enum Texts
+    {
+        Text_Gold, Text_Construction,
+        Text_TowerName, Text_TowerDescription, Text_CardCategory,
+        Text_Synergy1, Text_Synergy2,
+        Text_Damage, Text_Range, Text_AttackSpeed,
+    }
+
+    enum Images
+    {
+        // 타워 선택 테두리 — 인덱스 0~5, TOWER_COUNT와 반드시 일치
+        Image_BasicTower_Border, Image_SlowTower_Border, Image_PoisonTower_Border,
+        Image_CannonTower_Border, Image_SniperTower_Border, Image_LightningTower_Border,
+        // AfterClick 상세 패널
+        Image_Tower, Image_Category_BG, Image_Tower_Border,
+        Image_Synergy1_Border, Image_Synergy2_Border,
+    }
+
+    enum GameObjects
+    {
+        GameObject_BeforeClick, GameObject_AfterClick,
+    }
+
+    private const int TOWER_COUNT = 6;
+    private const int MAX_SYNERGY = 2;
+
+    // ─── TowerType 매핑 (enum 순서: Basic/Slow/Poison/Cannon/Sniper/Lightning) ──
+
+    private static readonly (string label, Color color)[] TOWER_TYPE_INFO =
+    {
+        ("기본", new Color(0.545f, 0.765f, 0.290f)),  // Basic     #8BC34A
+        ("둔화", new Color(0.502f, 0.847f, 1.000f)),  // Slow      #80D8FF
+        ("독",   new Color(0.463f, 1.000f, 0.012f)),  // Poison    #76FF03
+        ("폭발", new Color(1.000f, 0.427f, 0.000f)),  // Cannon    #FF6D00
+        ("저격", new Color(0.216f, 0.278f, 0.310f)),  // Sniper    #37474F
+        ("연쇄", new Color(1.000f, 0.839f, 0.000f)),  // Lightning #FFD600
+    };
+
+    private static readonly Images[] SYNERGY_IMGS = { Images.Image_Synergy1_Border, Images.Image_Synergy2_Border };
+    private static readonly Texts[] SYNERGY_TXTS = { Texts.Text_Synergy1, Texts.Text_Synergy2 };
 
     // ─── 이벤트 ───────────────────────────────────────────────────────────────
 
     public event Action<TowerData> OnTowerSelected;
 
-    // ─── 설정 ─────────────────────────────────────────────────────────────────
+    // ─── Inspector ────────────────────────────────────────────────────────────
 
-    [SerializeField] private float          _radius         = 90f;
-    [SerializeField] private float          _staggerDelay   = 0.03f;  // 버튼 간 딜레이
     [SerializeField] private RangeIndicator _rangeIndicator;
 
     // ─── 내부 상태 ────────────────────────────────────────────────────────────
 
-    private TowerData[]   _currentData;
-    private Vector3       _tileWorldPos;
-    private RectTransform _rect;
-    private Canvas        _rootCanvas;
+    private TowerData[] _currentData;
+    private Vector3 _tileWorldPos;
+    private int _selectedIndex = -1;
+    private bool _initialized;
 
-    // 각 버튼의 방사형 목표 위치 (ArrangeRadial에서 계산 후 저장)
-    private readonly Vector2[] _radialPositions = new Vector2[TOWER_COUNT];
-
-    // ─── 원형 배치 각도 (위쪽부터 시계방향, 6개 60° 간격) ────────────────────
-
-    private static readonly float[] ANGLES = { 90f, 30f, -30f, -90f, -150f, 150f };
-
-    // ─── Unity 생명주기 ───────────────────────────────────────────────────────
-
-    void OnDestroy()
-    {
-        Managers.GameM.OnGoldChanged -= RefreshButtonStates;
-    }
+    private readonly Color[] _defaultBorderColor = new Color[TOWER_COUNT];
+    private readonly TMP_Text[] _priceTxts = new TMP_Text[TOWER_COUNT];
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────
 
+    void OnEnable() => Managers.UIM.RequestPause();
+    void OnDisable() => Managers.UIM.ReleasePause();
+
     public override async UniTask<bool> Init()
     {
+        if (_initialized) return true;
         if (!await base.Init()) return false;
 
-        _rect       = GetComponent<RectTransform>();
-        _rootCanvas = GetComponentInParent<Canvas>();
-
         BindButton(typeof(Buttons));
+        BindText(typeof(Texts));
+        BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
         for (int i = 0; i < TOWER_COUNT; i++)
         {
             int idx = i;
-            Button btn = GetButton(typeof(Buttons), (int)Buttons.Tower_Basic + idx);
+            GetButton(typeof(Buttons), i).onClick.AddListener(() => OnTowerButtonClicked(idx));
 
-            btn.onClick.AddListener(() => OnTowerButtonClicked(idx));
+            _defaultBorderColor[i] = GetImage(typeof(Images), i).color;
 
-            BindEvent(btn.gameObject, () => OnButtonHoverEnter(idx),
-                      _type: Define.UIEvent.PointerEnter);
-
-            BindEvent(btn.gameObject, null, (_) => _rangeIndicator?.Hide(),
-                      Define.UIEvent.OnPointerExit);
+            // 가격 텍스트: 이름이 "Text (TMP)"로 고정이라 Find 사용
+            var container = GetButton(typeof(Buttons), i).transform.parent.parent;
+            _priceTxts[i] = container.Find("PriceObject/Text (TMP)")?.GetComponent<TMP_Text>();
         }
 
-        Managers.GameM.OnGoldChanged += RefreshButtonStates;
+        GetButton(typeof(Buttons), (int)Buttons.Button_Close).onClick.AddListener(OnCloseClicked);
+        GetButton(typeof(Buttons), (int)Buttons.Button_Cancle).onClick.AddListener(Hide);
+        GetButton(typeof(Buttons), (int)Buttons.Button_Construction).onClick.AddListener(OnConstructionClicked);
 
-        CalcRadialPositions();
-        ApplyTheme(Managers.WaveM.CurrentStage);
-
+        Managers.GameM.OnGoldChanged += OnGoldChanged;
+        _initialized = true;
         return true;
     }
 
-    public override void ApplyTheme(StageData stage)
+    void OnDestroy()
     {
-        if (stage == null) return;
-        // 버튼 이미지에 강조 색 적용 — 필요한 오브젝트 추가
-        for (int i = 0; i < TOWER_COUNT; i++)
-        {
-            var btn = GetButton(typeof(Buttons), (int)Buttons.Tower_Basic + i);
-            btn.GetComponent<Image>().color = stage.uiAccentColor;
-        }
+        if (Managers.GameM != null)
+            Managers.GameM.OnGoldChanged -= OnGoldChanged;
     }
 
     // ─── 공개 API ─────────────────────────────────────────────────────────────
 
     public void Show(Vector3 screenPos, Vector3 tileWorldPos, TowerData[] towerData)
     {
-        if (!isInit) Init().Forget();
-
-        _currentData  = towerData;
+        _currentData = towerData;
         _tileWorldPos = tileWorldPos;
+        _selectedIndex = -1;
 
-        PositionPopup(screenPos);
-        PopulateButtons();
-        RefreshButtonStates(Managers.GameM.Gold);
+        if (!_initialized) Init().Forget();
+
+        GetText(typeof(Texts), (int)Texts.Text_Gold).text = $"{Managers.GameM.Gold}";
+
+        for (int i = 0; i < TOWER_COUNT && i < _currentData?.Length; i++)
+        {
+            if (_priceTxts[i] == null || _currentData[i] == null) continue;
+            int cost = Mathf.RoundToInt(_currentData[i].buildCost * Managers.GameM.buildCostMultiplier);
+            _priceTxts[i].text = $"{cost}";
+        }
+
+        ResetSelection();
 
         gameObject.SetActive(true);
-        PlayOpenAnim();
+        transform.localScale = Vector3.one * 0.85f;
+        transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack).SetUpdate(true);
     }
 
     public void Hide()
     {
         _rangeIndicator?.Hide();
-        DOTween.Kill(gameObject);  // 진행 중 애니메이션 중단
+        DOTween.Kill(gameObject);
         gameObject.SetActive(false);
     }
 
-    // ─── 방사형 위치 계산 ────────────────────────────────────────────────────
-
-    private void CalcRadialPositions()
-    {
-        for (int i = 0; i < TOWER_COUNT; i++)
-        {
-            float rad = ANGLES[i] * Mathf.Deg2Rad;
-            _radialPositions[i] = new Vector2(
-                Mathf.Cos(rad) * _radius,
-                Mathf.Sin(rad) * _radius
-            );
-        }
-    }
-
-    // ─── 열기 애니메이션 ─────────────────────────────────────────────────────
-
-    private void PlayOpenAnim()
-    {
-        for (int i = 0; i < TOWER_COUNT; i++)
-        {
-            Button btn = GetButton(typeof(Buttons), (int)Buttons.Tower_Basic + i);
-            if (!btn.gameObject.activeSelf) continue;
-
-            RectTransform rt = btn.GetComponent<RectTransform>();
-
-            // 시작: 중앙, 스케일 0
-            rt.anchoredPosition = Vector2.zero;
-            rt.localScale       = Vector3.zero;
-
-            float delay = i * _staggerDelay;
-
-            // 목표 위치로 OutBack 튀어나오기
-            rt.DOAnchorPos(_radialPositions[i], ANIM_DURATION)
-              .SetDelay(delay)
-              .SetEase(Ease.OutBack)
-              .SetLink(gameObject);
-
-            rt.DOScale(Vector3.one, ANIM_DURATION)
-              .SetDelay(delay)
-              .SetEase(Ease.OutBack)
-              .SetLink(gameObject);
-        }
-    }
-
-    // ─── 버튼 내용 채우기 ────────────────────────────────────────────────────
-
-    private void PopulateButtons()
-    {
-        for (int i = 0; i < TOWER_COUNT; i++)
-        {
-            Button btn = GetButton(typeof(Buttons), (int)Buttons.Tower_Basic + i);
-            bool hasData = _currentData != null
-                        && i < _currentData.Length
-                        && _currentData[i] != null;
-
-            btn.gameObject.SetActive(true);
-            btn.interactable = hasData;
-        }
-    }
-
-    private void RefreshButtonStates(int gold)
-    {
-        if (_currentData == null) return;
-
-        for (int i = 0; i < TOWER_COUNT; i++)
-        {
-            if (i >= _currentData.Length || _currentData[i] == null) continue;
-            GetButton(typeof(Buttons), (int)Buttons.Tower_Basic + i).interactable
-                = gold >= _currentData[i].buildCost;
-        }
-    }
-
-    // ─── 이벤트 핸들러 ───────────────────────────────────────────────────────
+    // ─── 버튼 핸들러 ─────────────────────────────────────────────────────────
 
     private void OnTowerButtonClicked(int index)
     {
         if (_currentData == null || index >= _currentData.Length) return;
-        _rangeIndicator?.Hide();
-        OnTowerSelected?.Invoke(_currentData[index]);
-    }
 
-    private void OnButtonHoverEnter(int index)
-    {
-        if (_currentData == null || index >= _currentData.Length) return;
+        _selectedIndex = index;
         TowerData data = _currentData[index];
-        if (data == null || _rangeIndicator == null) return;
 
-        _rangeIndicator.Show(_tileWorldPos, data.baseRange);
+        // 선택 테두리 색 갱신
+        for (int i = 0; i < TOWER_COUNT; i++)
+            GetImage(typeof(Images), i).color = (i == index) ? data.towerUIColor : _defaultBorderColor[i];
+
+        GetImage(typeof(Images), (int)Images.Image_Tower_Border).color = data.towerUIColor;
+
+        // 패널 전환
+        GetObject(typeof(GameObjects), (int)GameObjects.GameObject_BeforeClick).SetActive(false);
+        GetObject(typeof(GameObjects), (int)GameObjects.GameObject_AfterClick).SetActive(true);
+
+        // 기본 정보
+        GetText(typeof(Texts), (int)Texts.Text_TowerName).text = data.towerName;
+        GetText(typeof(Texts), (int)Texts.Text_TowerDescription).text = data.Description;
+        GetText(typeof(Texts), (int)Texts.Text_Damage).text = $"{data.baseDamage}";
+        GetText(typeof(Texts), (int)Texts.Text_Range).text = $"{data.baseRange}";
+        GetText(typeof(Texts), (int)Texts.Text_AttackSpeed).text = $"{data.baseAttackSpeed}/s";
+
+        // 카테고리 레이블 + 배경 색
+        var (label, bgColor) = TOWER_TYPE_INFO[(int)data.towerType];
+        GetText(typeof(Texts), (int)Texts.Text_CardCategory).text = label;
+        GetImage(typeof(Images), (int)Images.Image_Category_BG).color = bgColor;
+
+        // 시너지 태그
+        for (int si = 0; si < MAX_SYNERGY; si++)
+        {
+            bool has = data.synergies != null && si < data.synergies.Length
+                       && !string.IsNullOrEmpty(data.synergies[si]);
+            GetImage(typeof(Images), (int)SYNERGY_IMGS[si]).gameObject.SetActive(has);
+            if (has) GetText(typeof(Texts), (int)SYNERGY_TXTS[si]).text = data.synergies[si];
+        }
+
+        // 타워 아이콘
+        if (data.iconKey != null)
+            GetImage(typeof(Images), (int)Images.Image_Tower).sprite = Managers.ResourceM.GetAtlas(data.iconKey);
+
+        // 설치 버튼 텍스트
+        int buildCost = Mathf.RoundToInt(data.buildCost * Managers.GameM.buildCostMultiplier);
+        GetText(typeof(Texts), (int)Texts.Text_Construction).text = $"설치  {buildCost}";
+
+        _rangeIndicator?.Show(_tileWorldPos, data.baseRange);
+        RefreshConstructionButton();
     }
 
-    // ─── 팝업 위치 ────────────────────────────────────────────────────────────
-
-    private void PositionPopup(Vector3 screenPos)   
+    private void OnConstructionClicked()
     {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            _rootCanvas.transform as RectTransform,
-            screenPos,
-            _rootCanvas.worldCamera,
-            out Vector2 localPos
-        );
-        _rect.localPosition = localPos;
+        if (_selectedIndex < 0 || _currentData == null) return;
+        OnTowerSelected?.Invoke(_currentData[_selectedIndex]);
+    }
 
-        Canvas.ForceUpdateCanvases();
-        Vector3[] corners = new Vector3[4];
-        _rect.GetWorldCorners(corners);
+    // ─── 갱신 ────────────────────────────────────────────────────────────────
 
-        Vector2 offset = Vector2.zero;
-        if (corners[0].x < 0)             offset.x = -corners[0].x;
-        if (corners[2].x > Screen.width)  offset.x = Screen.width  - corners[2].x;
-        if (corners[0].y < 0)             offset.y = -corners[0].y;
-        if (corners[2].y > Screen.height) offset.y = Screen.height - corners[2].y;
+    private void ResetSelection()
+    {
+        for (int i = 0; i < TOWER_COUNT; i++)
+            GetImage(typeof(Images), i).color = _defaultBorderColor[i];
 
-        _rect.localPosition += (Vector3)(offset / _rootCanvas.scaleFactor);
+        GetObject(typeof(GameObjects), (int)GameObjects.GameObject_BeforeClick).SetActive(true);
+        GetObject(typeof(GameObjects), (int)GameObjects.GameObject_AfterClick).SetActive(false);
+
+        GetButton(typeof(Buttons), (int)Buttons.Button_Construction).interactable = false;
+        GetText(typeof(Texts), (int)Texts.Text_Construction).text = "타워를 선택하세요";
+    }
+
+    private void RefreshConstructionButton()
+    {
+        if (_selectedIndex < 0 || _currentData == null || _selectedIndex >= _currentData.Length)
+        {
+            GetButton(typeof(Buttons), (int)Buttons.Button_Construction).interactable = false;
+            return;
+        }
+
+        int cost = Mathf.RoundToInt(_currentData[_selectedIndex].buildCost * Managers.GameM.buildCostMultiplier);
+        GetButton(typeof(Buttons), (int)Buttons.Button_Construction).interactable = Managers.GameM.Gold >= cost;
+    }
+
+    private void OnGoldChanged(int gold)
+    {
+        GetText(typeof(Texts), (int)Texts.Text_Gold).text = $"{gold}";
+        RefreshConstructionButton();
+    }
+
+    private void OnCloseClicked()
+    {
+        gameObject.SetActive(false);
     }
 }

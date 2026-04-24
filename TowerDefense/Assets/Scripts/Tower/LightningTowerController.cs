@@ -16,14 +16,8 @@ public class LightningTowerController : TowerController
     public override string GetUniqueEffectText()
     {
         if (_lightningTowerData == null) return "";
-        int stage  = UniqueEffectStage;
-        int chains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[stage];
-        if (stage < 3)
-        {
-            int nextChains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[stage + 1];
-            return $"체인 {chains}회  ->  {nextChains}회";
-        }
-        return $"체인 {chains}회  (최대)";
+        int chains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[UniqueEffectStage];
+        return $"최대 {chains}마리 연쇄 공격";
     }
 
     protected override void OnHit(Transform target)

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerName: "\uCE90\uB17C\uD0D1"
   Description: "\uCC29\uD0C4 \uBC94\uC704 \uD3ED\uBC1C \uACF5\uACA9"
-  towerType: 1
+  towerType: 3
   baseDamage: 40
   baseAttackSpeed: 0.6
   baseRange: 5
@@ -59,7 +59,18 @@ MonoBehaviour:
     description: "+100% \uC18D\uB3C4"
     cost: 480
     multiplier: 2
-  buildCost: 1
+  buildCost: 90
   addressableKey: CannonTower
   iconKey: CannonTower
+  towerUIColor: {r: 1, g: 0.42745098, b: 0, a: 1}
+  towerBorderColor: {r: 1, g: 0.42745098, b: 0, a: 1}
+  towerBGColor: {r: 0.18039216, g: 0.07058824, b: 0, a: 1}
+  synergies:
+  - "\uAD11\uC5ED \uC2DC\uB108\uC9C0"
+  - "\uD3ED\uBC1C \uC2DC\uB108\uC9C0"
   splashRadius: 1.5
+  stageSplashBonus:
+  - 0
+  - 0.3
+  - 0.6
+  - 1

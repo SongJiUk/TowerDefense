@@ -59,6 +59,12 @@ MonoBehaviour:
     description: "+120% \uC18D\uB3C4"
     cost: 320
     multiplier: 2.2
-  buildCost: 1
+  buildCost: 50
   addressableKey: BasicTower
   iconKey: BasicTower
+  towerUIColor: {r: 0.54509807, g: 0.7647059, b: 0.2901961, a: 1}
+  towerBorderColor: {r: 0.54509807, g: 0.7647059, b: 0.2901961, a: 1}
+  towerBGColor: {r: 0.10196078, g: 0.18039216, b: 0.03921569, a: 1}
+  synergies:
+  - "\uC9D1\uC911\uC0AC\uACA9 \uC2DC\uB108\uC9C0"
+  - "\uC5F0\uC0AC \uC2DC\uB108\uC9C0"

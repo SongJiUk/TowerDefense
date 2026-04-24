@@ -27,10 +27,10 @@ public class Define
     public enum TowerType
     {
         Basic,
-        Cannon,
         Slow,
-        Sniper,
         Poison,
+        Cannon,
+        Sniper,
         Lightning,
     }
 

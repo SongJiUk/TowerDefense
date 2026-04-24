@@ -31,6 +31,6 @@ MonoBehaviour:
     spawnWeight: 2
   bossEnemy: {fileID: 11400000, guid: dc8f8743d59615a49b242c3912369983, type: 2}
   bossWaveMinions: 8
-  uiBarBG: {r: 0.101960786, g: 0.039215688, b: 0.101960786, a: 1}
+  uiBarBG: {r: 0.16862745, g: 0.03921569, b: 0, a: 1}
   uiLineColor: {r: 0.54509807, g: 0, b: 0, a: 1}
   uiAccentColor: {r: 0.8, g: 0, b: 0.2, a: 1}

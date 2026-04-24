@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerName: "\uC2A4\uB098\uC774\uD37C\uD0D1"
   Description: "\uC7A5\uAC70\uB9AC \uACE0\uB370\uBBF8\uC9C0 \uB2E8\uC77C \uACF5\uACA9 "
-  towerType: 3
+  towerType: 4
   baseDamage: 60
   baseAttackSpeed: 0.5
   baseRange: 10
@@ -59,9 +59,14 @@ MonoBehaviour:
     description: "+90% \uC18D\uB3C4"
     cost: 560
     multiplier: 1.9
-  buildCost: 1
+  buildCost: 110
   addressableKey: SniperTower
   iconKey: SniperTower
+  towerUIColor: {r: 0.37647059, g: 0.49019608, b: 0.54509804, a: 1}
+  towerBorderColor: {r: 0.37647059, g: 0.49019608, b: 0.54509804, a: 1}
+  towerBGColor: {r: 0.10196078, g: 0.13333333, b: 0.14901961, a: 1}
+  synergies:
+  - "\uCE58\uBA85\uD0C0 \uC2DC\uB108\uC9C0"
   stageCritBonus:
   - 0
   - 0.05
