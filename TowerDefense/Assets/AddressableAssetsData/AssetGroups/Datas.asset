@@ -53,12 +53,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4679c7e36106f49a6838e5cd88f39691
-    m_Address: Tower_Sniper
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 499bebea951c5461594c298d4c24f143
     m_Address: Tower_Slow
     m_ReadOnly: 0

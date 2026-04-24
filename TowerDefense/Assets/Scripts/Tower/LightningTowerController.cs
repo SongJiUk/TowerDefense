@@ -13,13 +13,27 @@ public class LightningTowerController : TowerController
         _lightningTowerData = data as LightningTowerData;
     }
 
+    public override string GetUniqueEffectText()
+    {
+        if (_lightningTowerData == null) return "";
+        int stage  = UniqueEffectStage;
+        int chains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[stage];
+        if (stage < 3)
+        {
+            int nextChains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[stage + 1];
+            return $"체인 {chains}회  ->  {nextChains}회";
+        }
+        return $"체인 {chains}회  (최대)";
+    }
+
     protected override void OnHit(Transform target)
     {
         _chainTargets.Clear();
         _chainTargets.Add(target);
 
 
-        for (int i = 1; i <= _lightningTowerData.chainCount; i++)
+        int totalChains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[UniqueEffectStage];
+        for (int i = 1; i <= totalChains; i++)
         {
             Transform last = _chainTargets[_chainTargets.Count - 1];
             Transform next = FindChainTarget(last);

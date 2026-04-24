@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7915c4e8aa586194cb3b2b37a20cbeb4, type: 3}
+  m_Script: {fileID: 11500000, guid: 30685d6febd4cd1488d9aab23593d384, type: 3}
   m_Name: Tower_Sniper
   m_EditorClassIdentifier: 
   towerName: "\uC2A4\uB098\uC774\uD37C\uD0D1"
@@ -62,3 +62,8 @@ MonoBehaviour:
   buildCost: 1
   addressableKey: SniperTower
   iconKey: SniperTower
+  stageCritBonus:
+  - 0
+  - 0.05
+  - 0.12
+  - 0.2

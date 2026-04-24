@@ -211,7 +211,7 @@ public class UI_TowerSelectPopup : UI_Base
 
     // ─── 팝업 위치 ────────────────────────────────────────────────────────────
 
-    private void PositionPopup(Vector3 screenPos)
+    private void PositionPopup(Vector3 screenPos)   
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _rootCanvas.transform as RectTransform,
