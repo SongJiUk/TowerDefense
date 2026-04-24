@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: RangeUp
   m_EditorClassIdentifier: 
   cardName: "\uC0AC\uAC70\uB9AC Up"
-  Description: "\uD0C0\uC6CC \uC0AC\uAC70\uB9AC 1 \uC99D\uAC00"
+  Description: "\uD0C0\uC6CC \uC0AC\uAC70\uB9AC +0.5 \uC99D\uAC00"
   iconKey: RangeUp
   category: 0
   effectType: 2
-  effectValue: 1
+  effectValue: 0.5
   weight: 1.2
   maxStack: 3
