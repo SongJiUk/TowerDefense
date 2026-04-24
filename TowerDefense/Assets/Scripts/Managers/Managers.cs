@@ -17,6 +17,7 @@ public class Managers : MonoBehaviour
     readonly ObjectManager objectManager = new();
     readonly CardManager cardManager = new();
     readonly SkillManager skillManager = new();
+    readonly SynergyManager synergyManager = new();
     UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
@@ -51,6 +52,7 @@ public class Managers : MonoBehaviour
     public static ObjectManager ObjectM { get { return Instance?.objectManager; } }
     public static CardManager CardM { get { return Instance?.cardManager; } }
     public static SkillManager SkillM { get { return Instance?.skillManager; } }
+    public static SynergyManager SynergyM { get { return Instance?.synergyManager; } }
 
     public static Managers Instance
     {
@@ -82,5 +84,6 @@ public class Managers : MonoBehaviour
         PoolM.Clear();
         ResourceM.Clear();
         UIM.Clear();
+        SynergyM.Clear();
     }
 }

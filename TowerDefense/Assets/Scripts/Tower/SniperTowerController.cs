@@ -10,10 +10,17 @@ public class SniperTowerController : TowerController
         _sniperData = data as SniperTowerData;
     }
 
-    protected override float GetBonusCritChance()
+    protected override float GetBonusCritChance(Transform target)
     {
         if (_sniperData == null) return 0f;
-        return _sniperData.stageCritBonus[UniqueEffectStage];
+        float bonus = _sniperData.stageCritBonus[UniqueEffectStage];
+        if (Managers.SynergyM != null && Managers.SynergyM.PoisonShot)
+        {
+            var buff = target.GetComponent<BuffHandler>();
+            if (buff != null && buff.HasEffect<PoisonEffect>())
+                bonus += 0.25f;
+        }
+        return bonus;
     }
 
     public override string GetUniqueEffectText()

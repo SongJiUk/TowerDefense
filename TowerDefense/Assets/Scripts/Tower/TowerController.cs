@@ -47,12 +47,19 @@ public class TowerController : MonoBehaviour
     {
         if (Managers.GameM != null)
             Managers.GameM.OnCardApplied += ApplyStats;
+        if (Managers.SynergyM != null)
+            Managers.SynergyM.OnSynergyChanged += ApplyStats;
     }
 
     void OnDisable()
     {
         if (Managers.GameM != null)
             Managers.GameM.OnCardApplied -= ApplyStats;
+        if (Managers.SynergyM != null)
+        {
+            Managers.SynergyM.OnSynergyChanged -= ApplyStats;
+            if (Data != null) Managers.SynergyM.Unregister(Data.towerType);
+        }
 
         if (_selectedTower == this)
         {
@@ -144,6 +151,7 @@ public class TowerController : MonoBehaviour
         DamageLevel = 0;
         RangeLevel  = 0;
         SpeedLevel  = 0;
+        Managers.SynergyM?.Register(data.towerType);
         ApplyStats();
     }
 
@@ -238,6 +246,10 @@ public class TowerController : MonoBehaviour
         if (RangeLevel > 0 && Data.rangeUpgrades != null && RangeLevel <= Data.rangeUpgrades.Length)
             range *= Data.rangeUpgrades[RangeLevel - 1].multiplier;
 
+        if (Managers.SynergyM != null && Managers.SynergyM.FocusFire &&
+            (Data.towerType == Define.TowerType.Basic || Data.towerType == Define.TowerType.Sniper))
+            speed *= 1.15f;
+
         _currentDamage      = damage * Managers.GameM.globalDamageMultiplier;
         _currentAttackSpeed = speed  * Managers.GameM.globalAttackSpeedMultiplier;
         _currentRange       = range  + Managers.GameM.globalRangeBonus;
@@ -282,7 +294,7 @@ public class TowerController : MonoBehaviour
         if (Data.projectilePrefabKey == null) return;
 
         float damage = _currentDamage;
-        if (UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance())
+        if (UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance(target))
             damage *= 2f;
 
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
@@ -293,7 +305,7 @@ public class TowerController : MonoBehaviour
 
     protected virtual void OnHit(Transform target) { }
 
-    protected virtual float GetBonusCritChance() => 0f;
+    protected virtual float GetBonusCritChance(Transform target) => 0f;
 
     // ─── 헬퍼 ────────────────────────────────────────────────────────────────
 

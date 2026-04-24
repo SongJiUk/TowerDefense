@@ -22,6 +22,15 @@ public class CannonTowerController : TowerController
     protected override void OnHit(Transform target)
     {
         float radius = _cannonTowerData.splashRadius + _cannonTowerData.stageSplashBonus[UniqueEffectStage];
+
+        // 정밀 포격: 슬로우 걸린 적 명중 시 스플래시 반경 1.5배
+        if (Managers.SynergyM != null && Managers.SynergyM.PrecisionBombardment)
+        {
+            var buff = target.GetComponent<BuffHandler>();
+            if (buff != null && buff.HasEffect<SlowEffect>())
+                radius *= 1.5f;
+        }
+
         Collider[] cols = Physics.OverlapSphere(target.position, radius, _enemyMask);
         foreach (var col in cols)
         {
