@@ -10,18 +10,20 @@ using UnityEngine;
 /// </summary>
 public class EnemyController : MonoBehaviour, IDamageable
 {
+    protected EnemyHPBar _hpBar;
+    protected GameObject _hpBarGo;
 
-    private EnemyHPBar _hpBar;
-    private GameObject _hpBarGo;
-
-    private EnemyData _data;
-    [SerializeField] private float _hp;
-    private float _maxHp;
+    protected EnemyData _data;
+    [SerializeField] protected float _hp;
+    protected float _maxHp;
     public float CurrentHp => _hp;
-    private float _baseSpeed;
-    [SerializeField] private float _speed;
-    private bool _isDead;
-    private BuffHandler _buffHandler;
+    protected float _baseSpeed;
+    [SerializeField] protected float _speed;
+    protected bool _isDead;
+    protected BuffHandler _buffHandler;
+
+    protected float _storedHpMult = 1f;
+    protected float _storedSpeedMult = 1f;
 
     private List<Vector3> _path;
     private CancellationTokenSource _cts;
@@ -34,14 +36,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// 스폰 직후 WaveManager가 호출. 스탯 설정 후 경로탐색을 시작한다.
-    /// </summary>
-    /// <param name="hpMultiplier">웨이브 공식으로 계산된 HP 배율</param>
-    /// <param name="speedMultiplier">웨이브 공식으로 계산된 속도 배율</param>
-    public void Init(EnemyData data, float hpMultiplier = 1f, float speedMultiplier = 1f)
+    public virtual void Init(EnemyData data, float hpMultiplier = 1f, float speedMultiplier = 1f)
     {
         _data = data;
+        _storedHpMult = hpMultiplier;
+        _storedSpeedMult = speedMultiplier;
         _maxHp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier;
         _hp = _maxHp;
         _baseSpeed = data.baseMoveSpeed * speedMultiplier;
@@ -54,7 +53,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
-    void Awake()
+    protected virtual void Awake()
     {
         if (_buffHandler == null) _buffHandler = GetComponent<BuffHandler>();
     }
@@ -90,8 +89,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     // ─── 전투 ─────────────────────────────────────────────────────────────────
 
-    /// <summary>타워의 ProjectileController가 충돌 시 호출. HP가 0 이하면 Die().</summary>
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         if (_isDead) return;
         _hp -= damage;
@@ -99,16 +97,9 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (_hp <= 0f) Die();
     }
 
-    public void Heal(float amount)
-    {
+    public void Heal(float amount) { }
 
-    }
-
-    /// <summary>
-    /// 사망 처리.
-    /// 골드 지급 → WaveManager에 제거 알림 → ObjectPool 반환.
-    /// </summary>
-    private void Die()
+    protected virtual void Die()
     {
         _isDead = true;
         Managers.WaveM.OnEnemyRemoved();
@@ -119,11 +110,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     // ─── 경로 이동 ────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// PathFinder.OnPathChanged 이벤트 수신 시 호출.
-    /// transform.position 대신 _currentTarget(다음 웨이포인트)부터 재탐색해
-    /// 현재 칸을 통과한 직후 역방향으로 돌아가는 현상을 방지.
-    /// </summary>
     private void OnPathChanged()
     {
         List<Vector3> newPath = Managers.Path.FindPath(
@@ -133,15 +119,10 @@ public class EnemyController : MonoBehaviour, IDamageable
         StartMove(newPath);
     }
 
-    /// <summary>
-    /// 스폰 직후 경로 요청. Managers.Core가 null이면 이동하지 않는다.
-    /// Core가 Road 타일 위에 없으면 FindPath가 null을 반환하므로 반드시 Road 위에 배치해야 함.
-    /// </summary>
     private void RequestPath()
     {
         if (_data == null || Managers.CoreTransform == null) return;
 
-        // 스폰 Y를 SpawnPoint 표면에 맞춤 (땅 박힘 방지)
         if (Managers.SpawnPoint != null)
             transform.position = new Vector3(transform.position.x, Managers.SpawnPoint.transform.position.y, transform.position.z);
 
@@ -152,7 +133,6 @@ public class EnemyController : MonoBehaviour, IDamageable
         StartMove(path);
     }
 
-    /// <summary>진행 중인 이동 UniTask를 취소하고 새 경로로 재시작.</summary>
     private void StartMove(List<Vector3> newPath)
     {
         _cts?.Cancel();
@@ -163,11 +143,6 @@ public class EnemyController : MonoBehaviour, IDamageable
         MoveAlongPath(_cts.Token).Forget();
     }
 
-    /// <summary>
-    /// 경로의 웨이포인트를 순서대로 MoveTowards로 이동.
-    /// 각 웨이포인트 도달 직전에 _currentTarget을 업데이트해 경로 재계산 기준점으로 사용.
-    /// 전체 경로 완주 시 OnReachCore() 호출.
-    /// </summary>
     private async UniTaskVoid MoveAlongPath(CancellationToken token)
     {
         if (_path == null || _path.Count == 0) return;
@@ -189,7 +164,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 
                 var dir = target - transform.position;
                 dir.y = 0;
-                transform.rotation = Quaternion.LookRotation(dir);
+                if (dir != Vector3.zero)
+                    transform.rotation = Quaternion.LookRotation(dir);
 
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
@@ -198,10 +174,6 @@ public class EnemyController : MonoBehaviour, IDamageable
         OnReachCore();
     }
 
-    /// <summary>
-    /// 코어 도달 처리.
-    /// WaveManager에 제거 알림 후 풀 반환.
-    /// </summary>
     private void OnReachCore()
     {
         if (_isDead) return;
@@ -211,7 +183,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         Managers.ResourceM.Destroy(gameObject);
     }
 
-    // ─── 스탯 변경 ─────────────────────────────────────────────────────────────────
+    // ─── 스탯 변경 ────────────────────────────────────────────────────────────
 
     public void RecalculateSpeed()
     {

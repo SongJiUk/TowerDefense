@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_WaveAnnounce }
     enum Buttons { Button_SkillUpgrade }
     enum Images
     {
@@ -35,7 +35,9 @@ public class UI_GameScene : UI_Scene
         Managers.GameM.OnGoldChanged -= RefreshGold;
         Managers.GameM.OnExpChanged -= RefreshExp;
         Managers.GameM.OnLevelUp -= LevelUp;
-        Managers.WaveM.OnWaveStart -= RefreshWave;
+        Managers.WaveM.OnWaveStart -= OnWaveStart;
+        Managers.WaveM.OnAllWavesComplete -= OnAllWavesComplete;
+        Managers.GameM.OnGameOver -= OnGameOver;
         Managers.SkillM.OnSlotChanged -= OnSkillSlotChanged;
         Managers.SkillM.OnSkillPointsChanged -= RefreshSkillPoints;
         _skillBtnRect?.DOKill();
@@ -65,8 +67,10 @@ public class UI_GameScene : UI_Scene
         Managers.GameM.OnGoldChanged += RefreshGold;
         Managers.GameM.OnExpChanged += RefreshExp;
         Managers.GameM.OnLevelUp += LevelUp;
-        Managers.WaveM.OnWaveStart += RefreshWave;
+        Managers.WaveM.OnWaveStart += OnWaveStart;
         Managers.WaveM.OnWaveComplete += OnWaveComplete;
+        Managers.WaveM.OnAllWavesComplete += OnAllWavesComplete;
+        Managers.GameM.OnGameOver += OnGameOver;
         Managers.SkillM.OnSlotChanged += OnSkillSlotChanged;
         Managers.SkillM.OnSkillPointsChanged += RefreshSkillPoints;
 
@@ -117,10 +121,27 @@ public class UI_GameScene : UI_Scene
         GetText(typeof(Texts), (int)Texts.Text_Gold).text = $"{gold}";
     }
 
-    private void RefreshWave(int wave)
+    private void OnWaveStart(int wave)
     {
-        GetText(typeof(Texts), (int)Texts.Text_Wave).text =
-            $"{wave}";
+        GetText(typeof(Texts), (int)Texts.Text_Wave).text = $"{wave}";
+        ShowAnnounce($"Wave {wave} 시작!");
+    }
+
+    private void ShowAnnounce(string message)
+    {
+        var txt = GetText(typeof(Texts), (int)Texts.Text_WaveAnnounce);
+        txt.text = message;
+        txt.DOKill();
+        txt.transform.DOKill();
+
+        txt.alpha = 0f;
+        txt.transform.localScale = Vector3.one * 0.8f;
+
+        var seq = DOTween.Sequence().SetUpdate(true);
+        seq.Append(txt.DOFade(1f, 0.2f));
+        seq.Join(txt.transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack));
+        seq.AppendInterval(1.2f);
+        seq.Append(txt.DOFade(0f, 0.3f));
     }
 
     private void RefreshExp(int exp, int maxExp)
@@ -213,6 +234,20 @@ public class UI_GameScene : UI_Scene
 
     private void OnWaveComplete(int wave)
     {
-        // autoStart=false일 때 다음 웨이브 버튼 활성화 등 추가 가능
+        ShowAnnounce($"Wave {wave} 클리어!");
+    }
+
+    private async void OnAllWavesComplete()
+    {
+        var popup = Managers.ObjectM.SpawnUI<UI_StageCompletePopup>("UI_StageCompletePopup", transform);
+        await popup.Init();
+        popup.Show(Managers.SelectedStage).Forget();
+    }
+
+    private async void OnGameOver()
+    {
+        var popup = Managers.ObjectM.SpawnUI<UI_GameOverPopup>("UI_GameOverPopup", transform);
+        await popup.Init();
+        popup.Show(Managers.WaveM.CurrentWave).Forget();
     }
 }

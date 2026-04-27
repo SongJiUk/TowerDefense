@@ -76,7 +76,28 @@ public class GameManager
     public float waveBonusMultiplier = 1f;
     public float buildCostMultiplier = 1f;
     public float nextWaveEnemyHpMultiplier = 1f;
+    public float pendingEnemyHpMultiplier = 1f;
 
     public event Action OnCardApplied;
     public void NotifyCardApplied() => OnCardApplied?.Invoke();
+
+    // ─── 게임오버 ────────────────────────────────────────────────────────────
+
+    public event Action OnGameOver;
+    public void TriggerGameOver() => OnGameOver?.Invoke();
+
+    public void Reset()
+    {
+        ResetLevel();
+        ResetGold();
+        globalDamageMultiplier      = 1f;
+        globalAttackSpeedMultiplier = 1f;
+        globalRangeBonus            = 0f;
+        criticalChanceBonus         = 0f;
+        killRewardMultiplier        = 1f;
+        waveBonusMultiplier         = 1f;
+        buildCostMultiplier         = 1f;
+        nextWaveEnemyHpMultiplier   = 1f;
+        pendingEnemyHpMultiplier    = 1f;
+    }
 }
