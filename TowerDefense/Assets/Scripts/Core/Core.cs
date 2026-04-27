@@ -44,6 +44,7 @@ public class Core : MonoBehaviour, IDamageable
 
     private void Die()
     {
-
+        Managers.WaveM.Stop();
+        Managers.GameM.TriggerGameOver();
     }
 }

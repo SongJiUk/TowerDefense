@@ -81,6 +81,21 @@ public class WaveManager
         RunWave(_currentWaveIndex, _cts.Token).Forget();
     }
 
+    /// <summary>Split 등 런타임 추가 적 등록 시 호출.</summary>
+    public void RegisterExtraEnemy(int count) => _aliveCount += count;
+
+    /// <summary>런타임 위치 지정 스폰 (SplitEnemy 등에서 사용).</summary>
+    public void SpawnEnemyAt(EnemyData data, Vector3 position, float hpMultiplier, float speedMultiplier)
+    {
+        if (data == null) return;
+        GameObject go = Managers.PoolM.Pop(data.addressableKey);
+        if (go == null) return;
+        go.transform.position = position;
+        go.transform.rotation = Quaternion.identity;
+        if (go.TryGetComponent(out EnemyController enemy))
+            enemy.Init(data, hpMultiplier, speedMultiplier);
+    }
+
     /// <summary>EnemyController가 사망 or 코어 도달 시 호출.</summary>
     public void OnEnemyRemoved()
     {
@@ -94,6 +109,10 @@ public class WaveManager
         int waveBonus = Mathf.RoundToInt(cleared * 10 * Managers.GameM.waveBonusMultiplier);
         Managers.GameM.AddGold(waveBonus);
         Managers.GameM.waveBonusMultiplier = 1f;
+
+        // 웨이브 중 뽑은 적 HP 감소 카드를 다음 웨이브에 반영, 이번 웨이브 효과는 리셋
+        Managers.GameM.nextWaveEnemyHpMultiplier = Managers.GameM.pendingEnemyHpMultiplier;
+        Managers.GameM.pendingEnemyHpMultiplier = 1f;
 
         OnWaveComplete?.Invoke(cleared);
 
