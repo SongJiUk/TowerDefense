@@ -61,6 +61,8 @@ public class Define
 
     public enum UpgradeType { Damage, Range, Speed }
 
+    public enum Difficulty { Easy, Normal, Hard, Hell }
+
     public enum CardCategory { A, B, C, D }
     public enum CardEffectType
     {

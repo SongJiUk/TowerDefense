@@ -16,11 +16,14 @@ public class WaveManager
     /// <summary>웨이브 시작 시 발행 (1-based)</summary>
     public event Action<int> OnWaveStart;
 
-    /// <summary>웨이브 클리어 시 발행 (1-based)</summary>
-    public event Action<int> OnWaveComplete;
+    /// <summary>웨이브 클리어 시 발행 (wave, bonusGold)</summary>
+    public event Action<int, int> OnWaveComplete;
 
     /// <summary>스테이지 전체 클리어 시 발행</summary>
     public event Action OnAllWavesComplete;
+
+    /// <summary>대기 후 첫 적 스폰 직전 발행 — 카운트다운 UI 닫기용</summary>
+    public event Action OnWaveSpawnStart;
 
     // ─── 상태 ─────────────────────────────────────────────────────────────────
 
@@ -28,6 +31,7 @@ public class WaveManager
     public int TotalWaves => _stageData?.totalWaves ?? 0;
     public bool IsRunning { get; private set; }
     public StageData CurrentStage => _stageData;
+    public float LastWaveBonusMultiplier { get; private set; } = 1f;
 
     private StageData _stageData;
     private int _currentWaveIndex;
@@ -77,7 +81,17 @@ public class WaveManager
 
         IsRunning = true;
         OnWaveStart?.Invoke(CurrentWave);
+        // BeginSpawning()은 UI 카운트다운 완료 후 호출됨
+    }
 
+    /// <summary>UI 카운트다운 완료 후 호출 — 적 스폰을 즉시 시작.</summary>
+    public void BeginSpawning()
+    {
+        if (!IsRunning)
+        {
+            Debug.LogWarning("[WaveManager] StartNextWave()를 먼저 호출하세요.");
+            return;
+        }
         RunWave(_currentWaveIndex, _cts.Token).Forget();
     }
 
@@ -106,7 +120,8 @@ public class WaveManager
         int cleared = CurrentWave;
         _currentWaveIndex++;
 
-        int waveBonus = Mathf.RoundToInt(cleared * 10 * Managers.GameM.waveBonusMultiplier);
+        LastWaveBonusMultiplier = Managers.GameM.waveBonusMultiplier;
+        int waveBonus = Mathf.RoundToInt(cleared * 10 * LastWaveBonusMultiplier);
         Managers.GameM.AddGold(waveBonus);
         Managers.GameM.waveBonusMultiplier = 1f;
 
@@ -114,10 +129,14 @@ public class WaveManager
         Managers.GameM.nextWaveEnemyHpMultiplier = Managers.GameM.pendingEnemyHpMultiplier;
         Managers.GameM.pendingEnemyHpMultiplier = 1f;
 
-        OnWaveComplete?.Invoke(cleared);
+        OnWaveComplete?.Invoke(cleared, waveBonus);
 
         if (_currentWaveIndex >= _stageData.totalWaves)
+        {
             OnAllWavesComplete?.Invoke();
+            Managers.DifficultyM?.OnGameClear();
+            Managers.GameM.TriggerGameClear();
+        }
     }
 
     public void Stop()
@@ -156,12 +175,9 @@ public class WaveManager
     {
         bool isBossWave = (waveIndex == _stageData.totalWaves - 1);
 
-        await UniTask.Delay(
-            TimeSpan.FromSeconds(_stageData.waveStartDelay),
-            cancellationToken: token
-        );
+        OnWaveSpawnStart?.Invoke();
 
-        float hpMult = CalcHpMultiplier(waveIndex);
+        float hpMult = CalcHpMultiplier(waveIndex) * Managers.GameM.nextWaveEnemyHpMultiplier;
         float speedMult = CalcSpeedMultiplier(waveIndex);
         int waveNumber = waveIndex + 1;
 

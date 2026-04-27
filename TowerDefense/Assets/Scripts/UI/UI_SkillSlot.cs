@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UI_SkillSlot : UI_Base
 {
     enum Images { Image_Skill, Image_CoolDown, Image_SlotGlow }
-    enum Texts { Text_SkillName, Text_SkillLevel }
+    enum Texts { Text_SkillName, Text_SkillLevel, Text_CoolDown }
     enum Buttons { Button_Skill }
     enum GameObjects { Object_ReadyDot }
 
@@ -108,6 +108,11 @@ public class UI_SkillSlot : UI_Base
         var cooldownImg = GetImage(typeof(Images), (int)Images.Image_CoolDown);
         cooldownImg.fillAmount = ratio;
         cooldownImg.gameObject.SetActive(ratio > 0f);
+
+        var cdText = GetText(typeof(Texts), (int)Texts.Text_CoolDown);
+        float remaining = Managers.SkillM.GetCooldownRemaining(_slotIndex);
+        cdText.text = remaining > 0f ? $"{remaining:F1}" : "";
+        cdText.gameObject.SetActive(remaining > 0f);
 
         GetObject(typeof(GameObjects), (int)GameObjects.Object_ReadyDot).SetActive(ratio <= 0f);
     }

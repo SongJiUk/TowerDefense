@@ -12,9 +12,11 @@ using System;
 public class Core : MonoBehaviour, IDamageable
 {
 
-    private float maxHp = 10f;
-    private float currentHp = 10f;
+    private const float BASE_HP = 10f;
+    private float maxHp = BASE_HP;
+    private float currentHp = BASE_HP;
     public float CurrentHp => currentHp;
+    public float MaxHp => maxHp;
     public event Action<float> OnHpChanged;
 
     private void Awake()
@@ -22,7 +24,14 @@ public class Core : MonoBehaviour, IDamageable
         Managers.ICore = this;
     }
 
-    private void OnEnable() => Managers.CoreTransform = this.transform;
+    private void OnEnable()
+    {
+        Managers.CoreTransform = this.transform;
+        float mult = Managers.DifficultyM?.CoreHpMultiplier ?? 1f;
+        maxHp     = BASE_HP * mult;
+        currentHp = maxHp;
+        OnHpChanged?.Invoke(currentHp);
+    }
     private void OnDisable() => Managers.CoreTransform = null;
 
     public void TakeDamage(float damage)

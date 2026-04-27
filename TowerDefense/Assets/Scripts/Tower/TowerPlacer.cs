@@ -110,18 +110,27 @@ public class TowerPlacer : MonoBehaviour
 
         if (data == null || data.addressableKey == null) return;
 
-        int buildCost = Mathf.RoundToInt(data.buildCost * Managers.GameM.buildCostMultiplier);
-        if (!Managers.GameM.SpendGold(buildCost))
+        int buildCost = 0;
+        bool isFree = Managers.GameM.freeTowerCount > 0;
+        if (isFree)
         {
-            Debug.Log("[TowerPlacer] 골드 부족");
-            return;
+            Managers.GameM.freeTowerCount--;
+        }
+        else
+        {
+            buildCost = Mathf.RoundToInt(data.buildCost * Managers.GameM.buildCostMultiplier);
+            if (!Managers.GameM.SpendGold(buildCost))
+            {
+                Debug.Log("[TowerPlacer] 골드 부족");
+                return;
+            }
         }
 
         GameObject go = Managers.PoolM.Pop(data.addressableKey);
         if (go == null)
         {
             Debug.LogError($"[TowerPlacer] 타워 프리팹 로드 실패: {data.addressableKey}");
-            Managers.GameM.AddGold(buildCost);
+            if (!isFree) Managers.GameM.AddGold(buildCost);
             return;
         }
 

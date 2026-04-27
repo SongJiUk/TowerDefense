@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 251660168283234058}
   - component: {fileID: 4419287994052967449}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Cannon_Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1181,7 +1181,7 @@ GameObject:
   - component: {fileID: 7808212328273932804}
   - component: {fileID: 293773990338712088}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Poison_Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3612,7 +3612,7 @@ GameObject:
   - component: {fileID: 7735028490851362139}
   - component: {fileID: 4336500097957345097}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Slow_Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4430,7 +4430,7 @@ GameObject:
   - component: {fileID: 4741831351935526512}
   - component: {fileID: 4359710819035086909}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Lightning_Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5311,7 +5311,7 @@ GameObject:
   - component: {fileID: 5012187216554299195}
   - component: {fileID: 6024576762114356946}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Sniper_Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8209,7 +8209,7 @@ GameObject:
   - component: {fileID: 6215579171221976693}
   - component: {fileID: 5829261159016082627}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text_Basic_Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -18,7 +18,11 @@ public class SniperTowerController : TowerController
         {
             var buff = target.GetComponent<BuffHandler>();
             if (buff != null && buff.HasEffect<PoisonEffect>())
-                bonus += 0.25f;
+            {
+                float poisonBonus = 0.25f * (Managers.GameM?.synergyMultiplier ?? 1f);
+                bonus += poisonBonus;
+                Debug.Log($"[Synergy:독침] 독 적 저격 → 크리티컬 +{poisonBonus * 100:F0}% (총 {bonus * 100:F0}%)");
+            }
         }
         return bonus;
     }

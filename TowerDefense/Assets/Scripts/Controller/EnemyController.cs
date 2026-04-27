@@ -41,9 +41,11 @@ public class EnemyController : MonoBehaviour, IDamageable
         _data = data;
         _storedHpMult = hpMultiplier;
         _storedSpeedMult = speedMultiplier;
-        _maxHp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier;
+        float diffHp    = Managers.DifficultyM?.EnemyHpMultiplier    ?? 1f;
+        float diffSpeed = Managers.DifficultyM?.EnemySpeedMultiplier ?? 1f;
+        _maxHp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier * diffHp;
         _hp = _maxHp;
-        _baseSpeed = data.baseMoveSpeed * speedMultiplier;
+        _baseSpeed = data.baseMoveSpeed * speedMultiplier * diffSpeed;
         _speed = _baseSpeed;
         _currentTarget = transform.position;
         _isDead = false;

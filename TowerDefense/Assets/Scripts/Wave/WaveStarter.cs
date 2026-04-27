@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +9,9 @@ public class WaveStarter : MonoBehaviour
 {
     [Tooltip("true: Start()에서 자동 시작 / false: StartWave() 버튼으로 수동 시작")]
     [SerializeField] private bool _autoStart = true;
+
+    [Tooltip("웨이브 클리어 후 다음 웨이브 시작까지 대기 시간 (초)")]
+    [SerializeField] private float _nextWaveDelay = 3f;
 
     void Start()
     {
@@ -33,12 +37,21 @@ public class WaveStarter : MonoBehaviour
         Debug.Log($"[Wave] {wave} / {Managers.WaveM.TotalWaves} 웨이브 시작");
     }
 
-    private void OnWaveComplete(int wave)
+    private void OnWaveComplete(int wave, int bonus)
     {
-        Debug.Log($"[Wave] {wave}웨이브 클리어!");
+        Debug.Log($"[Wave] {wave}웨이브 클리어! +{bonus}G");
 
         if (_autoStart)
-            Managers.WaveM.StartNextWave();
+            StartNextWaveDelayed().Forget();
+    }
+
+    private async UniTaskVoid StartNextWaveDelayed()
+    {
+        await UniTask.Delay(
+            (int)(_nextWaveDelay * 1000),
+            cancellationToken: destroyCancellationToken
+        );
+        Managers.WaveM.StartNextWave();
     }
 
     private void OnAllWavesComplete()

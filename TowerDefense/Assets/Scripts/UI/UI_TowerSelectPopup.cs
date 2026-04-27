@@ -36,6 +36,8 @@ public class UI_TowerSelectPopup : UI_Base
         Text_TowerName, Text_TowerDescription, Text_CardCategory,
         Text_Synergy1, Text_Synergy2,
         Text_Damage, Text_Range, Text_AttackSpeed,
+        Text_Basic_Tower, Text_Slow_Tower, Text_Poison_Tower,
+        Text_Cannon_Tower, Text_Sniper_Tower, Text_Lightning_Tower
     }
 
     enum Images
@@ -108,19 +110,23 @@ public class UI_TowerSelectPopup : UI_Base
         {
             int idx = i;
             GetButton(typeof(Buttons), i).onClick.AddListener(() => OnTowerButtonClicked(idx));
-
             _defaultBorderColor[i] = GetImage(typeof(Images), i).color;
-
-            // 가격 텍스트: 이름이 "Text (TMP)"로 고정이라 Find 사용
-            var container = GetButton(typeof(Buttons), i).transform.parent.parent;
-            _priceTxts[i] = container.Find("PriceObject/Text (TMP)")?.GetComponent<TMP_Text>();
         }
+
+        // 가격 텍스트: 타워 순서와 동일한 Texts enum 인덱스로 직접 바인딩
+        _priceTxts[0] = GetText(typeof(Texts), (int)Texts.Text_Basic_Tower);
+        _priceTxts[1] = GetText(typeof(Texts), (int)Texts.Text_Slow_Tower);
+        _priceTxts[2] = GetText(typeof(Texts), (int)Texts.Text_Poison_Tower);
+        _priceTxts[3] = GetText(typeof(Texts), (int)Texts.Text_Cannon_Tower);
+        _priceTxts[4] = GetText(typeof(Texts), (int)Texts.Text_Sniper_Tower);
+        _priceTxts[5] = GetText(typeof(Texts), (int)Texts.Text_Lightning_Tower);
 
         GetButton(typeof(Buttons), (int)Buttons.Button_Close).onClick.AddListener(OnCloseClicked);
         GetButton(typeof(Buttons), (int)Buttons.Button_Cancle).onClick.AddListener(Hide);
         GetButton(typeof(Buttons), (int)Buttons.Button_Construction).onClick.AddListener(OnConstructionClicked);
 
         Managers.GameM.OnGoldChanged += OnGoldChanged;
+        Managers.GameM.OnCardApplied += RefreshPrices;
         _initialized = true;
         return true;
     }
@@ -128,7 +134,10 @@ public class UI_TowerSelectPopup : UI_Base
     void OnDestroy()
     {
         if (Managers.GameM != null)
+        {
             Managers.GameM.OnGoldChanged -= OnGoldChanged;
+            Managers.GameM.OnCardApplied -= RefreshPrices;
+        }
     }
 
     // ─── 공개 API ─────────────────────────────────────────────────────────────
@@ -208,10 +217,6 @@ public class UI_TowerSelectPopup : UI_Base
         if (data.iconKey != null)
             GetImage(typeof(Images), (int)Images.Image_Tower).sprite = Managers.ResourceM.GetAtlas(data.iconKey);
 
-        // 설치 버튼 텍스트
-        int buildCost = Mathf.RoundToInt(data.buildCost * Managers.GameM.buildCostMultiplier);
-        GetText(typeof(Texts), (int)Texts.Text_Construction).text = $"설치  {buildCost}";
-
         _rangeIndicator?.Show(_tileWorldPos, data.baseRange);
         RefreshConstructionButton();
     }
@@ -238,14 +243,37 @@ public class UI_TowerSelectPopup : UI_Base
 
     private void RefreshConstructionButton()
     {
+        var btn = GetButton(typeof(Buttons), (int)Buttons.Button_Construction);
+        var txt = GetText(typeof(Texts), (int)Texts.Text_Construction);
+
         if (_selectedIndex < 0 || _currentData == null || _selectedIndex >= _currentData.Length)
         {
-            GetButton(typeof(Buttons), (int)Buttons.Button_Construction).interactable = false;
+            btn.interactable = false;
+            return;
+        }
+
+        if (Managers.GameM.freeTowerCount > 0)
+        {
+            btn.interactable = true;
+            txt.text = $"무료 설치  ({Managers.GameM.freeTowerCount}회)";
             return;
         }
 
         int cost = Mathf.RoundToInt(_currentData[_selectedIndex].buildCost * Managers.GameM.buildCostMultiplier);
-        GetButton(typeof(Buttons), (int)Buttons.Button_Construction).interactable = Managers.GameM.Gold >= cost;
+        btn.interactable = Managers.GameM.Gold >= cost;
+        txt.text = $"설치  {cost}";
+    }
+
+    private void RefreshPrices()
+    {
+        if (!_initialized || _currentData == null) return;
+        for (int i = 0; i < TOWER_COUNT && i < _currentData.Length; i++)
+        {
+            if (_priceTxts[i] == null || _currentData[i] == null) continue;
+            int cost = Mathf.RoundToInt(_currentData[i].buildCost * Managers.GameM.buildCostMultiplier);
+            _priceTxts[i].text = $"{cost}";
+        }
+        RefreshConstructionButton();
     }
 
     private void OnGoldChanged(int gold)

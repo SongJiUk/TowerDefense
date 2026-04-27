@@ -34,9 +34,9 @@ public class StageData : ScriptableObject
     public int bossWaveMinions = 5;
 
     [Header("UI 테마")]
-    public Color uiBarBG;
-    public Color uiLineColor;
-    public Color uiAccentColor;
+    public Color uiBGColor;
+    public Color uiBorderColor;
+    public Color uiTextColor;
 }
 
 /// <summary>

@@ -53,6 +53,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 43202ad3efd75be47a6490a342e6d504
+    m_Address: Synergy_ConductivePoison
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 499bebea951c5461594c298d4c24f143
     m_Address: Tower_Slow
     m_ReadOnly: 0
@@ -67,6 +73,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 57b1a97d21ab89548b87c28c6d630e62
     m_Address: Freeze
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5be83572382ff3c4595a11b4fc17e787
+    m_Address: Synergy_Conductor
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -125,6 +137,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad1a360d16ccf0640a17cce8eae51f37
+    m_Address: Synergy_PoisonShot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b21b3839d6c0a46c19a03d15ec6ecafb
     m_Address: SynergyAmp
     m_ReadOnly: 0
@@ -143,6 +161,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbf6d56597de41440862eb8dfecc23be
+    m_Address: Synergy_PrecisionBombardment
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c6149b6d6ff464c94aa5c38d5ce37468
     m_Address: AttackSpeedUp
     m_ReadOnly: 0
@@ -157,6 +181,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcdd224e7afb74d2d9a3b698025c4006
     m_Address: CriticalChangeUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7b70062810701541b1265a5571afe33
+    m_Address: Tower_Sniper
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -187,6 +217,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fd38b335c6ab74526852b24df16bb7f4
     m_Address: WaveBonusDouble
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ffcc6da51b47f804ca1605b5088e299c
+    m_Address: Synergy_FocusFire
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
