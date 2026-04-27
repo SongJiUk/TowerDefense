@@ -18,6 +18,7 @@ public class Managers : MonoBehaviour
     readonly CardManager cardManager = new();
     readonly SkillManager skillManager = new();
     readonly SynergyManager synergyManager = new();
+    readonly DifficultyManager difficultyManager = new();
     UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
@@ -53,6 +54,7 @@ public class Managers : MonoBehaviour
     public static CardManager CardM { get { return Instance?.cardManager; } }
     public static SkillManager SkillM { get { return Instance?.skillManager; } }
     public static SynergyManager SynergyM { get { return Instance?.synergyManager; } }
+    public static DifficultyManager DifficultyM { get { return Instance?.difficultyManager; } }
 
     public static Managers Instance
     {

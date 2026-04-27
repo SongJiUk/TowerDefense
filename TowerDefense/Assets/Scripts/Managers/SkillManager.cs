@@ -31,6 +31,8 @@ public class SkillManager
 
     public SkillData GetSlot(int index) => _slots[index];
 
+    public float GetCooldownRemaining(int index) => _cooldowns[index];
+
     public float GetCooldownRatio(int index)
     {
         float effective = GetEffectiveCooldown(index);

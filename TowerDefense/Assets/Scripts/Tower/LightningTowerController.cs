@@ -32,7 +32,10 @@ public class LightningTowerController : TowerController
         {
             var buff = target.GetComponent<BuffHandler>();
             if (buff != null && buff.HasEffect<SlowEffect>())
+            {
                 totalChains += 1;
+                Debug.Log($"[Synergy:도체] 슬로우 적 명중 → 체인 +1 (총 {totalChains})");
+            }
         }
 
         bool conductivePoison = Managers.SynergyM != null && Managers.SynergyM.ConductivePoison;
@@ -50,7 +53,11 @@ public class LightningTowerController : TowerController
             {
                 var buff = next.GetComponent<BuffHandler>();
                 if (buff != null && buff.HasEffect<PoisonEffect>())
-                    damage *= 1.5f;
+                {
+                    float mult = 1f + 0.5f * (Managers.GameM?.synergyMultiplier ?? 1f);
+                    damage *= mult;
+                    Debug.Log($"[Synergy:전도성독] 체인 {i}번째 독 적 → 데미지 {mult:F2}배 ({damage:F1})");
+                }
             }
 
             next.GetComponent<IDamageable>()?.TakeDamage(damage);

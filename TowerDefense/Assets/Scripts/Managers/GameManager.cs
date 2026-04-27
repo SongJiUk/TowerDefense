@@ -49,7 +49,8 @@ public class GameManager
 
     public void AddGold(int amount)
     {
-        Gold += amount;
+        float mult = Managers.DifficultyM?.GoldMultiplier ?? 1f;
+        Gold += Mathf.RoundToInt(amount * mult);
         OnGoldChanged?.Invoke(Gold);
     }
 
@@ -77,14 +78,19 @@ public class GameManager
     public float buildCostMultiplier = 1f;
     public float nextWaveEnemyHpMultiplier = 1f;
     public float pendingEnemyHpMultiplier = 1f;
+    public float synergyMultiplier = 1f;
+    public int   freeTowerCount = 0;
 
     public event Action OnCardApplied;
     public void NotifyCardApplied() => OnCardApplied?.Invoke();
 
-    // ─── 게임오버 ────────────────────────────────────────────────────────────
+    // ─── 게임오버 / 클리어 ───────────────────────────────────────────────────
 
     public event Action OnGameOver;
     public void TriggerGameOver() => OnGameOver?.Invoke();
+
+    public event Action OnGameClear;
+    public void TriggerGameClear() => OnGameClear?.Invoke();
 
     public void Reset()
     {
@@ -99,5 +105,7 @@ public class GameManager
         buildCostMultiplier         = 1f;
         nextWaveEnemyHpMultiplier   = 1f;
         pendingEnemyHpMultiplier    = 1f;
+        synergyMultiplier           = 1f;
+        freeTowerCount              = 0;
     }
 }

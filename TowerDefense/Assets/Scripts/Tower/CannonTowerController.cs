@@ -22,7 +22,11 @@ public class CannonTowerController : TowerController
         {
             var buff = target.GetComponent<BuffHandler>();
             if (buff != null && buff.HasEffect<SlowEffect>())
-                radius *= 1.5f;
+            {
+                float radiusMult = 1f + 0.5f * (Managers.GameM?.synergyMultiplier ?? 1f);
+                radius *= radiusMult;
+                Debug.Log($"[Synergy:정밀포격] 슬로우 적 명중 → 스플래시 반경 {radiusMult:F2}배 ({radius:F2})");
+            }
         }
 
         Collider[] cols = Physics.OverlapSphere(target.position, radius, _enemyMask);

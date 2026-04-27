@@ -185,12 +185,12 @@ public class UI_TowerUpgradePopup : UI_Base
     public override void ApplyTheme(StageData stage)
     {
         if (stage == null) return;
-        _themeAccent = stage.uiAccentColor;
-        GetImage(typeof(Images), (int)Images.Image_Main_BG).color = stage.uiBarBG;
-        GetImage(typeof(Images), (int)Images.Image_Main_Border).color = stage.uiLineColor;
+        _themeAccent = stage.uiTextColor;
+        GetImage(typeof(Images), (int)Images.Image_Main_BG).color = stage.uiBGColor;
+        GetImage(typeof(Images), (int)Images.Image_Main_Border).color = stage.uiBorderColor;
 
-        GetImage(typeof(Images), (int)Images.Image_Sell_BG).color = stage.uiBarBG;
-        GetImage(typeof(Images), (int)Images.Image_Sell_Border).color = stage.uiLineColor;
+        GetImage(typeof(Images), (int)Images.Image_Sell_BG).color = stage.uiBGColor;
+        GetImage(typeof(Images), (int)Images.Image_Sell_Border).color = stage.uiBorderColor;
 
     }
 
@@ -309,11 +309,15 @@ public class UI_TowerUpgradePopup : UI_Base
 
     // ─── 버튼 핸들러 ─────────────────────────────────────────────────────────
 
-    private void OnUpgradeClicked(Define.UpgradeType type)
+    private async void OnUpgradeClicked(Define.UpgradeType type)
     {
         if (_tower == null) return;
-        if (_tower.TryUpgrade(type))
-            RefreshAll();
+        if (!_tower.TryUpgrade(type)) return;
+
+        RefreshAll();
+        await Cysharp.Threading.Tasks.UniTask.NextFrame();
+        var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
     }
 
     private void AddHoverAnimation(Button btn)

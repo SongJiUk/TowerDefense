@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed9011c3fdfc094b9b83b0dde081ca9, type: 3}
+  m_Name: Synergy_PrecisionBombardment
+  m_EditorClassIdentifier: 
+  synergyName: "\uC815\uBC00 \uD3EC\uACA9"
+  desc: "\uC2AC\uB85C\uC6B0 \uAC78\uB9B0 \uC801 \uBA85\uC911 \uC2DC \uC2A4\uD50C\uB798\uC2DC
+    \uBC18\uACBD 1.5\uBC30"
+  reqA: 1
+  reqB: 3

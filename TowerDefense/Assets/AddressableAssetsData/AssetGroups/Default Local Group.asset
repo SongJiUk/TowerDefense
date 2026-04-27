@@ -23,24 +23,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 73dc8356604fc19448e9fe02ce53066d
-    m_Address: EnemyHPBar
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e7b70062810701541b1265a5571afe33
-    m_Address: Tower_Sniper
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fe4d782fd82644fd88619d0b7f2c1538
-    m_Address: UI_TowerSelectPopup
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f9312a415536444c39ebd503ef764189, type: 2}
   m_SchemaSet:

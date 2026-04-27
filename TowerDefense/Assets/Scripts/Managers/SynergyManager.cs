@@ -32,8 +32,10 @@ public class SynergyManager
         OnSynergyChanged?.Invoke();
     }
 
-    private bool Has(Define.TowerType type) =>
+    public bool HasTower(Define.TowerType type) =>
         _counts.TryGetValue(type, out int n) && n > 0;
+
+    private bool Has(Define.TowerType type) => HasTower(type);
 
     // ─── 시너지 목록 ───────────────────────────────────────────────────────────
 

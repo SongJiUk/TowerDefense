@@ -152,7 +152,13 @@ public class CardManager
                 Managers.SkillM.AddSkillPoint();
                 break;
             case CardEffectType.FreeTower:
+                Managers.GameM.freeTowerCount += (int)cardData.effectValue;
+                Debug.Log($"[Card:FreeTower] 무료 설치 +{(int)cardData.effectValue} (총 {Managers.GameM.freeTowerCount})");
+                break;
+
             case CardEffectType.SynergyAmp:
+                Managers.GameM.synergyMultiplier += cardData.effectValue;
+                Debug.Log($"[Card:SynergyAmp] 시너지 배율 {Managers.GameM.synergyMultiplier:F2}x");
                 break;
         }
 

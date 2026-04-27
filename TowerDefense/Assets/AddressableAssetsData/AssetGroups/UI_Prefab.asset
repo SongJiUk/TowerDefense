@@ -29,6 +29,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73dc8356604fc19448e9fe02ce53066d
+    m_Address: EnemyHPBar
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9447741af424f634586e706afefcd9b7
     m_Address: UI_SkillUpgradePopup
     m_ReadOnly: 0
@@ -53,6 +59,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b327ed95e423222479153a9deeb98a9a
+    m_Address: UI_SynergyItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c433fae415ba97347a6b83cf6ece6837
     m_Address: UI_SkillReplacePopup
     m_ReadOnly: 0
@@ -67,6 +79,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fcb96c7a373884bf3a93961afb09312d
     m_Address: UI_LevelUpPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe4d782fd82644fd88619d0b7f2c1538
+    m_Address: UI_TowerSelectPopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad

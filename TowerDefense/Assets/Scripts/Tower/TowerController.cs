@@ -248,7 +248,11 @@ public class TowerController : MonoBehaviour
 
         if (Managers.SynergyM != null && Managers.SynergyM.FocusFire &&
             (Data.towerType == Define.TowerType.Basic || Data.towerType == Define.TowerType.Sniper))
-            speed *= 1.15f;
+        {
+            float speedMult = 1f + 0.15f * (Managers.GameM?.synergyMultiplier ?? 1f);
+            speed *= speedMult;
+            Debug.Log($"[Synergy:집중사격] {Data.towerType} 공격속도 {speedMult:F2}배 → {speed:F2}");
+        }
 
         _currentDamage      = damage * Managers.GameM.globalDamageMultiplier;
         _currentAttackSpeed = speed  * Managers.GameM.globalAttackSpeedMultiplier;
