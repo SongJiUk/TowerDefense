@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7915c4e8aa586194cb3b2b37a20cbeb4, type: 3}
+  m_Name: Tower_BasicData
+  m_EditorClassIdentifier: 
+  towerName: "\uC18C\uCD1D\uD0D1"
+  Description: "\uC6D0\uAC70\uB9AC \uB2E8\uC77C \uD0C0\uAC9F \uACF5\uACA9"
+  towerType: 0
+  baseDamage: 15
+  baseAttackSpeed: 1.2
+  baseRange: 5
+  projectilePrefabKey: Fire
+  projectileSpeed: 10
+  damageUpgrades:
+  - upgradeName: "\uB2E8\uB828\uB41C \uB0A0"
+    description: "+25% \uACF5\uACA9\uB825"
+    cost: 80
+    multiplier: 1.25
+  - upgradeName: "\uAC15\uCCA0 \uD654\uC0B4"
+    description: "+60% \uACF5\uACA9\uB825"
+    cost: 160
+    multiplier: 1.6
+  - upgradeName: "\uC6A9\uC758 \uC228\uACB0"
+    description: "+120% \uACF5\uACA9\uB825"
+    cost: 320
+    multiplier: 2.2
+  rangeUpgrades:
+  - upgradeName: "\uAE34 \uD65C"
+    description: "+20% \uC0AC\uAC70\uB9AC"
+    cost: 60
+    multiplier: 1.2
+  - upgradeName: "\uB9E4\uC758 \uB208"
+    description: "+45% \uC0AC\uAC70\uB9AC"
+    cost: 120
+    multiplier: 1.45
+  - upgradeName: "\uD558\uB298\uC9C0\uBC30"
+    description: "+80% \uC0AC\uAC70\uB9AC"
+    cost: 240
+    multiplier: 1.8
+  speedUpgrades:
+  - upgradeName: "\uBE60\uB978 \uC190"
+    description: "+30% \uC18D\uB3C4"
+    cost: 80
+    multiplier: 1.3
+  - upgradeName: "\uBC14\uB78C\uC758 \uAD81"
+    description: "+65% \uC18D\uB3C4"
+    cost: 160
+    multiplier: 1.65
+  - upgradeName: "\uD3ED\uD48D \uC758\uC9C0"
+    description: "+120% \uC18D\uB3C4"
+    cost: 320
+    multiplier: 2.2
+  buildCost: 50
+  addressableKey: BasicTower
+  iconKey: BasicTower
+  towerUIColor: {r: 0.54509807, g: 0.7647059, b: 0.2901961, a: 1}
+  towerBorderColor: {r: 0.54509807, g: 0.7647059, b: 0.2901961, a: 1}
+  towerBGColor: {r: 0.10196078, g: 0.18039216, b: 0.03921569, a: 1}
+  synergies:
+  - "\uC9D1\uC911\uC0AC\uACA9 \uC2DC\uB108\uC9C0"
+  - "\uC5F0\uC0AC \uC2DC\uB108\uC9C0"

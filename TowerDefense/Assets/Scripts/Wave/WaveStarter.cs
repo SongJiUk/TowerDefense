@@ -20,7 +20,13 @@ public class WaveStarter : MonoBehaviour
         Managers.WaveM.OnAllWavesComplete += OnAllWavesComplete;
 
         if (_autoStart)
-            Managers.WaveM.StartNextWave();
+            WaitAndStart().Forget();
+    }
+
+    private async UniTaskVoid WaitAndStart()
+    {
+        await GameSceneBootstrap.ReadyTask;
+        Managers.WaveM.StartNextWave();
     }
 
     void OnDestroy()

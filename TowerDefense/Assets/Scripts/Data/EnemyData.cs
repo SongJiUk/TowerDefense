@@ -22,8 +22,5 @@ public class EnemyData : ScriptableObject
     public float rewardExp;
 
     [Header("아트")]
-    /// <summary>
-    // Addressalbe로 가져올값 적용하면 됌
-    /// </summary>
-    public string addressableKey;
+    public string prefabKey;
 }

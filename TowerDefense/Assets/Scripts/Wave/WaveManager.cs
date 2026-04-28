@@ -30,6 +30,7 @@ public class WaveManager
     public int CurrentWave => _currentWaveIndex + 1;
     public int TotalWaves => _stageData?.totalWaves ?? 0;
     public bool IsRunning { get; private set; }
+    public bool IsInitialized => _stageData != null;
     public StageData CurrentStage => _stageData;
     public float LastWaveBonusMultiplier { get; private set; } = 1f;
 
@@ -102,7 +103,7 @@ public class WaveManager
     public void SpawnEnemyAt(EnemyData data, Vector3 position, float hpMultiplier, float speedMultiplier)
     {
         if (data == null) return;
-        GameObject go = Managers.PoolM.Pop(data.addressableKey);
+        GameObject go = Managers.PoolM.Pop(data.prefabKey);
         if (go == null) return;
         go.transform.position = position;
         go.transform.rotation = Quaternion.identity;
@@ -248,7 +249,7 @@ public class WaveManager
             return;
         }
 
-        GameObject go = Managers.PoolM.Pop(data.addressableKey);
+        GameObject go = Managers.PoolM.Pop(data.prefabKey);
         if (go == null) return;
 
         go.transform.position = Managers.SpawnPoint.transform.position;

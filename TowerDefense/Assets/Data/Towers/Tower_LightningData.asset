@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e141e17c86fa649a6b6408b8ba9234ca, type: 3}
+  m_Name: Tower_LightningData
+  m_EditorClassIdentifier: 
+  towerName: "\uBC88\uAC1C\uD0D1"
+  Description: "\uC5F0\uC1C4 \uBC88\uAC1C\uB85C \uB2E4\uC218 \uD0C0\uAC9F \uACF5\uACA9"
+  towerType: 5
+  baseDamage: 25
+  baseAttackSpeed: 1
+  baseRange: 5
+  projectilePrefabKey: Fire
+  projectileSpeed: 10
+  damageUpgrades:
+  - upgradeName: "\uC804\uD558 \uAC15\uD654"
+    description: "+30% \uACF5\uACA9\uB825"
+    cost: 120
+    multiplier: 1.3
+  - upgradeName: "\uACE0\uC555 \uBC29\uC804"
+    description: "+70% \uACF5\uACA9\uB825"
+    cost: 240
+    multiplier: 1.7
+  - upgradeName: "\uCC9C\uB465\uC2E0\uC758 \uBD84\uB178"
+    description: "+150% \uACF5\uACA9\uB825"
+    cost: 480
+    multiplier: 2.5
+  rangeUpgrades:
+  - upgradeName: "\uD655\uC7A5 \uBC29\uC804"
+    description: "+25% \uC0AC\uAC70\uB9AC"
+    cost: 80
+    multiplier: 1.25
+  - upgradeName: "\uAD11\uC5ED \uBC88\uAC1C"
+    description: "+55% \uC0AC\uAC70\uB9AC"
+    cost: 160
+    multiplier: 1.55
+  - upgradeName: "\uD3ED\uD48D \uC601\uC5ED"
+    description: "+100% \uC0AC\uAC70\uB9AC"
+    cost: 320
+    multiplier: 2
+  speedUpgrades:
+  - upgradeName: "\uBE60\uB978 \uBC29\uC804"
+    description: "+30% \uC18D\uB3C4"
+    cost: 100
+    multiplier: 1.3
+  - upgradeName: "\uC5F0\uC18D \uBC88\uAC1C"
+    description: "+65% \uC18D\uB3C4"
+    cost: 200
+    multiplier: 1.65
+  - upgradeName: "\uD3ED\uD48D \uC5F0\uC0AC"
+    description: "+120% \uC18D\uB3C4"
+    cost: 400
+    multiplier: 2.2
+  buildCost: 130
+  addressableKey: LightningTower
+  iconKey: LightningTower
+  towerUIColor: {r: 1, g: 0.83921569, b: 0, a: 1}
+  towerBorderColor: {r: 1, g: 0.83921569, b: 0, a: 1}
+  towerBGColor: {r: 0.16470588, g: 0.12549020, b: 0, a: 1}
+  synergies:
+  - "\uC5F0\uC1C4 \uC2DC\uB108\uC9C0"
+  chainCount: 2
+  chainRange: 3
+  chainDamageFalloff: 0.65
+  stageChainCountBonus: 00000000010000000100000002000000
