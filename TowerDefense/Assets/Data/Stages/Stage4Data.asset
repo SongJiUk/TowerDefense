@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d49259642bd15f4bb19a7384123b357, type: 3}
+  m_Name: Stage4Data
+  m_EditorClassIdentifier: 
+  totalWaves: 10
+  stageHpMultiplier: 3.8
+  spawnInterval: 1.2
+  waveStartDelay: 3
+  enemyPool:
+  - enemyData: {fileID: 11400000, guid: 3658b9d84ded3cd4c9247062b2778a33, type: 2}
+    fromWave: 1
+    spawnWeight: 2
+  - enemyData: {fileID: 11400000, guid: cb5a66a7986591b4f8abba6818a1264b, type: 2}
+    fromWave: 1
+    spawnWeight: 2
+  - enemyData: {fileID: 11400000, guid: 68e549e203ec7c34ba5f3b7db15c5383, type: 2}
+    fromWave: 1
+    spawnWeight: 2
+  - enemyData: {fileID: 11400000, guid: 59b49c79eca34f049a6706008f9befdc, type: 2}
+    fromWave: 3
+    spawnWeight: 2
+  bossEnemy: {fileID: 11400000, guid: dc8f8743d59615a49b242c3912369983, type: 2}
+  bossWaveMinions: 8
+  uiBGColor: {r: 0.12156863, g: 0.07058824, b: 0.07058824, a: 1}
+  uiBorderColor: {r: 0.54509807, g: 0, b: 0, a: 1}
+  uiTextColor: {r: 1, g: 0.26666668, b: 0.26666668, a: 1}

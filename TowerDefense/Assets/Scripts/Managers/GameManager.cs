@@ -54,8 +54,11 @@ public class GameManager
         OnGoldChanged?.Invoke(Gold);
     }
 
+    public bool TestInfiniteGold = false;
+
     public bool SpendGold(int amount)
     {
+        if (TestInfiniteGold) return true;
         if (Gold < amount) return false;
         Gold -= amount;
         OnGoldChanged?.Invoke(Gold);

@@ -35,6 +35,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 510f92f6c706944e38e8e06da23f26d1
+    m_Address: Enemy_Boss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a2964aecd86c42d4930a62043ee0246
+    m_Address: Enemy_Basic
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6c8697d176c0e494d8990d96f54f6085
     m_Address: SlowTower
     m_ReadOnly: 0
@@ -53,26 +65,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a30a719799fea494e8ecfdf1a2498200
+    m_Address: Enemy_MiddleBoss
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a56e1e6136bf2de4ea6ca1ceb776e037
     m_Address: BasicTower
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa1cc65ed60ef41c0b416fc467cb3963
+    m_Address: Enemy_Runner
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf8f5f783b75f43b69b8476161fedbbd
+    m_Address: Enemy_BeforeSplit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cffb46863e686494a9a8dbba2e6d1a86
+    m_Address: Enemy_Tank
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d64588cceafce436e83d12e4cbdaea46
+    m_Address: Enemy_Revive
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de436335e04e5465692a04f26450a9bf
+    m_Address: Enemy_AfterSplit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f9ffa4e8e45d46840b3cc9789473529e
     m_Address: PoisonTower
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fc08121e90a0da24aabe619d18906092
-    m_Address: Enemy_Basic
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ffe7f57ecdc474ef6804b7151dd1327a
-    m_Address: Enemy_Tank
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad

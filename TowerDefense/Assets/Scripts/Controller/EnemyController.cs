@@ -14,11 +14,11 @@ public class EnemyController : MonoBehaviour, IDamageable
     protected GameObject _hpBarGo;
 
     protected EnemyData _data;
-    [SerializeField] protected float _hp;
+    protected float _hp;
     protected float _maxHp;
     public float CurrentHp => _hp;
     protected float _baseSpeed;
-    [SerializeField] protected float _speed;
+    protected float _speed;
     protected bool _isDead;
     protected BuffHandler _buffHandler;
 
@@ -41,7 +41,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         _data = data;
         _storedHpMult = hpMultiplier;
         _storedSpeedMult = speedMultiplier;
-        float diffHp    = Managers.DifficultyM?.EnemyHpMultiplier    ?? 1f;
+        float diffHp = Managers.DifficultyM?.EnemyHpMultiplier ?? 1f;
         float diffSpeed = Managers.DifficultyM?.EnemySpeedMultiplier ?? 1f;
         _maxHp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier * diffHp;
         _hp = _maxHp;
