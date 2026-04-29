@@ -13,6 +13,10 @@ public class DevTestInput : MonoBehaviour
     void Awake()
     {
         Managers.GameM.TestInfiniteGold = true;
+        Managers.GameM.ResetGold(9999);
+
+        var waveStarter = FindObjectOfType<WaveStarter>();
+        if (waveStarter != null) waveStarter.enabled = false;
     }
 
     void Update()
@@ -22,6 +26,17 @@ public class DevTestInput : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 SpawnEnemy(i);
         }
+
+        if (Input.GetKeyDown(KeyCode.L))
+            LevelUp();
+    }
+
+    private void LevelUp()
+    {
+        var gameM = Managers.GameM;
+        if (gameM.LevelData == null) return;
+        int needed = gameM.LevelData.GetRequiredExp(gameM.Level) - gameM.CurrentExp;
+        gameM.AddExp(needed);
     }
 
     private void SpawnEnemy(int index)

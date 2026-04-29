@@ -36,6 +36,8 @@ public class WaveStarter : MonoBehaviour
         Managers.WaveM.OnAllWavesComplete -= OnAllWavesComplete;
     }
 
+    public void DisableAutoStart() => _autoStart = false;
+
     public void StartWave() => Managers.WaveM.StartNextWave();
 
     private void OnWaveStart(int wave)

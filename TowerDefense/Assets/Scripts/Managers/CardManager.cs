@@ -22,7 +22,7 @@ public class CardManager
 
         foreach (CardEffectType effectType in Enum.GetValues(typeof(CardEffectType)))
         {
-            string key = effectType.ToString();
+            string key = effectType.ToString() + "Data";
             var card = Managers.ResourceM.Load<CardData>(key);
             if (card == null) continue;
             _cardDatas[card.category].Add(card);

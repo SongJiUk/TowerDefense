@@ -55,7 +55,11 @@ public class BuffHandler : MonoBehaviour, ITickable
         {
             foreach (var e in _effects)
             {
-                if (e is BuffEffect existing && existing.EffectType == effect.EffectType) return;
+                if (e is BuffEffect existing && existing.EffectType == effect.EffectType)
+                {
+                    existing.Refresh();
+                    return;
+                }
             }
         }
 

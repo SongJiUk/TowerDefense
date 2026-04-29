@@ -8,7 +8,7 @@ public class PoisonEffect : BuffEffect
     private readonly float _hpRatio;
     private IDamageable _target;
     public override Type EffectType => typeof(PoisonEffect);
-    private float _tickTimer = 0f;
+    private float _tickTimer = 0.5f; // 첫 틱: 적중 0.5초 뒤
 
     public PoisonEffect(IDamageable target, float hpRatio, float duration)
     {
@@ -22,6 +22,12 @@ public class PoisonEffect : BuffEffect
 
     public override void OnRemove(BuffHandler handler) { }
 
+    public override void Refresh()
+    {
+        base.Refresh();
+        _tickTimer = 0.5f; // 재적중 시 0.5초 딜레이로 리셋
+    }
+
     public override void Tick(float deltaTime)
     {
         base.Tick(deltaTime);
@@ -29,10 +35,11 @@ public class PoisonEffect : BuffEffect
         if (_tickTimer >= 1f)
         {
             _tickTimer -= 1f;
-            float damage = _target.CurrentHp * _hpRatio;
+            float damage = Mathf.Max(1f, _target.CurrentHp * _hpRatio);
 
-            _target.TakeDamage(damage);
-            Debug.Log($"[Poison] target : {damage:F1} 데미지 / 남은 HP: {_target.CurrentHp:F1}");
+            _target.TakeDamage(damage, false, isPoison: true);
+            if (_target is MonoBehaviour mb)
+                Managers.FloatingTextM?.ShowPoison(mb.transform.position, damage);
         }
     }
 }

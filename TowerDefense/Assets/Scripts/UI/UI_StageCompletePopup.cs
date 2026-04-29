@@ -44,6 +44,8 @@ public class UI_StageCompletePopup : UI_Base
     {
         if (!_initialized) await Init();
 
+        Managers.SaveM?.OnStageClear(stage);
+
         GetText(typeof(Texts), (int)Texts.Text_Title).text = "Stage Clear!";
         GetText(typeof(Texts), (int)Texts.Text_StageNum).text = $"Stage {stage} 클리어";
 

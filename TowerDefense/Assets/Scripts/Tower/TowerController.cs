@@ -28,6 +28,7 @@ public class TowerController : MonoBehaviour
 
     private float _attackTimer;
     private Transform _currentTarget;
+    private EnemyController _currentTargetEnemy;
 
     protected static int _enemyMask;
     private static TowerController _selectedTower;
@@ -107,6 +108,7 @@ public class TowerController : MonoBehaviour
         if (_currentTarget == null)
         {
             _currentTarget = FindTarget();
+            _currentTargetEnemy = _currentTarget?.GetComponent<EnemyController>();
         }
         else
         {
@@ -114,9 +116,10 @@ public class TowerController : MonoBehaviour
                 new Vector2(_currentTarget.position.x, _currentTarget.position.z),
                 new Vector2(transform.position.x, transform.position.z));
 
-            if (!_currentTarget.gameObject.activeInHierarchy || xzDist > _currentRange)
+            if (!_currentTarget.gameObject.activeInHierarchy || _currentTargetEnemy?.IsDead == true || xzDist > _currentRange)
             {
                 _currentTarget = null;
+                _currentTargetEnemy = null;
                 return;
             }
 
@@ -136,6 +139,7 @@ public class TowerController : MonoBehaviour
         if (distBeforeFire > _currentRange)
         {
             _currentTarget = null;
+            _currentTargetEnemy = null;
             return;
         }
 
@@ -287,6 +291,7 @@ public class TowerController : MonoBehaviour
 
         foreach (Collider col in hits)
         {
+            if (col.GetComponent<EnemyController>()?.IsDead == true) continue;
             float dist = Vector3.Distance(col.transform.position, corePos);
             if (dist < minDist) { minDist = dist; best = col.transform; }
         }
@@ -298,13 +303,13 @@ public class TowerController : MonoBehaviour
         if (Data.projectilePrefabKey == null) return;
 
         float damage = _currentDamage;
-        if (UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance(target))
-            damage *= 2f;
+        bool isCritical = UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance(target);
+        if (isCritical) damage *= 2f;
 
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
         GameObject go = Managers.PoolM.Pop(Data.projectilePrefabKey);
         go.transform.position = spawnPos;
-        go.GetComponent<ProjectileController>()?.Init(target, damage, Data.projectileSpeed, onHit: OnHit);
+        go.GetComponent<ProjectileController>()?.Init(target, damage, Data.projectileSpeed, isCritical, onHit: OnHit);
     }
 
     protected virtual void OnHit(Transform target) { }
