@@ -19,6 +19,10 @@ public class Managers : MonoBehaviour
     readonly SkillManager skillManager = new();
     readonly SynergyManager synergyManager = new();
     readonly DifficultyManager difficultyManager = new();
+    readonly SoundManager soundManager = new();
+    readonly SaveManager saveManager = new();
+    readonly FloatingTextManager floatingTextManager = new();
+    readonly AchievementManager achievementManager = new();
     UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
@@ -55,6 +59,10 @@ public class Managers : MonoBehaviour
     public static SkillManager SkillM { get { return Instance?.skillManager; } }
     public static SynergyManager SynergyM { get { return Instance?.synergyManager; } }
     public static DifficultyManager DifficultyM { get { return Instance?.difficultyManager; } }
+    public static SoundManager SoundM { get { return Instance?.soundManager; } }
+    public static SaveManager SaveM { get { return Instance?.saveManager; } }
+    public static FloatingTextManager FloatingTextM { get { return Instance?.floatingTextManager; } }
+    public static AchievementManager AchievementM { get { return Instance?.achievementManager; } }
 
     public static Managers Instance
     {
@@ -74,6 +82,7 @@ public class Managers : MonoBehaviour
                 DontDestroyOnLoad(go);
                 instance = go.GetComponent<Managers>();
                 instance.updateManager = go.AddComponent<UpdateManager>();
+                instance.soundManager.Init(go);
             }
 
             return instance;

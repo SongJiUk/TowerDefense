@@ -42,6 +42,13 @@ public class GameManager
         OnExpChanged?.Invoke(CurrentExp, LevelData?.GetRequiredExp(Level) ?? 0);
     }
 
+    public void SetLevel(int level, int exp)
+    {
+        Level = Mathf.Max(1, level);
+        CurrentExp = Mathf.Max(0, exp);
+        OnExpChanged?.Invoke(CurrentExp, LevelData?.GetRequiredExp(Level) ?? 0);
+    }
+
     // ─── 골드 ────────────────────────────────────────────────────────────────
 
     public int Gold { get; private set; } = 150;

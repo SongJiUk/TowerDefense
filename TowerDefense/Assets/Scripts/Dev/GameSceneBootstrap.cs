@@ -39,7 +39,7 @@ public class GameSceneBootstrap : MonoBehaviour
         Managers.GameM.LevelData = Managers.ResourceM.Load<LevelData>("LevelData");
         Managers.CardM.Init();
 
-        string stageKey = $"Stage{stage}";
+        string stageKey = $"Stage{stage}Data";
         StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
 
         if (stageData == null)

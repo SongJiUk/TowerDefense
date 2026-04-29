@@ -216,6 +216,8 @@ public class UI_TowerUpgradePopup : UI_Base
         _rect.anchoredPosition = _originPos + Vector2.down * 800f;
         _rect.DOAnchorPos(_originPos, 0.35f).SetEase(Ease.OutCubic).SetUpdate(true)
              .OnComplete(() => bg.SetActive(true));
+
+        RebuildLayoutNextFrame().Forget();
     }
 
     // ─── 갱신 ─────────────────────────────────────────────────────────────────
@@ -242,8 +244,6 @@ public class UI_TowerUpgradePopup : UI_Base
         RefreshUniqueEffect();
 
         var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
     }
 
@@ -300,6 +300,15 @@ public class UI_TowerUpgradePopup : UI_Base
                 btn.onClick.AddListener(() => OnUpgradeClicked(capturedType));
             }
         }
+    }
+
+    private async UniTaskVoid RebuildLayoutNextFrame()
+    {
+        await UniTask.NextFrame(cancellationToken: destroyCancellationToken);
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_rect);
+        var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
     }
 
     private void OnGoldChanged(int gold)

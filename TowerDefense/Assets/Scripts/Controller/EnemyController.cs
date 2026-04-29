@@ -12,11 +12,16 @@ public class EnemyController : MonoBehaviour, IDamageable
 {
     protected EnemyHPBar _hpBar;
     protected GameObject _hpBarGo;
+    private Renderer[] _renderers;
+
+    protected static readonly int HASH_DIE = Animator.StringToHash("IsDie");
+    protected Animator _animator;
 
     protected EnemyData _data;
     protected float _hp;
     protected float _maxHp;
     public float CurrentHp => _hp;
+    public virtual bool IsDead => _isDead;
     protected float _baseSpeed;
     protected float _speed;
     protected bool _isDead;
@@ -57,7 +62,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     protected virtual void Awake()
     {
-        if (_buffHandler == null) _buffHandler = GetComponent<BuffHandler>();
+        _animator = GetComponent<Animator>();
+        _buffHandler = GetComponent<BuffHandler>();
+        _renderers = GetComponentsInChildren<Renderer>();
     }
 
     void OnEnable()
@@ -69,7 +76,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (_hpBarGo != null)
         {
             _hpBar = _hpBarGo.GetComponent<EnemyHPBar>();
-            _hpBar.Follow(transform, new Vector3(0f, 2f, 0f));
+            _hpBar.Follow(transform, new Vector3(0f, GetHeadOffset(), 0f));
         }
     }
 
@@ -89,13 +96,26 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
     }
 
+    private float GetHeadOffset()
+    {
+        if (_renderers == null || _renderers.Length == 0) return 2f;
+
+        Bounds bounds = _renderers[0].bounds;
+        for (int i = 1; i < _renderers.Length; i++)
+            bounds.Encapsulate(_renderers[i].bounds);
+
+        return bounds.max.y - transform.position.y + 0.3f;
+    }
+
     // ─── 전투 ─────────────────────────────────────────────────────────────────
 
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage, bool isCritical = false, bool isPoison = false)
     {
         if (_isDead) return;
         _hp -= damage;
         _hpBar?.SetHP(_hp, _maxHp);
+        if (!isPoison)
+            Managers.FloatingTextM?.ShowDamage(transform.position, damage, isCritical);
         if (_hp <= 0f) Die();
     }
 
@@ -104,6 +124,41 @@ public class EnemyController : MonoBehaviour, IDamageable
     protected virtual void Die()
     {
         _isDead = true;
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
+        DieAsync(destroyCancellationToken).Forget();
+    }
+
+    private async UniTaskVoid DieAsync(System.Threading.CancellationToken token)
+    {
+        await PlayDeathAnimationAsync(token);
+        if (token.IsCancellationRequested) return;
+        OnDeathComplete();
+    }
+
+    protected virtual async UniTask PlayDeathAnimationAsync(System.Threading.CancellationToken token)
+    {
+        if (_animator == null) return;
+
+        _animator.SetBool(HASH_DIE, true);
+        await UniTask.Yield(PlayerLoopTiming.Update, token);
+
+        float elapsed = 0f;
+        const float TIMEOUT = 2f;
+        while (elapsed < TIMEOUT)
+        {
+            var info = _animator.GetCurrentAnimatorStateInfo(0);
+            if (info.normalizedTime >= 1f && !info.loop) break;
+            elapsed += Time.deltaTime;
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
+        }
+
+        _animator.SetBool(HASH_DIE, false);
+    }
+
+    protected virtual void OnDeathComplete()
+    {
         Managers.WaveM.OnEnemyRemoved();
         Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));
         Managers.GameM.AddExp(_data.rewardExp);
@@ -114,6 +169,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void OnPathChanged()
     {
+        if (_isDead) return;
         List<Vector3> newPath = Managers.Path.FindPath(
             _currentTarget,
             Managers.EndPoint.transform.position
@@ -121,7 +177,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         StartMove(newPath);
     }
 
-    private void RequestPath()
+    protected void RequestPath()
     {
         if (_data == null || Managers.CoreTransform == null) return;
 

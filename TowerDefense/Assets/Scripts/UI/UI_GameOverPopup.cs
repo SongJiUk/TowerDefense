@@ -44,6 +44,8 @@ public class UI_GameOverPopup : UI_Base
     {
         if (!_initialized) await Init();
 
+        Managers.SaveM?.OnGameOver();
+
         GetText(typeof(Texts), (int)Texts.Text_Title).text = "Game Over";
         GetText(typeof(Texts), (int)Texts.Text_WaveCount).text = $"Wave {wave} 도달";
 

@@ -20,6 +20,6 @@ MonoBehaviour:
   baseReward: 5
   rewardExp: 10
   prefabKey: Enemy_BeforeSplit
-  afterSplitKey: Enemy_AfterSplitData
+  afterSplitKey: Enemy_SplitData
   splitCount: 2
   splitHpRatio: 0.6

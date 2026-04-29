@@ -12,24 +12,19 @@ public class ProjectileController : MonoBehaviour
     private Transform _target;
     private float _damage;
     private float _speed;
+    private bool _isCritical;
     private IDamageable _IDamage;
     private BuffHandler _buffHandler;
     private BuffEffect _onHitEffect;
 
     private System.Action<Transform> _onHit;
 
-
-    /// <summary>
-    /// 발사 직후 TowerController가 호출. 타겟·데미지·이동속도를 설정한다.
-    /// </summary>
-    /// <param name="target">추적할 적의 Transform</param>
-    /// <param name="damage">명중 시 입힐 데미지</param>
-    /// <param name="speed">이동 속도 (유닛/초)</param>
-    public void Init(Transform target, float damage, float speed, BuffEffect onHitEffect = null, System.Action<Transform> onHit = null)
+    public void Init(Transform target, float damage, float speed, bool isCritical = false, BuffEffect onHitEffect = null, System.Action<Transform> onHit = null)
     {
         _target = target;
         _damage = damage;
         _speed = speed;
+        _isCritical = isCritical;
         _IDamage = _target.GetComponent<IDamageable>();
         _buffHandler = _target.GetComponent<BuffHandler>();
         _onHitEffect = onHitEffect;
@@ -55,7 +50,7 @@ public class ProjectileController : MonoBehaviour
         // HIT_DISTANCE 이내로 진입하면 데미지 후 풀 반환
         if (Vector3.Distance(transform.position, aimPos) < HIT_DISTANCE)
         {
-            _IDamage?.TakeDamage(_damage);
+            _IDamage?.TakeDamage(_damage, _isCritical);
             if (_onHitEffect != null) _buffHandler?.AddEffect(_onHitEffect);
             _onHit?.Invoke(_target);
             Managers.ResourceM.Destroy(gameObject);

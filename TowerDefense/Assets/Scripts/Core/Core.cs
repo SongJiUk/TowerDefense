@@ -34,7 +34,7 @@ public class Core : MonoBehaviour, IDamageable
     }
     private void OnDisable() => Managers.CoreTransform = null;
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool isCritical = false, bool isPoison = false)
     {
         currentHp -= damage;
         OnHpChanged?.Invoke(currentHp);

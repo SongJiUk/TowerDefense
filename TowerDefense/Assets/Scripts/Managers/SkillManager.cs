@@ -216,7 +216,7 @@ public class SkillManager
                 var hits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[ArrowRain] targetPos={targetPos}, range={range}, hits={hits.Length}");
                 foreach (var hit in hits)
-                    hit.GetComponent<IDamageable>()?.TakeDamage(damage);
+                    hit.GetComponent<IDamageable>()?.TakeDamage(damage, false);
                 break;
 
             case Define.SkillType.Block:
@@ -243,7 +243,7 @@ public class SkillManager
             case Define.SkillType.LightningStorm:
                 var stormHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 foreach (var hit in stormHits)
-                    hit.GetComponent<IDamageable>()?.TakeDamage(damage);
+                    hit.GetComponent<IDamageable>()?.TakeDamage(damage, false);
                 break;
 
             case Define.SkillType.PoisonMist:

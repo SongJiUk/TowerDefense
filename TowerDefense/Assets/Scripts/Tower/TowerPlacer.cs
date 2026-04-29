@@ -36,15 +36,18 @@ public class TowerPlacer : MonoBehaviour
         if (_cam == null) _cam = Camera.main;
     }
 
-    async void Start()
+    void Start() => InitAsync().Forget();
+
+    private async UniTaskVoid InitAsync()
     {
-        // 팝업 프리팹 인스턴스 생성 (PrevLoad로 미리 로드된 상태)
+        await GameSceneBootstrap.ReadyTask;
+        if (this == null) return;
+
         GameObject popupGo = Managers.ResourceM.Instantiate("UI_TowerSelectPopup", _pooling: false);
         popupGo.transform.SetParent(Managers.UIM.Root.transform, false);
         _popup = popupGo.GetOrAddComponent<UI_TowerSelectPopup>();
         await _popup.Init();
 
-        // TowerData 6종 — TowerType 순서대로 정렬 (팝업 버튼 순서와 일치)
         var loaded = Managers.ResourceM.GetAllLoaded<TowerData>();
         loaded.Sort((a, b) => a.towerType.CompareTo(b.towerType));
         _allTowerData = loaded.ToArray();

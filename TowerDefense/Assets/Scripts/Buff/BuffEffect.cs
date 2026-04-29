@@ -17,4 +17,7 @@ public abstract class BuffEffect : IBuff
         _elapsed += deltaTime;
     }
 
+    /// <summary>재적중 시 지속시간 초기화. 필요한 효과에서 override.</summary>
+    public virtual void Refresh() => _elapsed = 0f;
+
 }

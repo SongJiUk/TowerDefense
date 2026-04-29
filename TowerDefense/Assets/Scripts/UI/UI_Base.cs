@@ -69,12 +69,13 @@ public class UI_Base : MonoBehaviour
         }
     }
 
-    protected void BindObject(Type _type) => Bind<GameObject>(_type);
-    protected void BindImage(Type _type)  => Bind<Image>(_type);
-    protected void BindText(Type _type)   => Bind<TextMeshProUGUI>(_type);
-    protected void BindButton(Type _type) => Bind<Button>(_type);
-    protected void BindToggle(Type _type) => Bind<Toggle>(_type);
-    protected void BindSlider(Type _type) => Bind<Slider>(_type);
+    protected void BindObject(Type _type)   => Bind<GameObject>(_type);
+    protected void BindImage(Type _type)    => Bind<Image>(_type);
+    protected void BindText(Type _type)     => Bind<TextMeshProUGUI>(_type);
+    protected void BindButton(Type _type)   => Bind<Button>(_type);
+    protected void BindToggle(Type _type)   => Bind<Toggle>(_type);
+    protected void BindSlider(Type _type)   => Bind<Slider>(_type);
+    protected void BindDropdown(Type _type) => Bind<TMPro.TMP_Dropdown>(_type);
 
     #endregion
 
@@ -90,8 +91,9 @@ public class UI_Base : MonoBehaviour
     protected Image           GetImage(Type _type, int _index)  => Get<Image>(_type, _index);
     protected TextMeshProUGUI GetText(Type _type, int _index)   => Get<TextMeshProUGUI>(_type, _index);
     protected Button          GetButton(Type _type, int _index) => Get<Button>(_type, _index);
-    protected Toggle          GetToggle(Type _type, int _index) => Get<Toggle>(_type, _index);
-    protected Slider          GetSlider(Type _type, int _index) => Get<Slider>(_type, _index);
+    protected Toggle             GetToggle(Type _type, int _index)    => Get<Toggle>(_type, _index);
+    protected Slider             GetSlider(Type _type, int _index)    => Get<Slider>(_type, _index);
+    protected TMPro.TMP_Dropdown GetDropdown(Type _type, int _index)  => Get<TMPro.TMP_Dropdown>(_type, _index);
 
     #endregion
 

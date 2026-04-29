@@ -100,15 +100,19 @@ public class WaveManager
     public void RegisterExtraEnemy(int count) => _aliveCount += count;
 
     /// <summary>런타임 위치 지정 스폰 (SplitEnemy 등에서 사용).</summary>
-    public void SpawnEnemyAt(EnemyData data, Vector3 position, float hpMultiplier, float speedMultiplier)
+    public EnemyController SpawnEnemyAt(EnemyData data, Vector3 position, float hpMultiplier, float speedMultiplier)
     {
-        if (data == null) return;
+        if (data == null) return null;
         GameObject go = Managers.PoolM.Pop(data.prefabKey);
-        if (go == null) return;
+        if (go == null) return null;
         go.transform.position = position;
         go.transform.rotation = Quaternion.identity;
         if (go.TryGetComponent(out EnemyController enemy))
+        {
             enemy.Init(data, hpMultiplier, speedMultiplier);
+            return enemy;
+        }
+        return null;
     }
 
     /// <summary>EnemyController가 사망 or 코어 도달 시 호출.</summary>

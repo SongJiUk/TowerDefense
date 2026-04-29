@@ -20,6 +20,8 @@ public class SlowEffect : BuffEffect
     {
         _modifier = new StatModifier(Define.StatType.Speed, _speedMultiplier, Define.ModifierType.Percent);
         handler.AddModifier(_modifier);
+        if (handler.TryGetComponent(out MonoBehaviour mb))
+            Managers.FloatingTextM?.ShowSlow(mb.transform.position);
     }
 
     public override void OnRemove(BuffHandler handler)

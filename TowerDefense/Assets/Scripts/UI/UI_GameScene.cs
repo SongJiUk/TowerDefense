@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public class UI_GameScene : UI_Scene
 {
     enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_WaveAnnounce }
-    enum Buttons { Button_SkillUpgrade, Button_SkillCancel }
+    enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause }
     enum Images
     {
         Image_Top, Image_Bottom, Image_LevelFillBG, Image_LevelFill, Image_TopGlow, Image_BottomGlow
@@ -24,11 +24,13 @@ public class UI_GameScene : UI_Scene
     private RectTransform _skillBtnRect;
     private Vector2 _skillBtnOriginPos;
     private float _displayHp = -1f;
+    private bool _isDoubleSpeed = false;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
     async void Start()
     {
+        await GameSceneBootstrap.ReadyTask;
         await Init();
     }
 
@@ -71,6 +73,9 @@ public class UI_GameScene : UI_Scene
         var cancelBtn = GetButton(typeof(Buttons), (int)Buttons.Button_SkillCancel);
         cancelBtn.onClick.AddListener(() => Managers.SkillM.CancelTargeting());
         cancelBtn.gameObject.SetActive(false);
+
+        GetButton(typeof(Buttons), (int)Buttons.Button_Speed).onClick.AddListener(OnSpeedToggle);
+        GetButton(typeof(Buttons), (int)Buttons.Button_Pause).onClick.AddListener(OnPauseClicked);
 
         Managers.SkillM.OnTargetingStarted += OnTargetingStarted;
         Managers.SkillM.OnTargetingCancelled += OnTargetingCancelled;
@@ -312,6 +317,20 @@ public class UI_GameScene : UI_Scene
     private void OnStartWaveClicked()
     {
         Managers.WaveM.StartNextWave();
+    }
+
+    private void OnSpeedToggle()
+    {
+        _isDoubleSpeed = !_isDoubleSpeed;
+        Time.timeScale = _isDoubleSpeed ? 2f : 1f;
+        var txt = GetButton(typeof(Buttons), (int)Buttons.Button_Speed).GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        if (txt != null) txt.text = _isDoubleSpeed ? "x2" : "x1";
+    }
+
+    private void OnPauseClicked()
+    {
+        var popup = Managers.ObjectM.SpawnUI<UI_PausePopup>("UI_PausePopup", transform);
+        if (popup != null) _ = popup.Init();
     }
 
     private void OnWaveComplete(int wave, int bonus)

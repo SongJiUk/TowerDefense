@@ -27,7 +27,6 @@ public class LightningTowerController : TowerController
 
         int totalChains = _lightningTowerData.chainCount + _lightningTowerData.stageChainCountBonus[UniqueEffectStage];
 
-        // 도체: 슬로우 걸린 첫 타겟 명중 시 체인 +1
         if (Managers.SynergyM != null && Managers.SynergyM.Conductor)
         {
             var buff = target.GetComponent<BuffHandler>();
@@ -48,7 +47,6 @@ public class LightningTowerController : TowerController
 
             float damage = CurrentDamage * Mathf.Pow(_lightningTowerData.chainDamageFalloff, i);
 
-            // 전도성 독: 체인 타겟이 독 걸려있으면 데미지 1.5배
             if (conductivePoison)
             {
                 var buff = next.GetComponent<BuffHandler>();
@@ -60,7 +58,9 @@ public class LightningTowerController : TowerController
                 }
             }
 
-            next.GetComponent<IDamageable>()?.TakeDamage(damage);
+            bool isCritical = UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance(next);
+            if (isCritical) damage *= 2f;
+            next.GetComponent<IDamageable>()?.TakeDamage(damage, isCritical);
             _chainTargets.Add(next);
         }
     }
@@ -70,11 +70,9 @@ public class LightningTowerController : TowerController
         Collider[] cols = Physics.OverlapSphere(from.position, _lightningTowerData.chainRange, _enemyMask);
         foreach (var col in cols)
         {
-            if (!_chainTargets.Contains(col.transform))
-            {
-                return col.transform;
-            }
-
+            if (_chainTargets.Contains(col.transform)) continue;
+            if (col.GetComponent<EnemyController>()?.IsDead == true) continue;
+            return col.transform;
         }
         return null;
     }

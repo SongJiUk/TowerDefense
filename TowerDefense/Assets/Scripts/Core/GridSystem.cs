@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -31,8 +32,15 @@ public class GridSystem : MonoBehaviour
     private GridNode[,] _grid;
 
 
-    void OnEnable()  => InitGrid();
+    void OnEnable()  => InitGridAsync().Forget();
     void OnDisable() => ClearMarkers();
+
+    private async UniTaskVoid InitGridAsync()
+    {
+        await GameSceneBootstrap.ReadyTask;
+        if (this == null || !enabled) return;
+        InitGrid();
+    }
 
 
     /// <summary>

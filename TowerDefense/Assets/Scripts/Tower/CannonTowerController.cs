@@ -33,7 +33,9 @@ public class CannonTowerController : TowerController
         foreach (var col in cols)
         {
             if (col.transform == target) continue;
-            col.GetComponent<IDamageable>()?.TakeDamage(CurrentDamage * 0.4f);
+            float splashDamage = CurrentDamage * 0.4f;
+            col.GetComponent<IDamageable>()?.TakeDamage(splashDamage, false);
+            Managers.FloatingTextM?.ShowSplash(col.transform.position, splashDamage);
         }
     }
 

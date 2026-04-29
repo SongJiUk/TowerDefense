@@ -19,6 +19,7 @@ public class UI_Synergy : UI_Base
 
     async void Start()
     {
+        await GameSceneBootstrap.ReadyTask;
         await Init();
     }
 

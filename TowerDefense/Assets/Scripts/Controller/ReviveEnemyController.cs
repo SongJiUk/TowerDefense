@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -6,9 +8,15 @@ using UnityEngine;
 /// </summary>
 public class ReviveEnemyController : EnemyController
 {
+    private static readonly int HASH_REVIVE = Animator.StringToHash("IsRevive");
+
     private ReviveEnemyData _reviveData;
     private bool _hasRevived;
+    private bool _isReviving;
     private Renderer[] _renderers;
+    private UniTaskCompletionSource _reviveEndTcs;
+
+    public override bool IsDead => _isDead || _isReviving;
 
     protected override void Awake()
     {
@@ -24,17 +32,48 @@ public class ReviveEnemyController : EnemyController
         base.Init(data, hpMultiplier, speedMultiplier);
     }
 
-    protected override void Die()
+    protected override async UniTask PlayDeathAnimationAsync(CancellationToken token)
+    {
+        await base.PlayDeathAnimationAsync(token); // Die 애니메이션 대기
+
+        if (_hasRevived || _reviveData == null || _animator == null) return;
+
+        // IsDie 끄기 → Any State → Death 재진입 방지
+        _isReviving = true;
+        _animator.SetBool(HASH_DIE, false);
+        _animator.SetBool(HASH_REVIVE, true);
+
+        _reviveEndTcs = new UniTaskCompletionSource();
+        await _reviveEndTcs.Task.AttachExternalCancellation(token);
+
+        _animator.SetBool(HASH_REVIVE, false);
+        _isReviving = false;
+    }
+
+    protected override void OnDeathComplete()
     {
         if (!_hasRevived && _reviveData != null)
         {
             _hasRevived = true;
+            _isDead = false;
             _hp = _maxHp * _reviveData.reviveHpRatio;
             _hpBar?.SetHP(_hp, _maxHp);
             SetTint(new Color(0.55f, 0.55f, 0.55f));
+            if (_animator != null)
+            {
+                _animator.SetBool(HASH_DIE, false);
+                _animator.SetBool(HASH_REVIVE, false);
+            }
+            RequestPath();
             return;
         }
-        base.Die();
+        base.OnDeathComplete();
+    }
+
+    // Revive 애니메이션 클립 마지막 프레임에 Animation Event로 연결
+    public void OnReviveAnimationEnd()
+    {
+        _reviveEndTcs?.TrySetResult();
     }
 
     private void SetTint(Color color)
