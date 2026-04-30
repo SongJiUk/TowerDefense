@@ -53,4 +53,12 @@ public class GameSceneBootstrap : MonoBehaviour
         Debug.Log($"[Bootstrap] 초기화 완료");
         _readyTcs.TrySetResult();
     }
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+            Managers.GameM.TriggerGameOver();
+    }
+#endif
 }

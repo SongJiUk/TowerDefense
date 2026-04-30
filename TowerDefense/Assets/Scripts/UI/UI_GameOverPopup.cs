@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 /// 코어 HP 0 → 게임오버 팝업.
 ///
 /// Unity 오브젝트 이름 규칙:
-///   텍스트 : Text_Title, Text_WaveCount
+///   텍스트 : Text_Title, Text_Subtitle, Text_KillCount, Text_Gold, Text_Time
 ///   버튼   : Button_Retry, Button_MainMenu
 ///   이미지 : Image_BG
 /// </summary>
 public class UI_GameOverPopup : UI_Base
 {
-    enum Texts { Text_Title, Text_WaveCount }
+    enum Texts { Text_Title, Text_Subtitle, Text_KillCount, Text_Gold, Text_Time }
     enum Buttons { Button_Retry, Button_MainMenu }
     enum Images { Image_BG }
 
@@ -40,14 +40,18 @@ public class UI_GameOverPopup : UI_Base
         return true;
     }
 
-    public async UniTaskVoid Show(int wave)
+    public async UniTaskVoid Show(int wave, int totalWaves)
     {
         if (!_initialized) await Init();
 
+        Managers.GameM.StopTimer();
         Managers.SaveM?.OnGameOver();
 
-        GetText(typeof(Texts), (int)Texts.Text_Title).text = "Game Over";
-        GetText(typeof(Texts), (int)Texts.Text_WaveCount).text = $"Wave {wave} 도달";
+        GetText(typeof(Texts), (int)Texts.Text_Title).text = "게임 오버";
+        GetText(typeof(Texts), (int)Texts.Text_Subtitle).text = $"{wave}/{totalWaves} 웨이브에서 실패";
+        GetText(typeof(Texts), (int)Texts.Text_KillCount).text = Managers.GameM.KillCount.ToString("N0");
+        GetText(typeof(Texts), (int)Texts.Text_Gold).text = Managers.GameM.Gold.ToString("N0");
+        GetText(typeof(Texts), (int)Texts.Text_Time).text = FormatTime(Managers.GameM.ElapsedTime);
 
         _rect.localScale = Vector3.one * 0.7f;
         var img = GetImage(typeof(Images), (int)Images.Image_BG);
@@ -56,6 +60,13 @@ public class UI_GameOverPopup : UI_Base
         var seq = DOTween.Sequence().SetUpdate(true);
         seq.Append(_rect.DOScale(1f, 0.35f).SetEase(Ease.OutBack));
         seq.Join(img.DOFade(1f, 0.25f));
+    }
+
+    private string FormatTime(float seconds)
+    {
+        int m = (int)(seconds / 60);
+        int s = (int)(seconds % 60);
+        return $"{m}:{s:D2}";
     }
 
     private void OnRetryClicked()

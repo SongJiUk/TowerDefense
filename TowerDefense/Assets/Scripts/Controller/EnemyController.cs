@@ -162,6 +162,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         Managers.WaveM.OnEnemyRemoved();
         Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));
         Managers.GameM.AddExp(_data.rewardExp);
+        Managers.GameM.AddKill();
         Managers.ResourceM.Destroy(gameObject);
     }
 

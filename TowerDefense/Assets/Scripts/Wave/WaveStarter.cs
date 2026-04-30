@@ -29,6 +29,8 @@ public class WaveStarter : MonoBehaviour
         Managers.WaveM.StartNextWave();
     }
 
+    void Update() => Managers.GameM.TickTimer(Time.deltaTime);
+
     void OnDestroy()
     {
         Managers.WaveM.OnWaveStart        -= OnWaveStart;
@@ -42,6 +44,7 @@ public class WaveStarter : MonoBehaviour
 
     private void OnWaveStart(int wave)
     {
+        if (wave == 1) Managers.GameM.StartTimer();
         Debug.Log($"[Wave] {wave} / {Managers.WaveM.TotalWaves} 웨이브 시작");
     }
 
