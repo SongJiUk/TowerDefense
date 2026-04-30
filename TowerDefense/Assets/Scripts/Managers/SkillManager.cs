@@ -105,6 +105,7 @@ public class SkillManager
             if (_slots[i] == null)
             {
                 SetSlot(i, skillData);
+                Activate(i);
                 return true;
             }
         }

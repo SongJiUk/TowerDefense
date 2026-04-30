@@ -94,6 +94,18 @@ public class GameManager
     public event Action OnCardApplied;
     public void NotifyCardApplied() => OnCardApplied?.Invoke();
 
+    // ─── 통계 ────────────────────────────────────────────────────────────────
+
+    public int KillCount { get; private set; } = 0;
+    public void AddKill() => KillCount++;
+
+    public float ElapsedTime { get; private set; } = 0f;
+    public bool IsTimerRunning { get; private set; } = false;
+
+    public void StartTimer() { ElapsedTime = 0f; IsTimerRunning = true; }
+    public void TickTimer(float delta) { if (IsTimerRunning) ElapsedTime += delta; }
+    public void StopTimer() => IsTimerRunning = false;
+
     // ─── 게임오버 / 클리어 ───────────────────────────────────────────────────
 
     public event Action OnGameOver;
@@ -117,5 +129,8 @@ public class GameManager
         pendingEnemyHpMultiplier    = 1f;
         synergyMultiplier           = 1f;
         freeTowerCount              = 0;
+        KillCount                   = 0;
+        ElapsedTime                 = 0f;
+        IsTimerRunning              = false;
     }
 }

@@ -36,8 +36,7 @@ public class UI_SkillSlot : UI_Base
 
         BindEvent(btn.gameObject, () =>
         {
-            if (Managers.SkillM.GetCooldownRatio(_slotIndex) <= 0f)
-                transform.DOScale(1.12f, 0.12f).SetEase(Ease.OutBack).SetUpdate(true);
+            transform.DOScale(1.12f, 0.12f).SetEase(Ease.OutBack).SetUpdate(true);
         }, _type: Define.UIEvent.PointerEnter);
 
         BindEvent(btn.gameObject, null,
@@ -73,6 +72,9 @@ public class UI_SkillSlot : UI_Base
         if (!hasSkill)
         {
             GetImage(typeof(Images), (int)Images.Image_CoolDown).fillAmount = 0f;
+            var cdTxt = GetText(typeof(Texts), (int)Texts.Text_CoolDown);
+            cdTxt.text = "";
+            cdTxt.gameObject.SetActive(false);
             return;
         }
 

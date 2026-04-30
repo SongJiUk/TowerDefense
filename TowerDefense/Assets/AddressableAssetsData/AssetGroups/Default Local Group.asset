@@ -17,6 +17,12 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1253833c425234d93a6399de33c6fefb
   m_SerializeEntries:
+  - m_GUID: 2b667cc3dff9afa49b10f8746ca5a9bf
+    m_Address: UI_GameOverPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6098628b22dd09a4aa13e8728529d462
     m_Address: Atlas
     m_ReadOnly: 0

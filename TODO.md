@@ -71,11 +71,11 @@
 
 ## 7단계 — 데미지 숫자 표시
 
-- [ ] FloatingText 프리팹 생성 (TMP + 위로 올라가며 사라지는 애니메이션)
+- [ ] FloatingText 프리팹 생성 (TMP + 위로 올라가며 사라지는 애니메이션) ← Unity 에디터 작업
 - [x] FloatingTextPool 구현 (ObjectPool)
 - [x] EnemyController.TakeDamage에서 FloatingText 호출
 - [x] 치명타 / 독 / 슬로우 색상 구분
-- [ ] Addressables 등록
+- [ ] FloatingText Addressables 등록
 
 ---
 
@@ -131,4 +131,47 @@
 
 ---
 
-> 마지막 업데이트: 2026-04-29
+---
+
+## 다음 세션 시작 순서 (2026-04-30 기준)
+
+### ✅ 오늘 완료
+- UI_GameOverPopup 처치/골드/시간 스탯 3개 추가
+- GameManager 킬카운트 + 경과시간 타이머 추가
+- EnemyController.OnDeathComplete에 AddKill() 연결
+- WaveStarter 1웨이브 시작 시 타이머 시작
+- 에디터 F키 → 게임오버 트리거 (GameSceneBootstrap)
+- SkillSlot 획득 즉시 자동 발동 + 호버 스케일 수정
+
+### 🔜 다음 세션 순서
+
+**1. UI_GameOverPopup 테스트** ← 지금 바로
+- 에디터 실행 → F 눌러서 팝업 확인
+- 오브젝트 이름 바인딩 확인 (Text_Title / Text_Subtitle / Text_KillCount / Text_Gold / Text_Time)
+- 다시시작 / 포기 버튼 동작 확인
+
+**2. UI_StageClearPopup 제작**
+- 게임오버와 유사한 구조
+- "스테이지 클리어!" 타이틀
+- 처치 / 골드 / 시간 스탯
+- WaveM.OnAllWavesComplete 이벤트 연결
+- 에디터 C키 → 스테이지 클리어 트리거 추가
+
+**3. FloatingText 프리팹** ← Unity 에디터 작업
+- TMP 오브젝트 생성
+- 위로 올라가며 FadeOut 애니메이션 (DOTween)
+- Addressables PrevLoad 그룹에 등록
+
+**4. 타이틀씬**
+- 배경 + 게임 로고 배치
+- "게임 시작" 버튼 → UI_StageSelectPopup 오픈
+- UI_LoadingScene 제작 (씬 전환 중 빈 화면 방지)
+- 각 스테이지 테마 색 적용
+
+**5. 저장/불러오기 완성**
+- 게임 시작 시 레벨/경험치 불러오기
+- 스테이지 간 누적 유지
+
+---
+
+> 마지막 업데이트: 2026-04-30

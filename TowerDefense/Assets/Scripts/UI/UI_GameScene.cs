@@ -354,6 +354,6 @@ public class UI_GameScene : UI_Scene
     {
         var popup = Managers.ObjectM.SpawnUI<UI_GameOverPopup>("UI_GameOverPopup", transform);
         await popup.Init();
-        popup.Show(Managers.WaveM.CurrentWave).Forget();
+        popup.Show(Managers.WaveM.CurrentWave, Managers.WaveM.TotalWaves).Forget();
     }
 }

@@ -74,7 +74,8 @@ public class UI_SkillSelectPopup : UI_Base
         foreach (Define.SkillType skillType in System.Enum.GetValues(typeof(Define.SkillType)))
         {
             if (Managers.SkillM.HasSkill(skillType)) continue;
-            SkillData data = Managers.ResourceM.Load<SkillData>(skillType.ToString());
+            string key = skillType.ToString() + "Data";
+            SkillData data = Managers.ResourceM.Load<SkillData>(key);
             if (data != null) pool.Add(data);
         }
 
