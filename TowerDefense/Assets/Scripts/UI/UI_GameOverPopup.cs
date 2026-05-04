@@ -13,15 +13,17 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class UI_GameOverPopup : UI_Base
 {
-    enum Texts { Text_Title, Text_Subtitle, Text_KillCount, Text_Gold, Text_Time }
+    enum Texts { Text_Subtitle, Text_KillCount, Text_Gold, Text_Time }
     enum Buttons { Button_Retry, Button_MainMenu }
-    enum Images { Image_BG }
+    enum Images { Image_Skull }
 
     private bool _initialized;
     private RectTransform _rect;
+    private Tween _skullTween;
 
     void OnEnable() => Managers.UIM.RequestPause();
     void OnDisable() => Managers.UIM.ReleasePause();
+    void OnDestroy() => _skullTween?.Kill();
 
     public override async UniTask<bool> Init()
     {
@@ -47,19 +49,28 @@ public class UI_GameOverPopup : UI_Base
         Managers.GameM.StopTimer();
         Managers.SaveM?.OnGameOver();
 
-        GetText(typeof(Texts), (int)Texts.Text_Title).text = "게임 오버";
         GetText(typeof(Texts), (int)Texts.Text_Subtitle).text = $"{wave}/{totalWaves} 웨이브에서 실패";
         GetText(typeof(Texts), (int)Texts.Text_KillCount).text = Managers.GameM.KillCount.ToString("N0");
         GetText(typeof(Texts), (int)Texts.Text_Gold).text = Managers.GameM.Gold.ToString("N0");
         GetText(typeof(Texts), (int)Texts.Text_Time).text = FormatTime(Managers.GameM.ElapsedTime);
 
         _rect.localScale = Vector3.one * 0.7f;
-        var img = GetImage(typeof(Images), (int)Images.Image_BG);
+        var img = GetImage(typeof(Images), (int)Images.Image_Skull);
         img.color = new Color(img.color.r, img.color.g, img.color.b, 0f);
 
         var seq = DOTween.Sequence().SetUpdate(true);
         seq.Append(_rect.DOScale(1f, 0.35f).SetEase(Ease.OutBack));
         seq.Join(img.DOFade(1f, 0.25f));
+        seq.OnComplete(() =>
+        {
+            var skullRect = img.rectTransform;
+            var startY = skullRect.anchoredPosition.y;
+            _skullTween = skullRect
+                .DOAnchorPosY(startY + 12f, 0.8f)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetUpdate(true);
+        });
     }
 
     private string FormatTime(float seconds)

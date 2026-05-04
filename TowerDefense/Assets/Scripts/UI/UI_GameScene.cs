@@ -43,6 +43,7 @@ public class UI_GameScene : UI_Scene
         Managers.WaveM.OnWaveComplete -= OnWaveComplete;
         Managers.WaveM.OnAllWavesComplete -= OnAllWavesComplete;
         Managers.GameM.OnGameOver -= OnGameOver;
+        Managers.GameM.OnGameClear -= OnAllWavesComplete;
         Managers.SkillM.OnSlotChanged -= OnSkillSlotChanged;
         Managers.SkillM.OnSkillPointsChanged -= RefreshSkillPoints;
         Managers.SkillM.OnTargetingStarted -= OnTargetingStarted;
@@ -89,6 +90,7 @@ public class UI_GameScene : UI_Scene
         Managers.WaveM.OnWaveComplete += OnWaveComplete;
         Managers.WaveM.OnAllWavesComplete += OnAllWavesComplete;
         Managers.GameM.OnGameOver += OnGameOver;
+        Managers.GameM.OnGameClear += OnAllWavesComplete;
         Managers.SkillM.OnSlotChanged += OnSkillSlotChanged;
         Managers.SkillM.OnSkillPointsChanged += RefreshSkillPoints;
 
