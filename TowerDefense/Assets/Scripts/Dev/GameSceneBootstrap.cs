@@ -59,6 +59,8 @@ public class GameSceneBootstrap : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
             Managers.GameM.TriggerGameOver();
+        if (Input.GetKeyDown(KeyCode.C))
+            Managers.GameM.TriggerGameClear();
     }
 #endif
 }

@@ -1,63 +1,85 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 난이도 선택 팝업. 타이틀/로딩씬에 배치.
-/// 버튼 4개(Easy/Normal/Hard/Hell) 각각에 DifficultyButton 컴포넌트를 연결하거나
-/// 이 스크립트에 직접 참조로 연결해 사용.
+/// 난이도 선택 팝업.
+/// Unity 오브젝트 이름 규칙:
+///   버튼 : Button_Back
+///   카드  : Content_Cards 하위에 Easy→Normal→Hard→Hell 순서대로 배치
+///           (각 카드에 UI_DifficultyCard 컴포넌트 + Button 컴포넌트 필요)
 /// </summary>
-public class UI_DifficultySelectPopup : MonoBehaviour
+public class UI_DifficultySelectPopup : UI_Base
 {
-    [System.Serializable]
-    public struct DifficultySlot
+    enum Buttons { Button_Back }
+
+    private bool _initialized;
+    private UI_DifficultyCard[] _cards;
+    private Define.Difficulty? _selected = null;
+
+    public override async UniTask<bool> Init()
     {
-        public Button button;
-        public TextMeshProUGUI nameText;
-        public TextMeshProUGUI descText;
-        public GameObject lockIcon;
-        public GameObject selectedMark;
+        if (_initialized) return true;
+        if (!await base.Init()) return false;
+        _initialized = true;
+
+        _cards = GetComponentsInChildren<UI_DifficultyCard>(true);
+        foreach (var card in _cards)
+            if (!await card.Init()) return false;
+
+        BindButton(typeof(Buttons));
+        GetButton(typeof(Buttons), (int)Buttons.Button_Back).onClick.AddListener(OnBackClicked);
+
+        Refresh();
+        return true;
     }
 
-    [SerializeField] private DifficultySlot[] _slots; // 길이 4, 순서: Easy Normal Hard Hell
-
-    private static readonly string[] NAMES = { "Easy", "Normal", "Hard", "Hell" };
-    private static readonly string[] DESCS =
+    private void Refresh()
     {
-        "적 HP -20% / 골드 +20%\n코어 HP x1.5",
-        "기본 난이도",
-        "적 HP +30% / 골드 -10%\n코어 HP x0.8",
-        "적 HP +70% / 골드 -25%\n코어 HP x0.5",
-    };
+        var saveData = Managers.SaveM.Data;
 
-    void OnEnable() => Refresh();
-
-    public void Refresh()
-    {
-        if (Managers.DifficultyM == null) return;
-
-        for (int i = 0; i < _slots.Length; i++)
+        for (int i = 0; i < _cards.Length; i++)
         {
             var d = (Define.Difficulty)i;
             bool unlocked = Managers.DifficultyM.IsUnlocked(d);
-            bool selected = Managers.DifficultyM.Selected == d;
+            string best = saveData.BestWave > 0 && (int)saveData.BestDifficulty == i
+                ? $"최고기록: 웨이브 {saveData.BestWave}"
+                : "최고기록: -";
 
-            var slot = _slots[i];
-            if (slot.nameText != null) slot.nameText.text = NAMES[i];
-            if (slot.descText != null) slot.descText.text = DESCS[i];
-            if (slot.lockIcon != null) slot.lockIcon.SetActive(!unlocked);
-            if (slot.selectedMark != null) slot.selectedMark.SetActive(selected);
-            if (slot.button != null) slot.button.interactable = unlocked;
+            _cards[i].SetData(unlocked, best);
+            _cards[i].SetSelected(_selected.HasValue && d == _selected.Value);
 
             int captured = i;
-            slot.button?.onClick.RemoveAllListeners();
-            slot.button?.onClick.AddListener(() => OnSelect((Define.Difficulty)captured));
+            _cards[i].SetOnClick(() => OnCardSelected((Define.Difficulty)captured));
+            _cards[i].SetOnStartClick(OnStartClicked);
         }
     }
 
-    private void OnSelect(Define.Difficulty d)
+    private void OnCardSelected(Define.Difficulty d)
     {
-        Managers.DifficultyM.Select(d);
+        if (!Managers.DifficultyM.IsUnlocked(d)) return;
+
+        if (_selected == d)
+            _selected = null;   // 같은 카드 다시 클릭 → 비활성화
+        else
+        {
+            _selected = d;
+            Managers.DifficultyM.Select(d);
+        }
         Refresh();
+    }
+
+    private void OnBackClicked()
+    {
+        Managers.UIM.ClosePopup();
+    }
+
+    private void OnStartClicked()
+    {
+        Managers.SelectedStage = 1;
+        Managers.GameM.Reset();
+        Managers.CardM.Clear();
+        Managers.Clear();
+        SceneManager.LoadScene("GameScene");
     }
 }

@@ -23,6 +23,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31d87d2b9bec0aa4895215b1d6d99f34
+    m_Address: UI_StageCompletePopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3440f70c4dc4e29438cd55b2988a8216
+    m_Address: UI_DifficultySelectPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6098628b22dd09a4aa13e8728529d462
     m_Address: Atlas
     m_ReadOnly: 0

@@ -21,6 +21,13 @@ public class SaveManager
             Data.SetStageCleared(stage);
         Data.Level = Managers.GameM.Level;
         Data.Exp   = Managers.GameM.CurrentExp;
+
+        int wave = Managers.WaveM.CurrentWave;
+        if (wave > Data.BestWave)
+        {
+            Data.BestWave  = wave;
+            Data.BestStage = stage;
+        }
         _storage.Save(Data);
     }
 
@@ -28,6 +35,13 @@ public class SaveManager
     {
         Data.Level = Managers.GameM.Level;
         Data.Exp   = Managers.GameM.CurrentExp;
+
+        int wave = Managers.WaveM.CurrentWave;
+        if (wave > Data.BestWave)
+        {
+            Data.BestWave  = wave;
+            Data.BestStage = Managers.SelectedStage;
+        }
         _storage.Save(Data);
     }
 
@@ -76,12 +90,16 @@ public class PlayerPrefsSaveStorage : ISaveStorage
 [Serializable]
 public class SaveData
 {
-    public int  Level = 1;
-    public int  Exp   = 0;
-    public bool Stage1Cleared;
-    public bool Stage2Cleared;
-    public bool Stage3Cleared;
-    public bool Stage4Cleared;
+    public string PlayerName   = "용사의 탑";
+    public int    Level        = 1;
+    public int    Exp          = 0;
+    public int    BestWave       = 0;
+    public int    BestStage      = 0;
+    public Define.Difficulty BestDifficulty = Define.Difficulty.Easy;
+    public bool   Stage1Cleared;
+    public bool   Stage2Cleared;
+    public bool   Stage3Cleared;
+    public bool   Stage4Cleared;
 
     public void SetStageCleared(int stage)
     {

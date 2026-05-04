@@ -70,4 +70,13 @@ public class DifficultyManager
         Define.Difficulty.Hell   => 0.50f,
         _ => 1f
     };
+
+    public int WaveCount => Selected switch
+    {
+        Define.Difficulty.Easy   => 10,
+        Define.Difficulty.Normal => 15,
+        Define.Difficulty.Hard   => 20,
+        Define.Difficulty.Hell   => 25,
+        _ => 10
+    };
 }
