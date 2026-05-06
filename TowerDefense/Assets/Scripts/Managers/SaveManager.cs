@@ -28,6 +28,10 @@ public class SaveManager
             Data.BestWave  = wave;
             Data.BestStage = stage;
         }
+
+        if (stage == 4)
+            Managers.DifficultyM.OnGameClear();
+
         _storage.Save(Data);
     }
 

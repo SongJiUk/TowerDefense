@@ -1336,7 +1336,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uACAC\uC2B5\uC0DD \uB09C\uC774\uB3C4 \uD074\uB9AC\uC5B4 \uD544\uC694"
+  m_text: "\uAE30\uBCF8 \uB09C\uC774\uB3C4. \uC801\uC808\uD55C \uAE34\uC7A5\uAC10\uACFC
+    \uC804\uB7B5\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.\r\n\uACAC\uC2B5\uC0DD 4\uC2A4\uD14C\uC774\uC9C0
+    \uC644\uC8FC \uC2DC \uD574\uAE08.\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa9a12681da3d7843820c71204d2028a, type: 2}
   m_sharedMaterial: {fileID: 5568889399649503167, guid: aa9a12681da3d7843820c71204d2028a, type: 2}
@@ -1363,8 +1365,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.67
-  m_fontSizeBase: 21.67
+  m_fontSize: 16.63
+  m_fontSizeBase: 16.63
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3868,7 +3870,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC6A9\uC0AC \uB09C\uC774\uB3C4 \uD074\uB9AC\uC5B4 \uD544\uC694"
+  m_text: "\uAC15\uD654\uB41C \uC801\uACFC \uC81C\uD55C\uB41C \uC790\uC6D0.\r\n\uCE58\uBC00\uD55C
+    \uC804\uB7B5\uC774 \uD544\uC694\uD55C \uB09C\uC774\uB3C4\uC785\uB2C8\uB2E4.\r\n\uC6A9\uC0AC
+    4\uC2A4\uD14C\uC774\uC9C0 \uC644\uC8FC \uC2DC \uD574\uAE08.\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa9a12681da3d7843820c71204d2028a, type: 2}
   m_sharedMaterial: {fileID: 5568889399649503167, guid: aa9a12681da3d7843820c71204d2028a, type: 2}
@@ -3895,8 +3899,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.67
-  m_fontSizeBase: 21.67
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -15905,7 +15909,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC815\uC608 \uB09C\uC774\uB3C4 \uD074\uB9AC\uC5B4 \uD544\uC694"
+  m_text: "\uCD5C\uACE0 \uB09C\uC774\uB3C4. \uC0B4\uC544\uB0A8\uC740 \uC790\uB9CC\uC774
+    \uB3C4\uC804\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.\r\n\uC815\uC608 4\uC2A4\uD14C\uC774\uC9C0
+    \uC644\uC8FC \uC2DC \uD574\uAE08.\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa9a12681da3d7843820c71204d2028a, type: 2}
   m_sharedMaterial: {fileID: 5568889399649503167, guid: aa9a12681da3d7843820c71204d2028a, type: 2}
@@ -15932,8 +15938,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.67
-  m_fontSizeBase: 21.67
+  m_fontSize: 16.6
+  m_fontSizeBase: 16.6
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

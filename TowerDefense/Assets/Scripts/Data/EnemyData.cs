@@ -23,4 +23,5 @@ public class EnemyData : ScriptableObject
 
     [Header("아트")]
     public string prefabKey;
+    public UnityEngine.Sprite icon;
 }

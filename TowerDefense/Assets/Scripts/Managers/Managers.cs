@@ -23,6 +23,7 @@ public class Managers : MonoBehaviour
     readonly SaveManager saveManager = new();
     readonly FloatingTextManager floatingTextManager = new();
     readonly AchievementManager achievementManager = new();
+    readonly SettingsManager settingsManager = new();
     UpdateManager updateManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
@@ -63,6 +64,7 @@ public class Managers : MonoBehaviour
     public static SaveManager SaveM { get { return Instance?.saveManager; } }
     public static FloatingTextManager FloatingTextM { get { return Instance?.floatingTextManager; } }
     public static AchievementManager AchievementM { get { return Instance?.achievementManager; } }
+    public static SettingsManager    SettingsM     { get { return Instance?.settingsManager; } }
 
     public static Managers Instance
     {

@@ -17,10 +17,15 @@ public class EnemyController : MonoBehaviour, IDamageable
     protected static readonly int HASH_DIE = Animator.StringToHash("IsDie");
     protected Animator _animator;
 
+    public event System.Action<float, float> OnHpChanged; // (current, max)
+    public event System.Action OnDeathEvent;
+
     protected EnemyData _data;
     protected float _hp;
     protected float _maxHp;
     public float CurrentHp => _hp;
+    public float MaxHp => _maxHp;
+    public EnemyData Data => _data;
     public virtual bool IsDead => _isDead;
     protected float _baseSpeed;
     protected float _speed;
@@ -55,6 +60,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         _currentTarget = transform.position;
         _isDead = false;
         _hpBar?.SetHP(_hp, _maxHp);
+        OnHpChanged?.Invoke(_hp, _maxHp);
         RequestPath();
     }
 
@@ -114,6 +120,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         if (_isDead) return;
         _hp -= damage;
         _hpBar?.SetHP(_hp, _maxHp);
+        OnHpChanged?.Invoke(_hp, _maxHp);
         if (!isPoison)
             Managers.FloatingTextM?.ShowDamage(transform.position, damage, isCritical);
         if (_hp <= 0f) Die();
@@ -159,6 +166,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     protected virtual void OnDeathComplete()
     {
+        OnDeathEvent?.Invoke();
         Managers.WaveM.OnEnemyRemoved();
         Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));
         Managers.GameM.AddExp(_data.rewardExp);

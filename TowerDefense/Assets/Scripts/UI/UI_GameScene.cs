@@ -11,20 +11,25 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_WaveAnnounce }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_WaveAnnounce, Text_FPS, Text_BossSubtitle, Text_BossName }
     enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause }
     enum Images
     {
         Image_Top, Image_Bottom, Image_LevelFillBG, Image_LevelFill, Image_TopGlow, Image_BottomGlow
     , Image_WaveSlotGlow, Image_WaveSlot, Image_WaveFillBG, Image_WaveFill, Top_Screen, Bottom_Screen, Image_SkillPointGlow, Image_SkillPointBG
     }
-    enum GameObjects { Content_SkillHorizontal, Object_WaveAnnounce }
+    enum GameObjects { Content_SkillHorizontal, Object_WaveAnnounce, Object_FPS, Object_BossAnnounce }
 
     Transform parent;
     private RectTransform _skillBtnRect;
     private Vector2 _skillBtnOriginPos;
     private float _displayHp = -1f;
-    private bool _isDoubleSpeed = false;
+    private bool  _isDoubleSpeed = false;
+    private float _fpsTimer;
+
+    private CanvasGroup      _bossAnnounceGroup;
+    private Sequence         _bossAnnounceSeq;
+    private UI_NextWavePanel _nextWavePanel;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -48,8 +53,11 @@ public class UI_GameScene : UI_Scene
         Managers.SkillM.OnSkillPointsChanged -= RefreshSkillPoints;
         Managers.SkillM.OnTargetingStarted -= OnTargetingStarted;
         Managers.SkillM.OnTargetingCancelled -= OnTargetingCancelled;
+        Managers.WaveM.OnBossAppear    -= OnBossAppear;
+        Managers.WaveM.OnNextWaveReady -= ShowNextWavePanel;
         if (Managers.ICore is Core coreForUnsub) coreForUnsub.OnHpChanged -= RefreshCoreHp;
         _skillBtnRect?.DOKill();
+        _bossAnnounceSeq?.Kill();
     }
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────
@@ -83,6 +91,14 @@ public class UI_GameScene : UI_Scene
 
         GetObject(typeof(GameObjects), (int)GameObjects.Object_WaveAnnounce).SetActive(false);
 
+        var bossPanel = GetObject(typeof(GameObjects), (int)GameObjects.Object_BossAnnounce);
+        _bossAnnounceGroup = bossPanel.GetComponent<CanvasGroup>();
+        _bossAnnounceGroup.alpha = 0f;
+        bossPanel.SetActive(false);
+
+        Managers.WaveM.OnBossAppear    += OnBossAppear;
+        Managers.WaveM.OnNextWaveReady += ShowNextWavePanel;
+
         Managers.GameM.OnGoldChanged += RefreshGold;
         Managers.GameM.OnExpChanged += RefreshExp;
         Managers.GameM.OnLevelUp += LevelUp;
@@ -105,7 +121,23 @@ public class UI_GameScene : UI_Scene
 
         ApplyTheme(Managers.WaveM.CurrentStage);
 
+        GetObject(typeof(GameObjects), (int)GameObjects.Object_FPS)
+            .SetActive(Managers.SettingsM.IsFPSOn);
+
         return true;
+    }
+
+    void Update()
+    {
+        if (!isInit) return;
+        var fpsObj = GetObject(typeof(GameObjects), (int)GameObjects.Object_FPS);
+        if (!fpsObj.activeSelf) return;
+
+        _fpsTimer += Time.unscaledDeltaTime;
+        if (_fpsTimer < 0.5f) return;
+        _fpsTimer = 0f;
+        GetText(typeof(Texts), (int)Texts.Text_FPS).text =
+            $"FPS {Mathf.RoundToInt(1f / Time.unscaledDeltaTime)}";
     }
 
     public override void ApplyTheme(StageData stage)
@@ -173,8 +205,19 @@ public class UI_GameScene : UI_Scene
 
     private void OnWaveStart(int wave)
     {
+        _nextWavePanel?.ForceClose();
+        _nextWavePanel = null;
         RefreshWave(wave);
         CountdownThenAnnounce(wave).Forget();
+    }
+
+    private async void ShowNextWavePanel(WavePreview preview)
+    {
+        var panel = Managers.ObjectM.SpawnUI<UI_NextWavePanel>("UI_NextWavePanel", transform);
+        if (panel == null) return;
+        await panel.Init();
+        panel.SetInfo(preview);
+        _nextWavePanel = panel;
     }
 
     private async UniTaskVoid CountdownThenAnnounce(int wave)
@@ -218,6 +261,41 @@ public class UI_GameScene : UI_Scene
         await UniTask.Delay(2000, cancellationToken: destroyCancellationToken);
 
         panel.SetActive(false);
+    }
+
+    // ─── 보스 등장 연출 ───────────────────────────────────────────────────────
+
+    private static readonly Color COLOR_MIDDLE_BOSS_ANNOUNCE = new Color(1f, 0.6f, 0.1f);
+    private static readonly Color COLOR_BOSS_ANNOUNCE        = new Color(1f, 0.25f, 0.25f);
+
+    private void OnBossAppear(EnemyData data)
+    {
+        bool isMiddle = data.enemyType == Define.EnemyType.MiddleBoss;
+
+        var subtitleTxt = GetText(typeof(Texts), (int)Texts.Text_BossSubtitle);
+        var nameTxt     = GetText(typeof(Texts), (int)Texts.Text_BossName);
+        var panel       = GetObject(typeof(GameObjects), (int)GameObjects.Object_BossAnnounce);
+
+        subtitleTxt.text  = isMiddle ? "중간 보스 등장!" : "최종 보스 등장!";
+        subtitleTxt.color = isMiddle ? COLOR_MIDDLE_BOSS_ANNOUNCE : COLOR_BOSS_ANNOUNCE;
+        nameTxt.text      = data.enemyName;
+        nameTxt.color     = Color.white;
+
+        _bossAnnounceSeq?.Kill();
+        panel.SetActive(true);
+        _bossAnnounceGroup.alpha = 0f;
+
+        float nameStartY = -30f;
+        var nameRect = nameTxt.rectTransform;
+        nameRect.anchoredPosition = new Vector2(nameRect.anchoredPosition.x, nameStartY);
+
+        _bossAnnounceSeq = DOTween.Sequence()
+            .Append(_bossAnnounceGroup.DOFade(1f, 0.35f).SetEase(Ease.OutQuad))
+            .Join(nameRect.DOAnchorPosY(0f, 0.4f).SetEase(Ease.OutBack))
+            .AppendInterval(2.2f)
+            .Append(_bossAnnounceGroup.DOFade(0f, 0.5f).SetEase(Ease.InQuad))
+            .OnComplete(() => panel.SetActive(false))
+            .SetUpdate(true);
     }
 
     private void RefreshExp(int exp, int maxExp)

@@ -1,8 +1,5 @@
 using Cysharp.Threading.Tasks;
-using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -21,6 +18,15 @@ public class UI_StageSelectPopup : UI_Base
 
     private static readonly string[] STAGE_NAMES =
         { "1 - 숲", "2 - 사막", "3 - 겨울", "4 - 악마성" };
+
+    // CLAUDE.md 스테이지 테마 색 (강조색 기준)
+    private static readonly Color[] STAGE_ACCENT = {
+        new Color(0.545f, 0.765f, 0.290f), // #8BC34A 숲
+        new Color(1.000f, 0.702f, 0.000f), // #FFB300 사막
+        new Color(0.502f, 0.847f, 1.000f), // #80D8FF 겨울
+        new Color(0.800f, 0.000f, 0.200f), // #CC0033 악마성
+    };
+    private static readonly Color COLOR_LOCKED = new Color(0.3f, 0.3f, 0.3f);
 
     private bool _initialized;
 
@@ -56,17 +62,22 @@ public class UI_StageSelectPopup : UI_Base
             string label = STAGE_NAMES[i] + (cleared ? " ✓" : "");
             GetText(typeof(Texts), i).text = label;
             GetImage(typeof(Images), i).gameObject.SetActive(!unlocked);
-            GetButton(typeof(Buttons), i).interactable = unlocked;
+
+            var btn = GetButton(typeof(Buttons), i);
+            btn.interactable = unlocked;
+            // 버튼 배경 이미지에 테마 색 적용 (잠금 시 회색)
+            var btnImage = btn.GetComponent<Image>();
+            if (btnImage != null)
+                btnImage.color = unlocked ? STAGE_ACCENT[i] : COLOR_LOCKED;
         }
     }
 
-    private void OnStageSelected(int stage)
+    private async void OnStageSelected(int stage)
     {
         Managers.SelectedStage = stage;
         Managers.PoolM.Push(gameObject);
-        // 난이도 선택 팝업 열기
         var diffPopup = Managers.ObjectM.SpawnUI<UI_DifficultySelectPopup>("UI_DifficultySelectPopup", transform.parent);
-        if (diffPopup != null) diffPopup.gameObject.SetActive(true);
+        if (diffPopup != null) await diffPopup.Init();
     }
 
     private void OnClose()

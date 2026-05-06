@@ -8,7 +8,8 @@ public class MiddleBossEnemyController : EnemyController
 {
     protected override void Die()
     {
-        Camera.main?.transform.DOShakePosition(0.3f, 0.15f, 15, 90, false).SetUpdate(true);
+        if (Managers.SettingsM.IsScreenShakeOn)
+            Camera.main?.transform.DOShakePosition(0.3f, 0.15f, 15, 90, false).SetUpdate(true);
         base.Die();
     }
 }

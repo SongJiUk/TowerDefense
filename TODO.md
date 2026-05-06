@@ -41,13 +41,21 @@
 ## 4단계 — 타이틀씬 / 스테이지 선택
 
 - [ ] 타이틀씬 배경 + 게임 로고 배치
-- [ ] "게임 시작" 버튼 → 스테이지 선택 화면으로 전환
+- [x] "게임 시작" 버튼 → UI_StageSelectPopup → UI_DifficultySelectPopup → 페이드 → GameScene
 - [x] UI_StageSelectPopup 구현
   - [x] 스테이지 1~4 버튼
   - [x] 클리어 여부 자물쇠 표시
-  - [ ] 각 스테이지 테마 색 적용
+  - [x] 각 스테이지 테마 색 적용 (숲/사막/겨울/악마성)
 - [ ] 씬 전환 로딩 화면 (UI_LoadingScene)
 - [x] 선택한 스테이지 Managers.SelectedStage에 저장 후 GameScene 로드
+
+### ⚠️ Unity 에디터 작업 — 4단계
+
+- [ ] **TitleScene Canvas > UI_TitleScene** 하위에 `Panel_Fade` 추가
+  - RectTransform: 앵커 stretch 전체 화면 (Left/Right/Top/Bottom = 0)
+  - Image 컴포넌트: Color = 검정 (0,0,0,255), Raycast Target = **OFF**
+  - **CanvasGroup** 컴포넌트 추가
+  - 계층 순서: 모든 UI 중 맨 마지막 자식 (가장 위에 렌더링)
 
 ---
 
@@ -69,6 +77,24 @@
 
 ---
 
+## 보스 HP바
+
+- [x] EnemyController OnHpChanged / OnDeathEvent 이벤트 추가
+- [x] WaveManager OnBossSpawned 이벤트 추가 (보스 컨트롤러 참조 전달)
+- [x] UI_BossHPBar 스크립트 작성 (보스 등장 시 자동 표시 · 사망 시 숨김)
+
+### ⚠️ Unity 에디터 작업 — 보스 HP바
+
+- [ ] **GameScene Canvas** 하위에 `UI_BossHPBar` GameObject 추가
+  - 위치: 화면 상단 중앙
+  - 하위 오브젝트:
+    - `Text_BossName` — TMP 텍스트 (보스 이름)
+    - `Image_HPFill` — Image 컴포넌트, **Image Type = Filled**, Fill Method = Horizontal
+  - `UI_BossHPBar` 컴포넌트 연결
+  - 초기 상태: **비활성화** (SetActive false) — 코드에서 보스 등장 시 자동 활성화
+
+---
+
 ## 7단계 — 데미지 숫자 표시
 
 - [ ] FloatingText 프리팹 생성 (TMP + 위로 올라가며 사라지는 애니메이션) ← Unity 에디터 작업
@@ -76,6 +102,13 @@
 - [x] EnemyController.TakeDamage에서 FloatingText 호출
 - [x] 치명타 / 독 / 슬로우 색상 구분
 - [ ] FloatingText Addressables 등록
+
+### ⚠️ Unity 에디터 작업 — FloatingText
+
+- [ ] Canvas (World Space) 또는 UI Canvas에 `FloatingText` 프리팹 생성
+  - TMP 텍스트 오브젝트
+  - Animator 또는 DOTween: 위로 1~1.5초 이동 + FadeOut
+  - Addressables PrevLoad 그룹에 키 `FloatingText`로 등록
 
 ---
 
@@ -133,45 +166,51 @@
 
 ---
 
-## 다음 세션 시작 순서 (2026-04-30 기준)
+## 다음 세션 시작 순서 (2026-05-06 기준)
 
-### ✅ 오늘 완료
-- UI_GameOverPopup 처치/골드/시간 스탯 3개 추가
-- GameManager 킬카운트 + 경과시간 타이머 추가
-- EnemyController.OnDeathComplete에 AddKill() 연결
-- WaveStarter 1웨이브 시작 시 타이머 시작
-- 에디터 F키 → 게임오버 트리거 (GameSceneBootstrap)
-- SkillSlot 획득 즉시 자동 발동 + 호버 스케일 수정
+### ✅ 이번 세션 완료 (코드)
+- UI_NextWavePanel — 다음 웨이브 예고 패널 (타입별 색상, 적 구성, 카운트다운, 즉시 시작)
+- WaveManager — PrepareNextWave / RequestEarlyStart / OnNextWaveReady / OnBossSpawned
+- WaveStarter — 딜레이 CTS 분리, OnEarlyStartRequested 처리
+- EnemyController — OnHpChanged / OnDeathEvent 이벤트 추가
+- UI_BossHPBar — 보스 등장 시 자동 표시, HP 실시간 반영
+- UI_TitleScene — 페이드 아웃 후 GameScene 로드 (FadeAndLoad)
+- UI_StageSelectPopup — 스테이지 테마 색 적용 (잠금 시 회색)
+- UI_DifficultySelectPopup — 씬 로드 권한을 TitleScene으로 위임
 
-### 🔜 다음 세션 순서
+### ⚠️ 다음 세션 시작 전 Unity 에디터 작업 (먼저 해야 코드가 동작함)
 
-**1. UI_GameOverPopup 테스트** ← 지금 바로
-- 에디터 실행 → F 눌러서 팝업 확인
-- 오브젝트 이름 바인딩 확인 (Text_Title / Text_Subtitle / Text_KillCount / Text_Gold / Text_Time)
-- 다시시작 / 포기 버튼 동작 확인
+**① TitleScene — Panel_Fade 추가**
+- Canvas > UI_TitleScene 하위 맨 마지막에 `Panel_Fade` 추가
+- Image: 검정(0,0,0,255), Raycast Target OFF
+- CanvasGroup 컴포넌트 추가
 
-**2. UI_StageClearPopup 제작**
-- 게임오버와 유사한 구조
-- "스테이지 클리어!" 타이틀
-- 처치 / 골드 / 시간 스탯
-- WaveM.OnAllWavesComplete 이벤트 연결
-- 에디터 C키 → 스테이지 클리어 트리거 추가
+**② GameScene — UI_BossHPBar 배치**
+- Canvas 하위에 `UI_BossHPBar` GameObject 추가 (상단 중앙)
+- 하위: `Text_BossName`(TMP), `Image_HPFill`(Image, Filled/Horizontal)
+- UI_BossHPBar 컴포넌트 연결, 초기 비활성화
 
-**3. FloatingText 프리팹** ← Unity 에디터 작업
-- TMP 오브젝트 생성
-- 위로 올라가며 FadeOut 애니메이션 (DOTween)
-- Addressables PrevLoad 그룹에 등록
+**③ GameScene — UI_NextWavePanel 프리팹 (이미 만들었으면 확인만)**
+- `UI_NextWavePanel` 컴포넌트의 enum 순서와 하위 오브젝트 이름 일치 여부 확인
+- 에디터에서 N키 눌러 패널 표시 테스트
 
-**4. 타이틀씬**
-- 배경 + 게임 로고 배치
-- "게임 시작" 버튼 → UI_StageSelectPopup 오픈
-- UI_LoadingScene 제작 (씬 전환 중 빈 화면 방지)
-- 각 스테이지 테마 색 적용
+### 🔜 다음 코드 작업 순서
 
-**5. 저장/불러오기 완성**
-- 게임 시작 시 레벨/경험치 불러오기
-- 스테이지 간 누적 유지
+**1. FloatingText 프리팹** ← Unity 에디터 작업
+- TMP 오브젝트 생성, 위로 올라가며 FadeOut (DOTween)
+- Addressables PrevLoad 그룹, 키 `FloatingText`로 등록
+
+**2. 저장/불러오기 완성**
+- 게임 시작 시 레벨·경험치 불러오기 (`SaveM.ApplyToGame` 이미 있음 → 적용 확인)
+- 스테이지 클리어 후 다음 스테이지 이어서 레벨 누적
+
+**3. SFX 연결**
+- 타워 공격 / 적 사망 / 웨이브 시작·클리어 / 카드·스킬
+
+**4. 씬 전환 로딩 화면 (선택)**
+- 현재는 TitleScene 백그라운드 로딩 후 직접 GameScene 진입
+- 필요 시 LoadingScene 추가
 
 ---
 
-> 마지막 업데이트: 2026-04-30
+> 마지막 업데이트: 2026-05-06

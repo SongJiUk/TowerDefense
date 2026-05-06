@@ -42,20 +42,19 @@ public class DevTool : MonoBehaviour
 
     // ─── 최고기록 ─────────────────────────────────────────────────────────────
 
-    [ContextMenu("최고기록 / Easy Lv5 웨이브12 세팅")]
-    void SetRecordEasy()   => SetRecord(5, 1, 12, Define.Difficulty.Easy);
+    [ContextMenu("최고기록 / Easy 스테이지1 - 웨이브8 세팅")]
+    void SetRecordEasy()   => SetRecord(1, 8, Define.Difficulty.Easy);
 
-    [ContextMenu("최고기록 / Normal Lv10 웨이브20 세팅")]
-    void SetRecordNormal() => SetRecord(10, 2, 20, Define.Difficulty.Normal);
+    [ContextMenu("최고기록 / Normal 스테이지2 - 웨이브12 세팅")]
+    void SetRecordNormal() => SetRecord(2, 12, Define.Difficulty.Normal);
 
-    [ContextMenu("최고기록 / Hard Lv15 웨이브18 세팅")]
-    void SetRecordHard()   => SetRecord(15, 3, 18, Define.Difficulty.Hard);
+    [ContextMenu("최고기록 / Hard 스테이지3 - 웨이브15 세팅")]
+    void SetRecordHard()   => SetRecord(3, 15, Define.Difficulty.Hard);
 
-    void SetRecord(int level, int stage, int wave, Define.Difficulty diff)
+    void SetRecord(int stage, int wave, Define.Difficulty diff)
     {
         var data = new SaveData
         {
-            Level          = level,
             BestStage      = stage,
             BestWave       = wave,
             BestDifficulty = diff,
@@ -66,7 +65,7 @@ public class DevTool : MonoBehaviour
         };
         PlayerPrefs.SetString("SaveData", JsonUtility.ToJson(data));
         PlayerPrefs.Save();
-        Debug.Log($"[DevTool] 최고기록 세팅 — Lv{level} 스테이지{stage} 웨이브{wave} ({diff})");
+        Debug.Log($"[DevTool] 최고기록 세팅 — 스테이지 {stage} - 웨이브 {wave} ({diff})");
     }
 
     // ─── 초기화 ───────────────────────────────────────────────────────────────

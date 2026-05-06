@@ -31,6 +31,7 @@ public class FloatingTextManager
 
     private void Spawn(Vector3 pos, string text, Color color)
     {
+        if (!Managers.SettingsM.IsDamageTextOn) return;
         GameObject go = Managers.PoolM.Pop("FloatingText");
         if (go == null) return;
 

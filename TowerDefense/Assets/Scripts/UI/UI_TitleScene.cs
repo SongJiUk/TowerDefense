@@ -18,8 +18,10 @@ public class UI_TitleScene : UI_Base
 {
     enum Texts { Text_TapToStart, Text_LogoRealm, Text_LogoGuard, Text_Subtitle, Text_BestRecord }
     enum Buttons { Button_TapToStart, Button_Start, Button_Difficulty, Button_Achievement, Button_Settings, Button_Quit }
-    enum GameObjects { Panel_Logo, Panel_Title, Panel_Menu, TextObject, Panel_Record }
+    enum GameObjects { Panel_Logo, Panel_Title, Panel_Menu, TextObject, Panel_Record, Panel_Fade }
     enum Images { Image_Crown }
+
+    public static UI_TitleScene Instance { get; private set; }
 
     private RectTransform _logoRect;
     private RectTransform _menuRect;
@@ -37,12 +39,14 @@ public class UI_TitleScene : UI_Base
 
     async void Start()
     {
+        Instance = this;
         await Init();
         StartLoadAsync().Forget();
     }
 
     void OnDestroy()
     {
+        Instance = null;
         _tapBlink?.Kill();
         _crownTween?.Kill();
         _swayTween?.Kill();
@@ -77,6 +81,7 @@ public class UI_TitleScene : UI_Base
 
         GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu).SetActive(false);
         GetObject(typeof(GameObjects), (int)GameObjects.Panel_Record).SetActive(false);
+        GetObject(typeof(GameObjects), (int)GameObjects.Panel_Fade).SetActive(false);
         GetText(typeof(Texts), (int)Texts.Text_TapToStart).gameObject.SetActive(false);
 
         // 인트로 초기 상태 — 모두 숨김
@@ -197,7 +202,7 @@ public class UI_TitleScene : UI_Base
         var bestText = GetText(typeof(Texts), (int)Texts.Text_BestRecord);
         var data = Managers.SaveM.Data;
         bestText.text = data.BestWave > 0
-            ? $"최고기록 : Lv {data.Level}, 스테이지 {data.BestStage} - {data.BestWave}"
+            ? $"최고기록 : 스테이지 {data.BestStage} - 웨이브 {data.BestWave}"
             : "최고기록 : -";
 
         _loadComplete = true;
@@ -240,14 +245,20 @@ public class UI_TitleScene : UI_Base
     // ─── 버튼 ─────────────────────────────────────────────────────────────────
 
     private void OnStartClicked()
+        => Managers.UIM.ShowPopup<UI_StageSelectPopup>("UI_StageSelectPopup");
+
+    public async UniTaskVoid FadeAndLoad(string scene)
     {
-        var best = (Define.Difficulty)Managers.DifficultyM.MaxUnlocked;
-        Managers.DifficultyM.Select(best);
-        Managers.SelectedStage = 1;
+        var fadeGo = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Fade);
+        fadeGo.SetActive(true);
+        var group = fadeGo.GetComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.DOFade(1f, 0.4f).SetEase(Ease.InQuad);
+        await UniTask.Delay(400, cancellationToken: destroyCancellationToken);
         Managers.GameM.Reset();
         Managers.CardM.Clear();
         Managers.Clear();
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene(scene);
     }
 
     private void OnDifficultyClicked() => Managers.UIM.ShowPopup<UI_DifficultySelectPopup>("UI_DifficultySelectPopup");

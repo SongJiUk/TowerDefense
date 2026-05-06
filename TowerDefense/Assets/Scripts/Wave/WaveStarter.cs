@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -11,13 +12,16 @@ public class WaveStarter : MonoBehaviour
     [SerializeField] private bool _autoStart = true;
 
     [Tooltip("웨이브 클리어 후 다음 웨이브 시작까지 대기 시간 (초)")]
-    [SerializeField] private float _nextWaveDelay = 3f;
+    [SerializeField] private float _nextWaveDelay = 5f;
+
+    private CancellationTokenSource _delayCts;
 
     void Start()
     {
-        Managers.WaveM.OnWaveStart        += OnWaveStart;
-        Managers.WaveM.OnWaveComplete     += OnWaveComplete;
-        Managers.WaveM.OnAllWavesComplete += OnAllWavesComplete;
+        Managers.WaveM.OnWaveStart           += OnWaveStart;
+        Managers.WaveM.OnWaveComplete        += OnWaveComplete;
+        Managers.WaveM.OnAllWavesComplete    += OnAllWavesComplete;
+        Managers.WaveM.OnEarlyStartRequested += OnEarlyStartRequested;
 
         if (_autoStart)
             WaitAndStart().Forget();
@@ -26,21 +30,27 @@ public class WaveStarter : MonoBehaviour
     private async UniTaskVoid WaitAndStart()
     {
         await GameSceneBootstrap.ReadyTask;
-        Managers.WaveM.StartNextWave();
+        Managers.WaveM.NextWaveDelay = _nextWaveDelay;
+        Managers.WaveM.PrepareNextWave();
+        StartNextWaveDelayed().Forget();
     }
 
     void Update() => Managers.GameM.TickTimer(Time.deltaTime);
 
     void OnDestroy()
     {
-        Managers.WaveM.OnWaveStart        -= OnWaveStart;
-        Managers.WaveM.OnWaveComplete     -= OnWaveComplete;
-        Managers.WaveM.OnAllWavesComplete -= OnAllWavesComplete;
+        Managers.WaveM.OnWaveStart           -= OnWaveStart;
+        Managers.WaveM.OnWaveComplete        -= OnWaveComplete;
+        Managers.WaveM.OnAllWavesComplete    -= OnAllWavesComplete;
+        Managers.WaveM.OnEarlyStartRequested -= OnEarlyStartRequested;
+        _delayCts?.Cancel();
+        _delayCts?.Dispose();
     }
 
     public void DisableAutoStart() => _autoStart = false;
+    public void StartWave()        => Managers.WaveM.StartNextWave();
 
-    public void StartWave() => Managers.WaveM.StartNextWave();
+    // ─── 이벤트 핸들러 ────────────────────────────────────────────────────────
 
     private void OnWaveStart(int wave)
     {
@@ -51,22 +61,39 @@ public class WaveStarter : MonoBehaviour
     private void OnWaveComplete(int wave, int bonus)
     {
         Debug.Log($"[Wave] {wave}웨이브 클리어! +{bonus}G");
-
+        // PrepareNextWave는 WaveManager.OnEnemyRemoved에서 이미 호출됨
         if (_autoStart)
             StartNextWaveDelayed().Forget();
-    }
-
-    private async UniTaskVoid StartNextWaveDelayed()
-    {
-        await UniTask.Delay(
-            (int)(_nextWaveDelay * 1000),
-            cancellationToken: destroyCancellationToken
-        );
-        Managers.WaveM.StartNextWave();
     }
 
     private void OnAllWavesComplete()
     {
         Debug.Log("[Wave] 스테이지 클리어!");
+    }
+
+    /// <summary>즉시 시작 버튼 → 대기 취소 후 바로 시작.</summary>
+    private void OnEarlyStartRequested()
+    {
+        _delayCts?.Cancel();
+        Managers.WaveM.StartNextWave();
+    }
+
+    // ─── 대기 ─────────────────────────────────────────────────────────────────
+
+    private async UniTaskVoid StartNextWaveDelayed()
+    {
+        _delayCts?.Cancel();
+        _delayCts?.Dispose();
+        _delayCts = new CancellationTokenSource();
+
+        try
+        {
+            await UniTask.Delay(
+                (int)(_nextWaveDelay * 1000),
+                cancellationToken: _delayCts.Token
+            );
+            Managers.WaveM.StartNextWave();
+        }
+        catch (System.OperationCanceledException) { }
     }
 }

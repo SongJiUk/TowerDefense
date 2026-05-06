@@ -57,10 +57,11 @@ public class GameSceneBootstrap : MonoBehaviour
 #if UNITY_EDITOR
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-            Managers.GameM.TriggerGameOver();
-        if (Input.GetKeyDown(KeyCode.C))
-            Managers.GameM.TriggerGameClear();
+        if (Input.GetKeyDown(KeyCode.F)) Managers.GameM.TriggerGameOver();
+        if (Input.GetKeyDown(KeyCode.C)) Managers.GameM.TriggerGameClear();
+
+        // N : 현재 웨이브 패널 다시 표시 (일반 / 중간보스 / 보스 색상 확인용)
+        if (Input.GetKeyDown(KeyCode.N)) Managers.WaveM.PrepareNextWave();
     }
 #endif
 }

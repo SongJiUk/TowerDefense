@@ -79,4 +79,17 @@ public class DifficultyManager
         Define.Difficulty.Hell   => 25,
         _ => 10
     };
+
+    /// <summary>
+    /// 중간보스가 enemyPool에 등장하기 시작하는 웨이브.
+    /// Easy는 후반에만, Hell은 1웨이브부터 등장.
+    /// </summary>
+    public int MiddleBossFromWave => Selected switch
+    {
+        Define.Difficulty.Easy   => 8,
+        Define.Difficulty.Normal => 5,
+        Define.Difficulty.Hard   => 3,
+        Define.Difficulty.Hell   => 1,
+        _ => 5
+    };
 }

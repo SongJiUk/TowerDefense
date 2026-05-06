@@ -25,6 +25,18 @@ public class WaveManager
     /// <summary>대기 후 첫 적 스폰 직전 발행 — 카운트다운 UI 닫기용</summary>
     public event Action OnWaveSpawnStart;
 
+    /// <summary>중간 보스 또는 최종 보스 스폰 시 발행 (이름·연출용)</summary>
+    public event Action<EnemyData> OnBossAppear;
+
+    /// <summary>중간 보스 또는 최종 보스 스폰 시 발행 (HP바 추적용)</summary>
+    public event Action<EnemyController> OnBossSpawned;
+
+    /// <summary>다음 웨이브 예고 데이터가 준비됐을 때 발행</summary>
+    public event Action<WavePreview> OnNextWaveReady;
+
+    /// <summary>즉시 시작 버튼 클릭 시 발행 — WaveStarter가 대기 취소</summary>
+    public event Action OnEarlyStartRequested;
+
     // ─── 상태 ─────────────────────────────────────────────────────────────────
 
     public int CurrentWave => _currentWaveIndex + 1;
@@ -38,6 +50,11 @@ public class WaveManager
     private int _currentWaveIndex;
     private int _aliveCount;
     private CancellationTokenSource _cts;
+
+    private readonly List<EnemyData> _preGenerated = new();
+
+    /// <summary>WaveStarter가 씬 준비 직후 설정. 카운트다운 UI 표시에 사용.</summary>
+    public float NextWaveDelay { get; set; } = 5f;
 
     // ─── 공식 상수 ────────────────────────────────────────────────────────────
 
@@ -56,6 +73,7 @@ public class WaveManager
         _currentWaveIndex = 0;
         _aliveCount = 0;
         IsRunning = false;
+        _preGenerated.Clear();
     }
 
     public void StartNextWave()
@@ -142,6 +160,10 @@ public class WaveManager
             Managers.DifficultyM?.OnGameClear();
             Managers.GameM.TriggerGameClear();
         }
+        else
+        {
+            PrepareNextWave();
+        }
     }
 
     public void Stop()
@@ -150,6 +172,73 @@ public class WaveManager
         _cts?.Dispose();
         _cts = null;
         IsRunning = false;
+    }
+
+    /// <summary>다음 웨이브 적 구성을 미리 뽑아 OnNextWaveReady를 발행한다.
+    /// WaveStarter가 씬 준비 완료 직후(1웨이브)와 각 웨이브 클리어 후 호출.</summary>
+    public void PrepareNextWave()
+    {
+        if (_stageData == null) return;
+
+        int waveIndex  = _currentWaveIndex;
+        int waveNumber = waveIndex + 1;
+        bool isBoss    = waveIndex == _stageData.totalWaves - 1;
+
+        _preGenerated.Clear();
+
+        if (isBoss)
+        {
+            if (_stageData.bossEnemy != null)
+                _preGenerated.Add(_stageData.bossEnemy);
+
+            int minionCount = _stageData.bossWaveMinions;
+            for (int i = 0; i < minionCount; i++)
+            {
+                var e = SelectEnemy(waveNumber);
+                if (e != null) _preGenerated.Add(e);
+            }
+
+            var preview = new WavePreview
+            {
+                WaveNumber       = waveNumber,
+                IsBossWave       = true,
+                EnemyGroups      = GroupEnemies(_preGenerated),
+                BaseRewardGold   = waveNumber * 10,
+                EstimatedSeconds = Mathf.RoundToInt(2f + minionCount * _stageData.spawnInterval),
+                WaveDelay        = NextWaveDelay,
+            };
+            OnNextWaveReady?.Invoke(preview);
+        }
+        else
+        {
+            int count = CalcSpawnCount(waveIndex);
+            for (int i = 0; i < count; i++)
+            {
+                var e = SelectEnemy(waveNumber);
+                if (e != null) _preGenerated.Add(e);
+            }
+
+            float interval = _stageData.spawnInterval;
+            if (waveNumber >= 7) interval = Mathf.Max(0.8f, interval - 0.5f);
+
+            var preview = new WavePreview
+            {
+                WaveNumber       = waveNumber,
+                IsBossWave       = false,
+                EnemyGroups      = GroupEnemies(_preGenerated),
+                BaseRewardGold   = waveNumber * 10,
+                EstimatedSeconds = Mathf.RoundToInt(count * interval),
+                WaveDelay        = NextWaveDelay,
+            };
+            OnNextWaveReady?.Invoke(preview);
+        }
+    }
+
+    /// <summary>즉시 시작 버튼 클릭 시 호출. 웨이브 보너스 1.5배 적용 후 대기 취소 요청.</summary>
+    public void RequestEarlyStart()
+    {
+        Managers.GameM.waveBonusMultiplier *= 1.5f;
+        OnEarlyStartRequested?.Invoke();
     }
 
     // ─── 공식 계산 ────────────────────────────────────────────────────────────
@@ -197,18 +286,17 @@ public class WaveManager
         float hpMult, float speedMult,
         CancellationToken token)
     {
-        int count = CalcSpawnCount(waveIndex);
+        int count = _preGenerated.Count > 0 ? _preGenerated.Count : CalcSpawnCount(waveIndex);
         _aliveCount = count;
 
         float interval = _stageData.spawnInterval;
-        // 후반 웨이브(7~9)는 스폰 간격 단축
         if (waveNumber >= 7) interval = Mathf.Max(0.8f, interval - 0.5f);
 
         for (int i = 0; i < count; i++)
         {
             if (token.IsCancellationRequested) return;
 
-            EnemyData data = SelectEnemy(waveNumber);
+            EnemyData data = i < _preGenerated.Count ? _preGenerated[i] : SelectEnemy(waveNumber);
             if (data != null)
                 SpawnEnemy(data, hpMult, speedMult);
 
@@ -228,13 +316,14 @@ public class WaveManager
 
         await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: token);
 
-        // 잡몹 후속 스폰
+        // 잡몹 후속 스폰 — preGenerated[0]=보스, [1+]=잡몹
         int waveNumber = _stageData.totalWaves;
         for (int i = 0; i < minionCount; i++)
         {
             if (token.IsCancellationRequested) return;
 
-            EnemyData data = SelectEnemy(waveNumber);
+            int preIdx    = i + 1;
+            EnemyData data = preIdx < _preGenerated.Count ? _preGenerated[preIdx] : SelectEnemy(waveNumber);
             if (data != null)
                 SpawnEnemy(data, hpMult, speedMult);
 
@@ -259,8 +348,39 @@ public class WaveManager
         go.transform.position = Managers.SpawnPoint.transform.position;
         go.transform.rotation = Quaternion.identity;
 
+        EnemyController spawnedEnemy = null;
         if (go.TryGetComponent(out EnemyController enemy))
+        {
             enemy.Init(data, hpMultiplier, speedMultiplier);
+            spawnedEnemy = enemy;
+        }
+
+        if (data.enemyType == Define.EnemyType.MiddleBoss || data.enemyType == Define.EnemyType.Boss)
+        {
+            OnBossAppear?.Invoke(data);
+            if (spawnedEnemy != null) OnBossSpawned?.Invoke(spawnedEnemy);
+        }
+    }
+
+    private static List<(EnemyData data, int count)> GroupEnemies(List<EnemyData> list)
+    {
+        var result = new List<(EnemyData data, int count)>();
+        foreach (var e in list)
+        {
+            if (e == null) continue;
+            bool found = false;
+            for (int j = 0; j < result.Count; j++)
+            {
+                if (result[j].data == e)
+                {
+                    result[j] = (result[j].data, result[j].count + 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) result.Add((e, 1));
+        }
+        return result;
     }
 
     /// <summary>현재 웨이브에서 등장 가능한 적 중 가중치 기반 랜덤 선택.</summary>
@@ -272,9 +392,17 @@ public class WaveManager
         float totalWeight = 0f;
         var available = new List<StageEnemyEntry>();
 
+        int middleBossFromWave = Managers.DifficultyM?.MiddleBossFromWave ?? 5;
+
         foreach (var entry in _stageData.enemyPool)
         {
-            if (entry.enemyData != null && entry.fromWave <= waveNumber)
+            if (entry.enemyData == null) continue;
+
+            int effectiveFromWave = entry.enemyData.enemyType == Define.EnemyType.MiddleBoss
+                ? middleBossFromWave
+                : entry.fromWave;
+
+            if (effectiveFromWave <= waveNumber)
             {
                 available.Add(entry);
                 totalWeight += entry.spawnWeight;

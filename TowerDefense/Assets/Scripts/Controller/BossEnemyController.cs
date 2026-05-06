@@ -27,7 +27,8 @@ public class BossEnemyController : EnemyController
 
     protected override void Die()
     {
-        Camera.main?.transform.DOShakePosition(0.6f, 0.4f, 25, 90, false).SetUpdate(true);
+        if (Managers.SettingsM.IsScreenShakeOn)
+            Camera.main?.transform.DOShakePosition(0.6f, 0.4f, 25, 90, false).SetUpdate(true);
         base.Die();
     }
 

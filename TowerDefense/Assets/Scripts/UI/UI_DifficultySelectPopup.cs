@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 난이도 선택 팝업.
@@ -43,7 +42,7 @@ public class UI_DifficultySelectPopup : UI_Base
             var d = (Define.Difficulty)i;
             bool unlocked = Managers.DifficultyM.IsUnlocked(d);
             string best = saveData.BestWave > 0 && (int)saveData.BestDifficulty == i
-                ? $"최고기록: 웨이브 {saveData.BestWave}"
+                ? $"최고기록: 스테이지 {saveData.BestStage} - 웨이브 {saveData.BestWave}"
                 : "최고기록: -";
 
             _cards[i].SetData(unlocked, best);
@@ -76,10 +75,7 @@ public class UI_DifficultySelectPopup : UI_Base
 
     private void OnStartClicked()
     {
-        Managers.SelectedStage = 1;
-        Managers.GameM.Reset();
-        Managers.CardM.Clear();
-        Managers.Clear();
-        SceneManager.LoadScene("GameScene");
+        // SelectedStage set by UI_StageSelectPopup, difficulty already set by OnCardSelected
+        UI_TitleScene.Instance?.FadeAndLoad("GameScene").Forget();
     }
 }
