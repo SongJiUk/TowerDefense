@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30798bbdfed6d64488ea8a6f72bb5997, type: 3}
   m_Name: Enemy_TankData
   m_EditorClassIdentifier: 
-  enemyName: Enemy_Tank
+  enemyName: "\uD574\uACE8 \uC911\uAC11\uAE30\uC0AC"
   enemyType: 1
   coreDamage: 2
   baseHp: 300
@@ -20,3 +20,4 @@ MonoBehaviour:
   baseReward: 8
   rewardExp: 15
   prefabKey: Enemy_Tank
+  icon: {fileID: 0}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30798bbdfed6d64488ea8a6f72bb5997, type: 3}
   m_Name: Enemy_BossData
   m_EditorClassIdentifier: 
-  enemyName: Enemy_Boss
+  enemyName: "\uC2EC\uC5F0\uC758 \uD574\uACE8\uC655"
   enemyType: 6
   coreDamage: 5
   baseHp: 2000
@@ -20,3 +20,4 @@ MonoBehaviour:
   baseReward: 50
   rewardExp: 100
   prefabKey: Enemy_Boss
+  icon: {fileID: 0}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba882d4b2e844757a43e0eb9e949eb9, type: 3}
   m_Name: Enemy_ReviveData
   m_EditorClassIdentifier: 
-  enemyName: Enemy_Revive
+  enemyName: "\uBD88\uC0AC \uD574\uACE8"
   enemyType: 4
   coreDamage: 1
   baseHp: 120
@@ -20,4 +20,5 @@ MonoBehaviour:
   baseReward: 8
   rewardExp: 12
   prefabKey: Enemy_Revive
+  icon: {fileID: 0}
   reviveHpRatio: 0.4

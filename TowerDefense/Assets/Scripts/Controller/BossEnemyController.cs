@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class BossEnemyController : EnemyController
 {
+    protected override bool ShowHPBar => false;
+
     [SerializeField] private float _enrageSpeedMultiplier = 1.4f;
 
     private bool _isEnraged;

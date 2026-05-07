@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class MiddleBossEnemyController : EnemyController
 {
+    protected override bool ShowHPBar => false;
+
     protected override void Die()
     {
         if (Managers.SettingsM.IsScreenShakeOn)

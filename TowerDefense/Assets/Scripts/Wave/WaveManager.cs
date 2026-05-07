@@ -117,6 +117,9 @@ public class WaveManager
     /// <summary>Split 등 런타임 추가 적 등록 시 호출.</summary>
     public void RegisterExtraEnemy(int count) => _aliveCount += count;
 
+    public void NotifyBossSpawned(EnemyController boss) => OnBossSpawned?.Invoke(boss);
+    public void NotifyBossAppear(EnemyData data) => OnBossAppear?.Invoke(data);
+
     /// <summary>런타임 위치 지정 스폰 (SplitEnemy 등에서 사용).</summary>
     public EnemyController SpawnEnemyAt(EnemyData data, Vector3 position, float hpMultiplier, float speedMultiplier)
     {

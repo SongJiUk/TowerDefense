@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30798bbdfed6d64488ea8a6f72bb5997, type: 3}
   m_Name: Enemy_RunnerData
   m_EditorClassIdentifier: 
-  enemyName: Enemy_Runner
+  enemyName: "\uD574\uACE8 \uCC99\uD6C4\uBCD1"
   enemyType: 2
   coreDamage: 1
   baseHp: 50
@@ -20,3 +20,4 @@ MonoBehaviour:
   baseReward: 4
   rewardExp: 6
   prefabKey: Enemy_Runner
+  icon: {fileID: 0}

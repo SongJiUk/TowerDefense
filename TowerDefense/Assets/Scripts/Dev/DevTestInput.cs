@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class DevTestInput : MonoBehaviour
 {
-    [Tooltip("키 1~7에 매핑할 EnemyData (순서대로)")]
+        [Tooltip("키 1~7에 매핑할 EnemyData (순서대로)")]
     [SerializeField] private EnemyData[] _enemies = new EnemyData[7];
 
     void Awake()
@@ -29,6 +29,25 @@ public class DevTestInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
             LevelUp();
+
+        if (Input.GetKeyDown(KeyCode.B))
+            NotifyAnnounce(Define.EnemyType.Boss);
+
+        if (Input.GetKeyDown(KeyCode.M))
+            NotifyAnnounce(Define.EnemyType.MiddleBoss);
+    }
+
+    private void NotifyAnnounce(Define.EnemyType type)
+    {
+        foreach (var data in _enemies)
+        {
+            if (data != null && data.enemyType == type)
+            {
+                Managers.WaveM.NotifyBossAppear(data);
+                return;
+            }
+        }
+        Debug.LogWarning($"[DevTest] _enemies 배열에 {type} 타입 EnemyData가 없습니다.");
     }
 
     private void LevelUp()
@@ -61,7 +80,11 @@ public class DevTestInput : MonoBehaviour
         go.transform.rotation = Quaternion.identity;
 
         if (go.TryGetComponent(out EnemyController enemy))
+        {
             enemy.Init(data, 1f, 1f);
+            if (enemy is BossEnemyController || enemy is MiddleBossEnemyController)
+                Managers.WaveM.NotifyBossSpawned(enemy);
+        }
     }
 }
 #endif

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1ab0628b7f4f4265879bb41bfa67ec4, type: 3}
   m_Name: Enemy_SplitData
   m_EditorClassIdentifier: 
-  enemyName: Enemy_Split
+  enemyName: "\uD574\uACE8 \uBD84\uC5F4\uCCB4"
   enemyType: 3
   coreDamage: 1
   baseHp: 120
@@ -20,6 +20,7 @@ MonoBehaviour:
   baseReward: 5
   rewardExp: 10
   prefabKey: Enemy_BeforeSplit
+  icon: {fileID: 0}
   afterSplitKey: Enemy_SplitData
   splitCount: 2
   splitHpRatio: 0.6

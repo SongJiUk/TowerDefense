@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public float MaxHp => _maxHp;
     public EnemyData Data => _data;
     public virtual bool IsDead => _isDead;
+    protected virtual bool ShowHPBar => true;
     protected float _baseSpeed;
     protected float _speed;
     protected bool _isDead;
@@ -78,11 +79,14 @@ public class EnemyController : MonoBehaviour, IDamageable
         Managers.Path.OnPathChanged += OnPathChanged;
         if (_buffHandler != null) _buffHandler.OnModifiersChanged += RecalculateSpeed;
 
-        _hpBarGo = Managers.ResourceM.Instantiate("EnemyHPBar", null, true);
-        if (_hpBarGo != null)
+        if (ShowHPBar)
         {
-            _hpBar = _hpBarGo.GetComponent<EnemyHPBar>();
-            _hpBar.Follow(transform, new Vector3(0f, GetHeadOffset(), 0f));
+            _hpBarGo = Managers.ResourceM.Instantiate("EnemyHPBar", null, true);
+            if (_hpBarGo != null)
+            {
+                _hpBar = _hpBarGo.GetComponent<EnemyHPBar>();
+                _hpBar.Follow(transform, new Vector3(0f, GetHeadOffset(), 0f));
+            }
         }
     }
 

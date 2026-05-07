@@ -35,6 +35,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5177cf8d0ad9c5b4a9f1714ca622e2d5
+    m_Address: Assets/Prefabs/UI/UI_PausePopup.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6098628b22dd09a4aa13e8728529d462
     m_Address: Atlas
     m_ReadOnly: 0
@@ -49,6 +54,24 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 78274ac9478da554d8ad7e34d94e0f03
     m_Address: UI_SettingsPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9948730f15e214bb6a70ed5e3d3d12f4
+    m_Address: UI_BossAnnounce
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a774b15707f1d45699663eaabc5b2817
+    m_Address: UI_NextWavePanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d366049e1e82f4baba0820da7fd0f6cc
+    m_Address: UI_BossHPBar
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
