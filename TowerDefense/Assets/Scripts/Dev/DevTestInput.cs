@@ -12,6 +12,12 @@ public class DevTestInput : MonoBehaviour
 
     void Awake()
     {
+        if (!Managers.IsTestMode)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         Managers.GameM.TestInfiniteGold = true;
         Managers.GameM.ResetGold(9999);
 

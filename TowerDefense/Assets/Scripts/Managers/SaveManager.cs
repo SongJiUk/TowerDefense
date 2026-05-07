@@ -49,6 +49,8 @@ public class SaveManager
         _storage.Save(Data);
     }
 
+    public void SaveCurrent() => _storage.Save(Data);
+
     public bool IsStageCleared(int stage) => Data.IsStageCleared(stage);
 
     public void ApplyToGame()
@@ -111,6 +113,14 @@ public class SaveData
         else if (stage == 2) Stage2Cleared = true;
         else if (stage == 3) Stage3Cleared = true;
         else if (stage == 4) Stage4Cleared = true;
+    }
+
+    public void ResetStageFlags()
+    {
+        Stage1Cleared = false;
+        Stage2Cleared = false;
+        Stage3Cleared = false;
+        Stage4Cleared = false;
     }
 
     public bool IsStageCleared(int stage) => stage switch

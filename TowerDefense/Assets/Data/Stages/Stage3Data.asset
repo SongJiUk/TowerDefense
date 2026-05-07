@@ -28,6 +28,7 @@ MonoBehaviour:
     spawnWeight: 2
   bossEnemy: {fileID: 11400000, guid: dc8f8743d59615a49b242c3912369983, type: 2}
   bossWaveMinions: 7
+  mapPrefabKey: Stage3
   uiBGColor: {r: 0.05490196, g: 0.11764706, b: 0.1882353, a: 1}
   uiBorderColor: {r: 0.2901961, g: 0.5647059, b: 0.78431374, a: 1}
   uiTextColor: {r: 0.5019608, g: 0.84705883, b: 1, a: 1}

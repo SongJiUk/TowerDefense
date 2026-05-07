@@ -162,6 +162,10 @@ public class UI_BossAnnounce : UI_Base
             // 퇴장
             .AppendCallback(() => { _warningPulse?.Kill(); _stripeTween?.Kill(); })
             .Append(_canvasGroup.DOFade(0f, 0.35f).SetEase(Ease.InQuad))
-            .OnComplete(() => gameObject.SetActive(false));
+            .OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                Managers.WaveM.NotifyBossAnnounceComplete();
+            });
     }
 }

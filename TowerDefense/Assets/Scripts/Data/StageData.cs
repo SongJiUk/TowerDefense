@@ -33,6 +33,10 @@ public class StageData : ScriptableObject
     [Tooltip("보스 등장 2초 후 함께 스폰될 잡몹 수")]
     public int bossWaveMinions = 5;
 
+    [Header("맵")]
+    [Tooltip("Addressable 맵 프리팹 키 (예: Stage1_Forest)")]
+    public string mapPrefabKey;
+
     [Header("UI 테마")]
     public Color uiBGColor;
     public Color uiBorderColor;

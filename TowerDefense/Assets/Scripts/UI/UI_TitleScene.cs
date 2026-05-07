@@ -33,7 +33,7 @@ public class UI_TitleScene : UI_Base
     private Tween _swayTween;
     private Tween _textGlowTween;
 
-    private bool _menuOpen    = false;
+    private bool _menuOpen = false;
     private bool _introComplete;
     private bool _loadComplete;
 
@@ -164,7 +164,7 @@ public class UI_TitleScene : UI_Base
         // 색상·초기 GlowPower는 Init에서 이미 설정 — 여기서는 진동만
         _textGlowTween = DOTween
             .To(() => mat.GetFloat(ShaderUtilities.ID_GlowPower),
-                v  => mat.SetFloat(ShaderUtilities.ID_GlowPower, v),
+                v => mat.SetFloat(ShaderUtilities.ID_GlowPower, v),
                 0.5f, 1.5f)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
@@ -188,12 +188,13 @@ public class UI_TitleScene : UI_Base
         }
 
         Managers.GameM.LevelData = Managers.ResourceM.Load<LevelData>("LevelData");
-        Debug.Log($"[TitleScene] LevelData: {(Managers.GameM.LevelData != null ? "OK" : "NULL")}");
-
         Managers.CardM.Init();
         Managers.SaveM.ApplyToGame();
 
-        Debug.Log("[TitleScene] 로딩 완료 → 탭투스타트 활성화");
+        // 스테이지 결정 + WaveM 초기화 — 로딩 완료 시점에 모두 끝냄
+        PrepareStage();
+
+        Debug.Log("[TitleScene] 로딩 완료");
         OnLoadComplete();
     }
 
@@ -244,20 +245,60 @@ public class UI_TitleScene : UI_Base
 
     // ─── 버튼 ─────────────────────────────────────────────────────────────────
 
+    private void PrepareStage()
+    {
+        var data = Managers.SaveM.Data;
+
+        bool allCleared = data.IsStageCleared(1) && data.IsStageCleared(2)
+                       && data.IsStageCleared(3) && data.IsStageCleared(4);
+
+        if (allCleared)
+        {
+            data.ResetStageFlags();
+            Managers.SaveM.SaveCurrent();
+            int maxIndex = System.Enum.GetValues(typeof(Define.Difficulty)).Length - 1;
+            var next = (Define.Difficulty)Mathf.Min((int)Managers.DifficultyM.Selected + 1, maxIndex);
+            Managers.DifficultyM.Select(next);
+            Managers.SelectedStage = 1;
+        }
+        else
+        {
+            int nextStage = 1;
+            for (int s = 1; s <= 4; s++)
+            {
+                if (!data.IsStageCleared(s)) { nextStage = s; break; }
+            }
+            Managers.SelectedStage = nextStage;
+        }
+
+        string stageKey = $"Stage{Managers.SelectedStage}Data";
+        StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
+        if (stageData != null)
+            Managers.WaveM.Init(stageData);
+        else
+            Debug.LogError($"[TitleScene] StageData 로드 실패: '{stageKey}'");
+    }
+
     private void OnStartClicked()
-        => Managers.UIM.ShowPopup<UI_StageSelectPopup>("UI_StageSelectPopup");
+    {
+        Managers.IsTestMode = false;
+        FadeAndLoad("GameScene").Forget();
+    }
 
     public async UniTaskVoid FadeAndLoad(string scene)
     {
         var fadeGo = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Fade);
         fadeGo.SetActive(true);
         var group = fadeGo.GetComponent<CanvasGroup>();
+        if (group == null) group = fadeGo.AddComponent<CanvasGroup>();
         group.alpha = 0f;
         group.DOFade(1f, 0.4f).SetEase(Ease.InQuad);
         await UniTask.Delay(400, cancellationToken: destroyCancellationToken);
         Managers.GameM.Reset();
         Managers.CardM.Clear();
-        Managers.Clear();
+        Managers.PoolM.Clear();
+        Managers.UIM.Clear();
+        Managers.SynergyM.Clear();
         SceneManager.LoadScene(scene);
     }
 

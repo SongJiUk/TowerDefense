@@ -31,6 +31,9 @@ public class WaveManager
     /// <summary>중간 보스 또는 최종 보스 스폰 시 발행 (HP바 추적용)</summary>
     public event Action<EnemyController> OnBossSpawned;
 
+    /// <summary>보스 등장 연출(UI_BossAnnounce)이 끝났을 때 발행 — WaveStarter가 대기 해제용으로 사용</summary>
+    public event Action OnBossAnnounceComplete;
+
     /// <summary>다음 웨이브 예고 데이터가 준비됐을 때 발행</summary>
     public event Action<WavePreview> OnNextWaveReady;
 
@@ -118,7 +121,20 @@ public class WaveManager
     public void RegisterExtraEnemy(int count) => _aliveCount += count;
 
     public void NotifyBossSpawned(EnemyController boss) => OnBossSpawned?.Invoke(boss);
-    public void NotifyBossAppear(EnemyData data) => OnBossAppear?.Invoke(data);
+    public void NotifyBossAppear(EnemyData data)        => OnBossAppear?.Invoke(data);
+    public void NotifyBossAnnounceComplete()            => OnBossAnnounceComplete?.Invoke();
+
+    /// <summary>다음 웨이브 _preGenerated 중 보스/중간보스 데이터. 없으면 null.</summary>
+    public EnemyData NextWaveBossData
+    {
+        get
+        {
+            foreach (var e in _preGenerated)
+                if (e != null && (e.enemyType == Define.EnemyType.Boss || e.enemyType == Define.EnemyType.MiddleBoss))
+                    return e;
+            return null;
+        }
+    }
 
     /// <summary>런타임 위치 지정 스폰 (SplitEnemy 등에서 사용).</summary>
     public EnemyController SpawnEnemyAt(EnemyData data, Vector3 position, float hpMultiplier, float speedMultiplier)

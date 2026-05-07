@@ -40,6 +40,9 @@ public class Managers : MonoBehaviour
     /// <summary>로딩씬에서 설정. 1~4 중 하나.</summary>
     public static int SelectedStage = 1;
 
+    /// <summary>타이틀씬 '테스트 시작' 버튼으로 진입했을 때만 true. DevTestInput이 확인.</summary>
+    public static bool IsTestMode = false;
+
     /// <summary>적 스폰 위치. SpawnPoint.OnEnable/OnDisable에서 자동 등록/해제.</summary>
     public static SpawnPoint SpawnPoint;
     public static EndPoint EndPoint;

@@ -75,7 +75,13 @@ public class UI_DifficultySelectPopup : UI_Base
 
     private void OnStartClicked()
     {
-        // SelectedStage set by UI_StageSelectPopup, difficulty already set by OnCardSelected
+        string stageKey = $"Stage{Managers.SelectedStage}";
+        StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
+        if (stageData != null)
+            Managers.WaveM.Init(stageData);
+        else
+            Debug.LogError($"[DifficultyPopup] StageData 로드 실패: '{stageKey}'");
+
         UI_TitleScene.Instance?.FadeAndLoad("GameScene").Forget();
     }
 }

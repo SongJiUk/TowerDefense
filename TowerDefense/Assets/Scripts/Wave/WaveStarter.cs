@@ -12,16 +12,18 @@ public class WaveStarter : MonoBehaviour
     [SerializeField] private bool _autoStart = true;
 
     [Tooltip("웨이브 클리어 후 다음 웨이브 시작까지 대기 시간 (초)")]
-    [SerializeField] private float _nextWaveDelay = 5f;
+    [SerializeField] private float _nextWaveDelay = 15f;
 
     private CancellationTokenSource _delayCts;
+    private bool _announceComplete;
 
     void Start()
     {
-        Managers.WaveM.OnWaveStart           += OnWaveStart;
-        Managers.WaveM.OnWaveComplete        += OnWaveComplete;
-        Managers.WaveM.OnAllWavesComplete    += OnAllWavesComplete;
-        Managers.WaveM.OnEarlyStartRequested += OnEarlyStartRequested;
+        Managers.WaveM.OnWaveStart              += OnWaveStart;
+        Managers.WaveM.OnWaveComplete           += OnWaveComplete;
+        Managers.WaveM.OnAllWavesComplete       += OnAllWavesComplete;
+        Managers.WaveM.OnEarlyStartRequested    += OnEarlyStartRequested;
+        Managers.WaveM.OnBossAnnounceComplete   += () => _announceComplete = true;
 
         if (_autoStart)
             WaitAndStart().Forget();
@@ -43,6 +45,7 @@ public class WaveStarter : MonoBehaviour
         Managers.WaveM.OnWaveComplete        -= OnWaveComplete;
         Managers.WaveM.OnAllWavesComplete    -= OnAllWavesComplete;
         Managers.WaveM.OnEarlyStartRequested -= OnEarlyStartRequested;
+        Managers.WaveM.OnBossAnnounceComplete -= () => _announceComplete = true;
         _delayCts?.Cancel();
         _delayCts?.Dispose();
     }
@@ -71,11 +74,11 @@ public class WaveStarter : MonoBehaviour
         Debug.Log("[Wave] 스테이지 클리어!");
     }
 
-    /// <summary>즉시 시작 버튼 → 대기 취소 후 바로 시작.</summary>
+    /// <summary>즉시 시작 버튼 → 대기 취소 후 보스면 어나운스, 아니면 바로 시작.</summary>
     private void OnEarlyStartRequested()
     {
         _delayCts?.Cancel();
-        Managers.WaveM.StartNextWave();
+        StartAfterAnnounceIfNeeded().Forget();
     }
 
     // ─── 대기 ─────────────────────────────────────────────────────────────────
@@ -92,8 +95,20 @@ public class WaveStarter : MonoBehaviour
                 (int)(_nextWaveDelay * 1000),
                 cancellationToken: _delayCts.Token
             );
-            Managers.WaveM.StartNextWave();
+            await StartAfterAnnounceIfNeeded();
         }
         catch (System.OperationCanceledException) { }
+    }
+
+    private async UniTask StartAfterAnnounceIfNeeded()
+    {
+        var bossData = Managers.WaveM.NextWaveBossData;
+        if (bossData != null)
+        {
+            _announceComplete = false;
+            Managers.WaveM.NotifyBossAppear(bossData);
+            await UniTask.WaitUntil(() => _announceComplete);
+        }
+        Managers.WaveM.StartNextWave();
     }
 }
