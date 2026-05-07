@@ -166,6 +166,14 @@
 
 ---
 
+## 현재 세션 (2026-05-07) — 즉시 처리 항목
+
+- [x] 게임씬 + 타이틀씬 연결 (FadeAndLoad, PrepareStage, GameSceneBootstrap 정리)
+- [ ] Bind 안 쓰는 Text 찾아서 제거 (enum Texts에 선언됐지만 GetText() 미사용 항목)
+- [ ] 몬스터 미등장 원인 확인 및 수정 (WaveManager 스폰 로직, SpawnPoint, 적 풀 확인)
+
+---
+
 ## 다음 세션 시작 순서 (2026-05-06 기준)
 
 ### ✅ 이번 세션 완료 (코드)
