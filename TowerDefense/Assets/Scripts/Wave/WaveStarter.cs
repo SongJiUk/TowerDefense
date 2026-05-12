@@ -12,7 +12,7 @@ public class WaveStarter : MonoBehaviour
     [SerializeField] private bool _autoStart = true;
 
     [Tooltip("웨이브 클리어 후 다음 웨이브 시작까지 대기 시간 (초)")]
-    [SerializeField] private float _nextWaveDelay = 15f;
+    [SerializeField] private float _nextWaveDelay = 10f;
 
     private CancellationTokenSource _delayCts;
     private bool _announceComplete;
@@ -32,7 +32,9 @@ public class WaveStarter : MonoBehaviour
     private async UniTaskVoid WaitAndStart()
     {
         await GameSceneBootstrap.ReadyTask;
-        Managers.WaveM.NextWaveDelay = _nextWaveDelay;
+        float stageDelay = Managers.WaveM.CurrentStage?.waveStartDelay ?? _nextWaveDelay;
+        Managers.WaveM.NextWaveDelay = stageDelay;
+        _nextWaveDelay = stageDelay;
         Managers.WaveM.PrepareNextWave();
         StartNextWaveDelayed().Forget();
     }

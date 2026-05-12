@@ -83,21 +83,43 @@ public class UI_StageCompletePopup : UI_Base
         return $"{m}:{s:D2}";
     }
 
-    private void OnNextStageClicked()
+    private async void OnNextStageClicked()
     {
+        GetButton(typeof(Buttons), (int)Buttons.Button_NextStage).interactable = false;
+        GetButton(typeof(Buttons), (int)Buttons.Button_MainMenu).interactable = false;
+
+        await SceneFader.FadeOut();
+
         int next = Managers.SelectedStage + 1;
         Managers.SelectedStage = next;
+
+        string stageKey = $"Stage{next}Data";
+        StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
+        if (stageData != null)
+            Managers.WaveM.Init(stageData);
+        else
+            Debug.LogError($"[StageComplete] StageData 로드 실패: '{stageKey}'");
+
         Managers.GameM.ResetGold();
         Managers.CardM.Clear();
-        Managers.Clear();
+        Managers.PoolM.Clear();
+        Managers.UIM.Clear();
+        Managers.SynergyM.Clear();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void OnMainMenuClicked()
+    private async void OnMainMenuClicked()
     {
+        GetButton(typeof(Buttons), (int)Buttons.Button_NextStage).interactable = false;
+        GetButton(typeof(Buttons), (int)Buttons.Button_MainMenu).interactable = false;
+
+        await SceneFader.FadeOut();
+
         Managers.GameM.Reset();
         Managers.CardM.Clear();
-        Managers.Clear();
-        SceneManager.LoadScene("MainMenu");
+        Managers.PoolM.Clear();
+        Managers.UIM.Clear();
+        Managers.SynergyM.Clear();
+        SceneManager.LoadScene("TitleScene");
     }
 }

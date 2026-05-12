@@ -15,7 +15,7 @@ MonoBehaviour:
   totalWaves: 10
   stageHpMultiplier: 3.8
   spawnInterval: 1.2
-  waveStartDelay: 3
+  waveStartDelay: 10
   enemyPool:
   - enemyData: {fileID: 11400000, guid: 3658b9d84ded3cd4c9247062b2778a33, type: 2}
     fromWave: 1

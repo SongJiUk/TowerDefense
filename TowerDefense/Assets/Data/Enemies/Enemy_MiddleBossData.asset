@@ -15,7 +15,7 @@ MonoBehaviour:
   enemyName: "\uD574\uACE8 \uAD70\uC8FC"
   enemyType: 5
   coreDamage: 3
-  baseHp: 800
+  baseHp: 3000
   baseMoveSpeed: 1.8
   baseReward: 25
   rewardExp: 50

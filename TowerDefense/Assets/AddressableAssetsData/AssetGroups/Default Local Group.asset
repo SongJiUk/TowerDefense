@@ -40,6 +40,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 600456d331f550e42ae3bfc54a02fbbe
+    m_Address: Stage3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6098628b22dd09a4aa13e8728529d462
     m_Address: Atlas
     m_ReadOnly: 0
@@ -72,6 +78,18 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d366049e1e82f4baba0820da7fd0f6cc
     m_Address: UI_BossHPBar
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec8f3b0813b69284cbfe5889d8abf01f
+    m_Address: Stage4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f926aa6be9e935747a5ae666572b17da
+    m_Address: Stage2
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad

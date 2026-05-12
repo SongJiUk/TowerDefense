@@ -33,7 +33,7 @@ public class GameSceneBootstrap : MonoBehaviour
             Managers.CardM.Init();
             Managers.SaveM.ApplyToGame();
 
-            string stageKey = $"Stage{stage}";
+            string stageKey = $"Stage{stage}Data";
             StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
 
             if (stageData == null)

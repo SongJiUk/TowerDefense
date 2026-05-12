@@ -34,6 +34,15 @@ public class BossEnemyController : EnemyController
         base.Die();
     }
 
+    protected override void OnReachCore()
+    {
+        if (_isDead) return;
+        _isDead = true;
+        Managers.WaveM.OnEnemyRemoved();
+        Managers.GameM.TriggerGameOver();
+        Managers.ResourceM.Destroy(gameObject);
+    }
+
     private void Enrage()
     {
         _isEnraged = true;

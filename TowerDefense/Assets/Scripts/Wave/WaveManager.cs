@@ -176,7 +176,6 @@ public class WaveManager
         if (_currentWaveIndex >= _stageData.totalWaves)
         {
             OnAllWavesComplete?.Invoke();
-            Managers.DifficultyM?.OnGameClear();
             Managers.GameM.TriggerGameClear();
         }
         else

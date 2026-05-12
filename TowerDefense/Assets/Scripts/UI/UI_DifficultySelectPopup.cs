@@ -75,7 +75,7 @@ public class UI_DifficultySelectPopup : UI_Base
 
     private void OnStartClicked()
     {
-        string stageKey = $"Stage{Managers.SelectedStage}";
+        string stageKey = $"Stage{Managers.SelectedStage}Data";
         StageData stageData = Managers.ResourceM.Load<StageData>(stageKey);
         if (stageData != null)
             Managers.WaveM.Init(stageData);

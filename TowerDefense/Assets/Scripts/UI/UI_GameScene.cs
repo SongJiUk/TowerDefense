@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -11,20 +10,20 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_WaveAnnounce, Text_FPS/*, Text_BossSubtitle, Text_BossName*/ }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_FPS, Text_Speed }
     enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause }
     enum Images
     {
         Image_Top, Image_Bottom, Image_LevelFillBG, Image_LevelFill, Image_TopGlow, Image_BottomGlow
     , Image_WaveSlotGlow, Image_WaveSlot, Image_WaveFillBG, Image_WaveFill, Top_Screen, Bottom_Screen, Image_SkillPointGlow, Image_SkillPointBG
     }
-    enum GameObjects { Content_SkillHorizontal, Object_WaveAnnounce, Object_FPS }
+    enum GameObjects { Content_SkillHorizontal, Object_FPS }
 
     Transform parent;
     private RectTransform _skillBtnRect;
     private Vector2 _skillBtnOriginPos;
     private float _displayHp = -1f;
-    private bool  _isDoubleSpeed = false;
+    private bool _isDoubleSpeed = false;
     private float _fpsTimer;
 
     private UI_NextWavePanel _nextWavePanel;
@@ -35,6 +34,7 @@ public class UI_GameScene : UI_Scene
     {
         await GameSceneBootstrap.ReadyTask;
         await Init();
+        await SceneFader.FadeIn();
     }
 
     void OnDestroy()
@@ -52,6 +52,7 @@ public class UI_GameScene : UI_Scene
         Managers.SkillM.OnTargetingStarted -= OnTargetingStarted;
         Managers.SkillM.OnTargetingCancelled -= OnTargetingCancelled;
         Managers.WaveM.OnNextWaveReady -= ShowNextWavePanel;
+        Managers.UIM.OnGamePaused -= ResetSpeed;
         if (Managers.ICore is Core coreForUnsub) coreForUnsub.OnHpChanged -= RefreshCoreHp;
         _skillBtnRect?.DOKill();
     }
@@ -85,9 +86,8 @@ public class UI_GameScene : UI_Scene
         Managers.SkillM.OnTargetingStarted += OnTargetingStarted;
         Managers.SkillM.OnTargetingCancelled += OnTargetingCancelled;
 
-        GetObject(typeof(GameObjects), (int)GameObjects.Object_WaveAnnounce).SetActive(false);
-
         Managers.WaveM.OnNextWaveReady += ShowNextWavePanel;
+        Managers.UIM.OnGamePaused += ResetSpeed;
 
         Managers.GameM.OnGoldChanged += RefreshGold;
         Managers.GameM.OnExpChanged += RefreshExp;
@@ -115,7 +115,7 @@ public class UI_GameScene : UI_Scene
             .SetActive(Managers.SettingsM.IsFPSOn);
 
         var bossAnnounceGo = Managers.ResourceM.Instantiate("UI_BossAnnounce", transform);
-        var bossAnnounce   = bossAnnounceGo?.GetComponent<UI_BossAnnounce>();
+        var bossAnnounce = bossAnnounceGo?.GetComponent<UI_BossAnnounce>();
         if (bossAnnounce != null) await bossAnnounce.Init();
 
         var bossHPBarGo = Managers.ResourceM.Instantiate("UI_BossHPBar", transform);
@@ -182,34 +182,30 @@ public class UI_GameScene : UI_Scene
 
     private void RefreshCoreHp(float hp)
     {
-        float maxHp = (Managers.ICore as Core)?.MaxHp ?? 1f;
-        float normalized = Mathf.Clamp01(hp / maxHp) * 100f;
+        float displayHp = Mathf.Max(0f, hp);
 
         if (_displayHp < 0f)
         {
-            _displayHp = normalized;
-            GetText(typeof(Texts), (int)Texts.Text_HP).text = $"{Mathf.RoundToInt(normalized)}";
+            _displayHp = displayHp;
+            GetText(typeof(Texts), (int)Texts.Text_HP).text = $"{Mathf.RoundToInt(displayHp)}";
             return;
         }
         var txt = GetText(typeof(Texts), (int)Texts.Text_HP);
         DG.Tweening.DOTween.To(
             () => _displayHp,
             x => { _displayHp = x; txt.text = $"{Mathf.RoundToInt(x)}"; },
-            normalized, 0.4f
+            displayHp, 0.4f
         ).SetEase(DG.Tweening.Ease.OutQuad).SetUpdate(true);
     }
 
     // ─── 웨이브 알림 ──────────────────────────────────────────────────────────
-
-    private static readonly Color COLOR_WAVE_START = new Color(1.0f, 0.55f, 0.1f);
-    private static readonly Color COLOR_WAVE_CLEAR = new Color(0.3f, 1.0f, 0.3f);
 
     private void OnWaveStart(int wave)
     {
         _nextWavePanel?.ForceClose();
         _nextWavePanel = null;
         RefreshWave(wave);
-        CountdownThenAnnounce(wave).Forget();
+        Managers.WaveM.BeginSpawning();
     }
 
     private async void ShowNextWavePanel(WavePreview preview)
@@ -219,49 +215,6 @@ public class UI_GameScene : UI_Scene
         await panel.Init();
         panel.SetInfo(preview);
         _nextWavePanel = panel;
-    }
-
-    private async UniTaskVoid CountdownThenAnnounce(int wave)
-    {
-        await UniTask.WaitUntil(() => isInit, cancellationToken: destroyCancellationToken);
-
-        var panel = GetObject(typeof(GameObjects), (int)GameObjects.Object_WaveAnnounce);
-        var txt   = GetText(typeof(Texts), (int)Texts.Text_WaveAnnounce);
-        int count = Mathf.FloorToInt(Managers.WaveM.CurrentStage?.waveStartDelay ?? 3f);
-
-        txt.color = COLOR_WAVE_START;
-        panel.SetActive(true);
-
-        for (int i = count; i >= 1; i--)
-        {
-            txt.text = i.ToString();
-            // DelayType.DeltaTime → timeScale 0이면 일시정지
-            await UniTask.Delay(TimeSpan.FromSeconds(1), DelayType.DeltaTime,
-                cancellationToken: destroyCancellationToken);
-        }
-
-        txt.text = $"Wave {wave} 시작!";
-        await UniTask.Delay(TimeSpan.FromSeconds(1), DelayType.DeltaTime,
-            cancellationToken: destroyCancellationToken);
-
-        panel.SetActive(false);
-        Managers.WaveM.BeginSpawning();
-    }
-
-    private async UniTaskVoid ShowAnnounce(string message, Color textColor)
-    {
-        await UniTask.WaitUntil(() => isInit, cancellationToken: destroyCancellationToken);
-
-        var panel = GetObject(typeof(GameObjects), (int)GameObjects.Object_WaveAnnounce);
-        var txt   = GetText(typeof(Texts), (int)Texts.Text_WaveAnnounce);
-
-        txt.text  = message;
-        txt.color = textColor;
-        panel.SetActive(true);
-
-        await UniTask.Delay(2000, cancellationToken: destroyCancellationToken);
-
-        panel.SetActive(false);
     }
 
     private void RefreshExp(int exp, int maxExp)
@@ -369,8 +322,16 @@ public class UI_GameScene : UI_Scene
     {
         _isDoubleSpeed = !_isDoubleSpeed;
         Time.timeScale = _isDoubleSpeed ? 2f : 1f;
-        var txt = GetButton(typeof(Buttons), (int)Buttons.Button_Speed).GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        var txt = GetText(typeof(Texts), (int)Texts.Text_Speed);
         if (txt != null) txt.text = _isDoubleSpeed ? "x2" : "x1";
+    }
+
+    private void ResetSpeed()
+    {
+        if (!_isDoubleSpeed) return;
+        _isDoubleSpeed = false;
+        var txt = GetText(typeof(Texts), (int)Texts.Text_Speed);
+        if (txt != null) txt.text = "x1";
     }
 
     private void OnPauseClicked()
@@ -381,9 +342,6 @@ public class UI_GameScene : UI_Scene
 
     private void OnWaveComplete(int wave, int bonus)
     {
-        float mult = Managers.WaveM.LastWaveBonusMultiplier;
-        string extra = mult > 1.01f ? $"\n<size=70%>클리어 보너스 +{(mult - 1f) * 100f:F0}%</size>" : "";
-        ShowAnnounce($"Wave {wave} 클리어!\n<color=#FFD700>+{bonus}G</color>{extra}", COLOR_WAVE_CLEAR).Forget();
         int total = Managers.WaveM.TotalWaves;
         if (total > 0)
             GetImage(typeof(Images), (int)Images.Image_WaveFill).fillAmount = (float)wave / total;

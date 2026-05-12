@@ -12,7 +12,7 @@ using System;
 public class Core : MonoBehaviour, IDamageable
 {
 
-    private const float BASE_HP = 10f;
+    private const float BASE_HP = 20f;
     private float maxHp = BASE_HP;
     private float currentHp = BASE_HP;
     public float CurrentHp => currentHp;

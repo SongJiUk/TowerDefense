@@ -43,6 +43,9 @@ public class UI_SkillSlot : UI_Base
             _ => transform.DOScale(1f, 0.12f).SetEase(Ease.OutQuad).SetUpdate(true),
             Define.UIEvent.OnPointerExit);
 
+        GetImage(typeof(Images), (int)Images.Image_CoolDown).gameObject.SetActive(false);
+        GetText(typeof(Texts), (int)Texts.Text_CoolDown).gameObject.SetActive(false);
+
         Managers.SkillM.OnSlotChanged += OnSlotChanged;
         Managers.SkillM.OnCooldownChanged += OnCooldownChanged;
 

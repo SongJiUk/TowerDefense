@@ -8,12 +8,15 @@ public class UIManager
 {
     public readonly Stack<UI_Base> popupStack = new();
 
+    public event Action OnGamePaused;
+
     private int _pauseCount = 0;
 
     public void RequestPause()
     {
         _pauseCount++;
         Time.timeScale = 0f;
+        OnGamePaused?.Invoke();
     }
 
     public void ReleasePause()

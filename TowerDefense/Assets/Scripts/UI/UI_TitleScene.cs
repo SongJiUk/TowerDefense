@@ -9,14 +9,14 @@ using UnityEngine.SceneManagement;
 /// 흐름: 인트로 애니메이션 → 로딩(백그라운드) → 탭투스타트 버튼 활성화 → 클릭 → 메인메뉴 슬라이드인
 ///
 /// Unity 오브젝트 이름 규칙:
-///   텍스트  : Text_TapToStart, Text_LogoRealm, Text_LogoGuard, Text_BestRecord
+///   텍스트  : Text_TapToStart, Text_LogoRealm, Text_BestRecord
 ///   버튼    : Button_TapToStart, Button_Start, Button_Difficulty, Button_Achievement, Button_Settings, Button_Quit
 ///   오브젝트: Panel_Logo, Panel_Title, Panel_Menu, TextObject
 ///   이미지  : Image_Crown
 /// </summary>
 public class UI_TitleScene : UI_Base
 {
-    enum Texts { Text_TapToStart, Text_LogoRealm, Text_LogoGuard, Text_Subtitle, Text_BestRecord }
+    enum Texts { Text_TapToStart, Text_LogoRealm, Text_Subtitle, Text_BestRecord }
     enum Buttons { Button_TapToStart, Button_Start, Button_Difficulty, Button_Achievement, Button_Settings, Button_Quit }
     enum GameObjects { Panel_Logo, Panel_Title, Panel_Menu, TextObject, Panel_Record, Panel_Fade }
     enum Images { Image_Crown }

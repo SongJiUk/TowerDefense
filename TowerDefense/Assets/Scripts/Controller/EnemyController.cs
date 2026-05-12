@@ -245,7 +245,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         OnReachCore();
     }
 
-    private void OnReachCore()
+    protected virtual void OnReachCore()
     {
         if (_isDead) return;
         _isDead = true;

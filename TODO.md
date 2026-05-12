@@ -166,11 +166,16 @@
 
 ---
 
-## 현재 세션 (2026-05-07) — 즉시 처리 항목
+## 세션 (2026-05-07 ~ 2026-05-12) — 완료 항목
 
 - [x] 게임씬 + 타이틀씬 연결 (FadeAndLoad, PrepareStage, GameSceneBootstrap 정리)
-- [ ] Bind 안 쓰는 Text 찾아서 제거 (enum Texts에 선언됐지만 GetText() 미사용 항목)
-- [ ] 몬스터 미등장 원인 확인 및 수정 (WaveManager 스폰 로직, SpawnPoint, 적 풀 확인)
+- [x] Bind 안 쓰는 Text 제거 (Text_LogoGuard, Text_Description, Text_WaveAnnounce, Object_WaveAnnounce)
+- [x] 몬스터 미등장 수정 — Object_WaveAnnounce 없어서 BeginSpawning 미호출 → OnWaveStart에서 직접 호출
+- [x] stageKey 버그 수정 — GameSceneBootstrap·DifficultySelectPopup "Stage{n}" → "Stage{n}Data"
+- [x] StageData.waveStartDelay WaveStarter에 연결 (스테이지별 웨이브 대기시간 적용)
+- [x] UI_NextWavePanel Image_Wave 추가 (Atlas wave_boss·wave_middleboss·wave_normal)
+- [x] ForceClose double-release 버그 수정 (_closed 플래그)
+- [x] UI_SkillSlot 바인드 후 CoolDown 초기 비활성화
 
 ---
 

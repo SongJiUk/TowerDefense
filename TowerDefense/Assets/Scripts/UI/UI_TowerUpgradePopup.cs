@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// 공격력(D) / 사거리(R) / 공격속도(S) 3열 독립 업그레이드.
 ///
 /// Unity 오브젝트 이름 규칙 (Bind 패턴):
-///   텍스트  : Text_TowerName, Text_Description, Text_SellPrice
+///   텍스트  : Text_TowerName, Text_SellPrice
 ///             Text_D1_Name, Text_D1_Description, Text_D1_Price  (D=Damage, R=Range, S=Speed / 1~3)
 ///   버튼    : Button_Close
 ///             Button_D1~D3, Button_R1~R3, Button_S1~S3
@@ -26,7 +26,7 @@ public class UI_TowerUpgradePopup : UI_Base
     enum GameObjects { BG, Content_Upgrade, Content_Sell }
     enum Texts
     {
-        Text_TowerName, Text_Description, Text_SellPrice, Text_SellPriceWord,
+        Text_TowerName, Text_SellPrice, Text_SellPriceWord,
         Text_CurrentDamage, Text_CurrentRange, Text_CurrentAttackSpeed,
         Text_UniqueName, Text_UniqueEffect,
         Text_D1_Name, Text_D1_Description, Text_D1_Price,
