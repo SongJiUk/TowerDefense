@@ -22,9 +22,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private LayerMask _roadLayer;
     [SerializeField] private LayerMask _placeableLayer;
 
-    [Header("설치 가능 마커")]
-    [Tooltip("Placeable 칸에 자동으로 올릴 큐브 프리팹 AddressKey .")]
-    [SerializeField] private string _markerPrefabKey;
+    private const string MARKER_KEY = "Marker";
 
     /// <summary>TowerPlacer의 Plane.Raycast 기준 Y값.</summary>
     public float OriginY => _origin.y;
@@ -90,13 +88,10 @@ public class GridSystem : MonoBehaviour
         return (NodeType.None, _worldPos.y);
     }
 
-    /// <summary>
-    /// 마커 큐브 스폰.
-    /// _markerPrefab이 있으면 인스턴스화, 없으면 기본 큐브를 생성하고 Marker 레이어 설정.
-    /// </summary>
+    /// <summary>Placeable 칸에 마커 큐브 스폰. Addressables 키 "Marker" 사용.</summary>
     private GameObject SpawnMarker(Vector3 worldPos)
     {
-        GameObject marker = Managers.PoolM.Pop(_markerPrefabKey);
+        GameObject marker = Managers.PoolM.Pop(MARKER_KEY);
         if (marker == null) return null;
 
         marker.transform.SetParent(transform);

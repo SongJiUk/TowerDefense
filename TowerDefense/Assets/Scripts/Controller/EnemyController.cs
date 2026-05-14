@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         _storedSpeedMult = speedMultiplier;
         float diffHp = Managers.DifficultyM?.EnemyHpMultiplier ?? 1f;
         float diffSpeed = Managers.DifficultyM?.EnemySpeedMultiplier ?? 1f;
-        _maxHp = data.baseHp * hpMultiplier * Managers.GameM.nextWaveEnemyHpMultiplier * diffHp;
+        _maxHp = data.baseHp * hpMultiplier * diffHp;
         _hp = _maxHp;
         _baseSpeed = data.baseMoveSpeed * speedMultiplier * diffSpeed;
         _speed = _baseSpeed;
@@ -110,11 +110,14 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (_renderers == null || _renderers.Length == 0) return 2f;
 
-        Bounds bounds = _renderers[0].bounds;
-        for (int i = 1; i < _renderers.Length; i++)
-            bounds.Encapsulate(_renderers[i].bounds);
+        float maxY = float.MinValue;
+        foreach (var r in _renderers)
+        {
+            float topY = r.transform.TransformPoint(r.localBounds.max).y;
+            if (topY > maxY) maxY = topY;
+        }
 
-        return bounds.max.y - transform.position.y + 0.3f;
+        return maxY - transform.position.y + 0.3f;
     }
 
     // ─── 전투 ─────────────────────────────────────────────────────────────────

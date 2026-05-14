@@ -38,7 +38,7 @@ public static class Utils
         }
         else
         {
-            foreach (T component in _go.GetComponentsInChildren<T>())
+            foreach (T component in _go.GetComponentsInChildren<T>(true))
             {
                 if (string.IsNullOrEmpty(_name) || component.name == _name)
                     return component;

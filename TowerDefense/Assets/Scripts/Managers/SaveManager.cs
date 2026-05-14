@@ -22,8 +22,8 @@ public class SaveManager
         Data.Level = Managers.GameM.Level;
         Data.Exp   = Managers.GameM.CurrentExp;
 
-        int wave = Managers.WaveM.CurrentWave;
-        if (wave > Data.BestWave)
+        int wave = Managers.WaveM.TotalWaves;
+        if (IsBetter(stage, wave, Data.BestStage, Data.BestWave))
         {
             Data.BestWave  = wave;
             Data.BestStage = stage;
@@ -41,15 +41,19 @@ public class SaveManager
         Data.Exp   = Managers.GameM.CurrentExp;
 
         int wave = Managers.WaveM.CurrentWave;
-        if (wave > Data.BestWave)
+        int stage = Managers.SelectedStage;
+        if (IsBetter(stage, wave, Data.BestStage, Data.BestWave))
         {
             Data.BestWave  = wave;
-            Data.BestStage = Managers.SelectedStage;
+            Data.BestStage = stage;
         }
         _storage.Save(Data);
     }
 
     public void SaveCurrent() => _storage.Save(Data);
+
+    private static bool IsBetter(int newStage, int newWave, int bestStage, int bestWave)
+        => newStage > bestStage || (newStage == bestStage && newWave > bestWave);
 
     public bool IsStageCleared(int stage) => Data.IsStageCleared(stage);
 

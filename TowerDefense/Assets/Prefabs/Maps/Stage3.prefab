@@ -12538,7 +12538,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12703,11 +12702,14 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 9028713821500830438}
+  - {fileID: 8088203258520210746}
   - {fileID: 3283556945022458590}
   - {fileID: 8220556112558452187}
   - {fileID: 7177099246116972458}
   - {fileID: 5035750482705286085}
   - {fileID: 2114648442722911123}
+  - {fileID: 7088487500405292257}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &357905248821265148
@@ -22249,7 +22251,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24837,7 +24838,6 @@ MonoBehaviour:
   _placeableLayer:
     serializedVersion: 2
     m_Bits: 128
-  _markerPrefabKey: 
 --- !u!1 &1147565817668289555
 GameObject:
   m_ObjectHideFlags: 0
@@ -43116,7 +43116,6 @@ Transform:
   - {fileID: 567269866934828334}
   - {fileID: 3723204520002246986}
   - {fileID: 9189923832701719092}
-  - {fileID: 7088487500405292257}
   - {fileID: 6108290665323944553}
   - {fileID: 7746137482612568159}
   - {fileID: 372914214375937422}
@@ -67717,7 +67716,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -68721,8 +68719,9 @@ GameObject:
   - component: {fileID: 7088487500405292257}
   - component: {fileID: 5788454524128024189}
   - component: {fileID: 364283388824950459}
+  - component: {fileID: 1355618649010524182}
   m_Layer: 0
-  m_Name: Castle_W_Blue
+  m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68750,7 +68749,7 @@ Transform:
   - {fileID: 1717622041323169753}
   - {fileID: 822513039021805805}
   - {fileID: 1699814943687627860}
-  m_Father: {fileID: 7177099246116972458}
+  m_Father: {fileID: 1338402163096415565}
   m_LocalEulerAnglesHint: {x: 0, y: 180.00002, z: 0}
 --- !u!33 &5788454524128024189
 MeshFilter:
@@ -68802,6 +68801,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1355618649010524182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3393432544801911445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4efb15c964a785348809f479e9804876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3394634796396861030
 GameObject:
   m_ObjectHideFlags: 0
@@ -74496,7 +74507,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92972,7 +92982,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93961,6 +93970,50 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.9999998, y: 1.9999998, z: 2.0000005}
   m_Center: {x: 0.000000923872, y: 0, z: 0}
+--- !u!1 &3975879605043678782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9028713821500830438}
+  - component: {fileID: 3715267927665395855}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9028713821500830438
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3975879605043678782}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -37.588, y: -0.53, z: 27.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1338402163096415565}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3715267927665395855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3975879605043678782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1b5c0674059494684ca0e07342f6c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3979561876821998624
 GameObject:
   m_ObjectHideFlags: 0
@@ -95467,8 +95520,8 @@ GameObject:
   - component: {fileID: 6255885759304921018}
   - component: {fileID: 4176737528746780363}
   - component: {fileID: 7783417392207451236}
-  m_Layer: 8
-  m_Name: WinterGroundRockSnow (165)
+  m_Layer: 6
+  m_Name: EndPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95487,7 +95540,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5035750482705286085}
+  m_Father: {fileID: 8220556112558452187}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6255885759304921018
 MeshFilter:
@@ -105516,7 +105569,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115577,7 +115629,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123664,7 +123715,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -124144,6 +124194,8 @@ Transform:
   - {fileID: 1736436996965151176}
   - {fileID: 772899335392912910}
   - {fileID: 6827840921545760347}
+  - {fileID: 3300247813359428496}
+  - {fileID: 4336539311198498866}
   m_Father: {fileID: 1338402163096415565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4902237522632413624
@@ -163062,7 +163114,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -172536,7 +172587,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -172621,6 +172671,50 @@ Transform:
   - {fileID: 259672751921615873}
   m_Father: {fileID: 5996490208353700767}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8019959509709124067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8088203258520210746}
+  - component: {fileID: 2662559296648939398}
+  m_Layer: 0
+  m_Name: EndPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8088203258520210746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8019959509709124067}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 4.75, y: -0.61, z: 27.843}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1338402163096415565}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2662559296648939398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8019959509709124067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e77108c0cee41b43980a80b87bad425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8028226399626271884
 GameObject:
   m_ObjectHideFlags: 0
@@ -181394,8 +181488,8 @@ GameObject:
   - component: {fileID: 2217828338738845066}
   - component: {fileID: 6123277440213301647}
   - component: {fileID: 650951037309410987}
-  m_Layer: 8
-  m_Name: WinterGroundRockSnow_v2 (171)
+  m_Layer: 6
+  m_Name: StartPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -181414,7 +181508,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5035750482705286085}
+  m_Father: {fileID: 8220556112558452187}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2217828338738845066
 MeshFilter:
@@ -182004,14 +182098,12 @@ Transform:
   - {fileID: 6927163256065426940}
   - {fileID: 4688032132797417549}
   - {fileID: 2981591406137187681}
-  - {fileID: 4336539311198498866}
   - {fileID: 5017909546440778369}
   - {fileID: 7799772988148649038}
   - {fileID: 5397085196035472756}
   - {fileID: 3665050646609837427}
   - {fileID: 138364846380499662}
   - {fileID: 7644779138044992766}
-  - {fileID: 3300247813359428496}
   - {fileID: 8795468315003409593}
   - {fileID: 4739896329216116824}
   - {fileID: 1270061270917049338}
@@ -190242,7 +190334,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 10f192c0980be6641b7577a6d0400b8f, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

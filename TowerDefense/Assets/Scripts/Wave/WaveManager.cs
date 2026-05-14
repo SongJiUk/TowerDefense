@@ -79,6 +79,7 @@ public class WaveManager
         _preGenerated.Clear();
     }
 
+
     public void StartNextWave()
     {
         if (_stageData == null)
@@ -375,7 +376,6 @@ public class WaveManager
 
         if (data.enemyType == Define.EnemyType.MiddleBoss || data.enemyType == Define.EnemyType.Boss)
         {
-            OnBossAppear?.Invoke(data);
             if (spawnedEnemy != null) OnBossSpawned?.Invoke(spawnedEnemy);
         }
     }

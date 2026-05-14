@@ -101,7 +101,7 @@ public class UI_NextWavePanel : UI_Base
         RefreshContents(preview);
         StartCountdown(preview.WaveDelay);
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+        RebuildLayoutAsync().Forget();
     }
 
     // ─── 색상 ─────────────────────────────────────────────────────────────────
@@ -203,6 +203,18 @@ public class UI_NextWavePanel : UI_Base
     {
         Managers.WaveM.RequestEarlyStart();
         ForceClose();
+    }
+
+    private async UniTaskVoid RebuildLayoutAsync()
+    {
+        await UniTask.NextFrame();
+        if (this == null || !gameObject.activeSelf) return;
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+
+        await UniTask.NextFrame();
+        if (this == null || !gameObject.activeSelf) return;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
     }
 
     // ─── 유틸 ─────────────────────────────────────────────────────────────────

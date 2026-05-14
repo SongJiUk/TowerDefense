@@ -82,9 +82,13 @@ public class UI_GameOverPopup : UI_Base
 
     private void OnRetryClicked()
     {
+        Managers.WaveM.Init(Managers.WaveM.CurrentStage);
         Managers.GameM.Reset();
+        Managers.SkillM.Clear();
         Managers.CardM.Clear();
-        Managers.Clear();
+        Managers.PoolM.Clear();
+        Managers.UIM.Clear();
+        Managers.SynergyM.Clear();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

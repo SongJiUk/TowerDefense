@@ -25,6 +25,7 @@ public class UI_GameScene : UI_Scene
     private float _displayHp = -1f;
     private bool _isDoubleSpeed = false;
     private float _fpsTimer;
+    private int _prevSkillPoints;
 
     private UI_NextWavePanel _nextWavePanel;
 
@@ -44,7 +45,6 @@ public class UI_GameScene : UI_Scene
         Managers.GameM.OnLevelUp -= LevelUp;
         Managers.WaveM.OnWaveStart -= OnWaveStart;
         Managers.WaveM.OnWaveComplete -= OnWaveComplete;
-        Managers.WaveM.OnAllWavesComplete -= OnAllWavesComplete;
         Managers.GameM.OnGameOver -= OnGameOver;
         Managers.GameM.OnGameClear -= OnAllWavesComplete;
         Managers.SkillM.OnSlotChanged -= OnSkillSlotChanged;
@@ -94,7 +94,6 @@ public class UI_GameScene : UI_Scene
         Managers.GameM.OnLevelUp += LevelUp;
         Managers.WaveM.OnWaveStart += OnWaveStart;
         Managers.WaveM.OnWaveComplete += OnWaveComplete;
-        Managers.WaveM.OnAllWavesComplete += OnAllWavesComplete;
         Managers.GameM.OnGameOver += OnGameOver;
         Managers.GameM.OnGameClear += OnAllWavesComplete;
         Managers.SkillM.OnSlotChanged += OnSkillSlotChanged;
@@ -105,6 +104,7 @@ public class UI_GameScene : UI_Scene
 
         RefreshGold(Managers.GameM.Gold);
         RefreshWave(Managers.WaveM.CurrentWave);
+        _prevSkillPoints = Managers.SkillM.SkillPoints;
         RefreshSkillPoints(Managers.SkillM.SkillPoints);
         if (Managers.ICore is Core core)
             RefreshCoreHp(core.CurrentHp);
@@ -264,6 +264,10 @@ public class UI_GameScene : UI_Scene
         var btn = GetButton(typeof(Buttons), (int)Buttons.Button_SkillUpgrade);
         GetText(typeof(Texts), (int)Texts.Text_SkillPoint).text = $"+{points}";
 
+        if (points > _prevSkillPoints)
+            ShowSkillPointGain(points - _prevSkillPoints);
+        _prevSkillPoints = points;
+
         bool hasUpgradable = false;
         for (int i = 0; i < 3; i++)
         {
@@ -292,6 +296,28 @@ public class UI_GameScene : UI_Scene
         {
             _skillBtnRect.DOPunchScale(Vector3.one * 0.25f, 0.35f, 6, 0.5f);
         }
+    }
+
+    private void ShowSkillPointGain(int amount)
+    {
+        var spText = GetText(typeof(Texts), (int)Texts.Text_SkillPoint);
+
+        var go = new GameObject("SkillPointGainText");
+        go.transform.SetParent(spText.transform.parent, false);
+
+        var rt = go.AddComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(120f, 50f);
+        rt.anchoredPosition = (spText.rectTransform.anchoredPosition + Vector2.up * 10f);
+
+        var tmp = go.AddComponent<TMPro.TextMeshProUGUI>();
+        tmp.text = $"+{amount}";
+        tmp.fontSize = spText.fontSize * 1.2f;
+        tmp.fontStyle = TMPro.FontStyles.Bold;
+        tmp.color = new Color(1f, 0.85f, 0f);
+        tmp.alignment = TMPro.TextAlignmentOptions.Center;
+
+        rt.DOAnchorPosY(rt.anchoredPosition.y + 80f, 0.9f).SetEase(Ease.OutQuad).SetUpdate(true);
+        tmp.DOFade(0f, 0.9f).SetDelay(0.2f).SetUpdate(true).OnComplete(() => Destroy(go));
     }
 
     // ─── 버튼 핸들러 ─────────────────────────────────────────────────────────

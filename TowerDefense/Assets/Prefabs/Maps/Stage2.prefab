@@ -7123,7 +7123,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1d13699a40edd244080be7667d805d4d, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -18303,8 +18302,9 @@ GameObject:
   - component: {fileID: 6378282850879411929}
   - component: {fileID: 28953650185600504}
   - component: {fileID: 8866976732840333629}
+  - component: {fileID: 643588278277557465}
   m_Layer: 0
-  m_Name: DesertCastle_Red
+  m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18328,7 +18328,7 @@ Transform:
   - {fileID: 3255772865997673932}
   - {fileID: 6422646954858477161}
   - {fileID: 3597938376137717012}
-  m_Father: {fileID: 5638682548263002154}
+  m_Father: {fileID: 8940458836953154247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &28953650185600504
 MeshFilter:
@@ -18380,6 +18380,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &643588278277557465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090889885974890450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4efb15c964a785348809f479e9804876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1115737153340995587
 GameObject:
   m_ObjectHideFlags: 0
@@ -35454,7 +35466,6 @@ Transform:
   - {fileID: 19707833228398193}
   - {fileID: 2142668231331586854}
   - {fileID: 6530846942772241436}
-  - {fileID: 3278836066688556571}
   - {fileID: 2634810506957236179}
   - {fileID: 7078465495109005010}
   - {fileID: 8968293631468032777}
@@ -35576,7 +35587,6 @@ Transform:
   - {fileID: 3917224315381940363}
   - {fileID: 2091189555695221380}
   - {fileID: 9210150511371958444}
-  - {fileID: 6118575888870678869}
   - {fileID: 7720690553764562184}
   - {fileID: 4934399533074107654}
   - {fileID: 3498604601409069938}
@@ -36536,8 +36546,8 @@ GameObject:
   - component: {fileID: 2029906010055236648}
   - component: {fileID: 5426446999714186943}
   - component: {fileID: 8322126060524439380}
-  m_Layer: 8
-  m_Name: DesertGround02 (57)
+  m_Layer: 6
+  m_Name: StartPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36556,7 +36566,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2570206367361482112}
+  m_Father: {fileID: 772234132902642491}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2029906010055236648
 MeshFilter:
@@ -41458,7 +41468,6 @@ MonoBehaviour:
   _placeableLayer:
     serializedVersion: 2
     m_Bits: 128
-  _markerPrefabKey: 
 --- !u!1 &3377036544795143966
 GameObject:
   m_ObjectHideFlags: 0
@@ -43958,6 +43967,50 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.9999998, y: 2, z: 2.0000005}
   m_Center: {x: 0.000000923872, y: 0, z: 0}
+--- !u!1 &3583043756349842499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1159110564365200354}
+  - component: {fileID: 4115576723089541029}
+  m_Layer: 0
+  m_Name: EndPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1159110564365200354
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3583043756349842499}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: -5.59, y: -0.54, z: -20.47}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8940458836953154247}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4115576723089541029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3583043756349842499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e77108c0cee41b43980a80b87bad425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3589467043685532548
 GameObject:
   m_ObjectHideFlags: 0
@@ -68538,7 +68591,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1d13699a40edd244080be7667d805d4d, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82201,7 +82253,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1d13699a40edd244080be7667d805d4d, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83429,6 +83480,50 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &5004034480907793994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6916425336200575783}
+  - component: {fileID: 374444352289328941}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6916425336200575783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5004034480907793994}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 36.45, y: -0.47, z: -20.48}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8940458836953154247}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &374444352289328941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5004034480907793994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1b5c0674059494684ca0e07342f6c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5008067915485805076
 GameObject:
   m_ObjectHideFlags: 0
@@ -85329,11 +85424,14 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6916425336200575783}
+  - {fileID: 1159110564365200354}
   - {fileID: 6950424921762244119}
   - {fileID: 772234132902642491}
   - {fileID: 2570206367361482112}
   - {fileID: 8453527363395618276}
   - {fileID: 5638682548263002154}
+  - {fileID: 6378282850879411929}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &5260471202483440692
@@ -92773,7 +92871,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1d13699a40edd244080be7667d805d4d, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96233,7 +96330,6 @@ Transform:
   - {fileID: 3168282331265252793}
   - {fileID: 2406861321985235555}
   - {fileID: 6072040581671794935}
-  - {fileID: 6378282850879411929}
   - {fileID: 178376243829248769}
   - {fileID: 235450277948168730}
   - {fileID: 3215970154595638148}
@@ -109415,12 +109511,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 772234132902642491}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &772234132902642491
 Transform:
@@ -109501,6 +109597,8 @@ Transform:
   - {fileID: 4208457813221093751}
   - {fileID: 4843095983778871566}
   - {fileID: 6059292279044971874}
+  - {fileID: 3278836066688556571}
+  - {fileID: 6118575888870678869}
   m_Father: {fileID: 8940458836953154247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7144723884570960240
@@ -119841,8 +119939,8 @@ GameObject:
   - component: {fileID: 9135545759993412067}
   - component: {fileID: 8442106706543543851}
   - component: {fileID: 481279265710087526}
-  m_Layer: 8
-  m_Name: DesertGround01 (162)
+  m_Layer: 6
+  m_Name: EndPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119861,7 +119959,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2570206367361482112}
+  m_Father: {fileID: 772234132902642491}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9135545759993412067
 MeshFilter:
