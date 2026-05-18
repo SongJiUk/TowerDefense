@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "839794068027",
+    "firebase_url": "https://towerdefense-4c8a2-default-rtdb.firebaseio.com",
+    "project_id": "towerdefense-4c8a2",
+    "storage_bucket": "towerdefense-4c8a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839794068027:android:9ee7e90e995dd2b4726a1e",
+        "android_client_info": {
+          "package_name": "com.JiUk.TowerDefense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839794068027-o64vjpg1srirv4vfhkhvkjfs1iviahvh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.JiUk.TowerDefense",
+            "certificate_hash": "c370c1718ee7420d753ca925d17178d2463bce16"
+          }
+        },
+        {
+          "client_id": "839794068027-dfje6ht82mcjbtdj9np14thekccplcub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWISoR7_5QJuWw0OvaBxQnMxdrAhRDYt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839794068027-dfje6ht82mcjbtdj9np14thekccplcub.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

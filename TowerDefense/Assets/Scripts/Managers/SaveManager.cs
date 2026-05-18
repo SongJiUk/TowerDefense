@@ -8,10 +8,18 @@ using UnityEngine;
 /// </summary>
 public class SaveManager
 {
-    private readonly ISaveStorage _storage = new PlayerPrefsSaveStorage();
+    private ISaveStorage _storage = new PlayerPrefsSaveStorage();
 
     private SaveData _data;
     public SaveData Data => _data ??= _storage.Load();
+
+    public void SwitchToFirebase() => _storage = new FirebaseSaveStorage();
+
+    public void ApplyLoaded(SaveData loaded)
+    {
+        _data = loaded;
+        Managers.GameM.SetLevel(loaded.Level, loaded.Exp);
+    }
 
     // ─── 공개 API ─────────────────────────────────────────────────────────────
 
@@ -101,6 +109,7 @@ public class PlayerPrefsSaveStorage : ISaveStorage
 public class SaveData
 {
     public string PlayerName   = "용사의 탑";
+    public bool   IsGuest      = true;
     public int    Level        = 1;
     public int    Exp          = 0;
     public int    BestWave       = 0;

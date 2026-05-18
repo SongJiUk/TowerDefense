@@ -115,7 +115,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _Offset: 0.21224459
+    - _Offset: 0.21178682
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _Ratio: 0.05

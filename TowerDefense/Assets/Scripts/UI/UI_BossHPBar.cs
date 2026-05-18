@@ -101,15 +101,16 @@ public class UI_BossHPBar : UI_Base
         if (max <= 0f) return;
         float ratio = Mathf.Clamp01(cur / max);
 
-        // DelayFill(뒤, 어두운색) = 즉시 → 깎인 부분 노출
-        GetImage(typeof(Images), (int)Images.Image_DelayFill).fillAmount = ratio;
+        // HPFill(앞, 밝은색) = 즉시 → 현재 HP 바로 반영
+        GetImage(typeof(Images), (int)Images.Image_HPFill).fillAmount = ratio;
 
-        // HPFill(앞, 밝은색) = 딜레이 트윈 → 천천히 따라옴
+        // DelayFill(뒤, 어두운색) = 딜레이 트윈 → 유령 효과
         _hpTween?.Kill();
-        _hpTween = GetImage(typeof(Images), (int)Images.Image_HPFill)
+        _hpTween = GetImage(typeof(Images), (int)Images.Image_DelayFill)
             .DOFillAmount(ratio, 0.4f)
             .SetDelay(0.3f)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
     }
 
     private void OnBossDied()

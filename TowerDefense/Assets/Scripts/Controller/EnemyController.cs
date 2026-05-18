@@ -10,6 +10,8 @@ using UnityEngine;
 /// </summary>
 public class EnemyController : MonoBehaviour, IDamageable
 {
+    [SerializeField] protected Transform _hpBarPos;
+
     protected EnemyHPBar _hpBar;
     protected GameObject _hpBarGo;
     private Renderer[] _renderers;
@@ -81,11 +83,14 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         if (ShowHPBar)
         {
-            _hpBarGo = Managers.ResourceM.Instantiate("EnemyHPBar", null, true);
+            _hpBarGo = Managers.PoolM.Pop("EnemyHPBar");
             if (_hpBarGo != null)
             {
                 _hpBar = _hpBarGo.GetComponent<EnemyHPBar>();
-                _hpBar.Follow(transform, new Vector3(0f, GetHeadOffset(), 0f));
+                if (_hpBarPos != null)
+                    _hpBar.Follow(transform, _hpBarPos);
+                else
+                    _hpBar.Follow(transform, new Vector3(0f, GetHeadOffset(), 0f));
             }
         }
     }
@@ -100,7 +105,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         if (_hpBarGo != null)
         {
-            Managers.ResourceM.Destroy(_hpBarGo);
+            Managers.PoolM.Push(_hpBarGo);
             _hpBarGo = null;
             _hpBar = null;
         }

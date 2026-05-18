@@ -25,6 +25,7 @@ public class Managers : MonoBehaviour
     readonly AchievementManager achievementManager = new();
     readonly SettingsManager settingsManager = new();
     UpdateManager updateManager = null;
+    FirebaseManager firebaseManager = null;
 
     // ─── 전역 참조 ────────────────────────────────────────────────────────────
 
@@ -68,6 +69,7 @@ public class Managers : MonoBehaviour
     public static FloatingTextManager FloatingTextM { get { return Instance?.floatingTextManager; } }
     public static AchievementManager AchievementM { get { return Instance?.achievementManager; } }
     public static SettingsManager    SettingsM     { get { return Instance?.settingsManager; } }
+    public static FirebaseManager    FirebaseM     { get { return Instance?.firebaseManager; } }
 
     public static Managers Instance
     {
@@ -86,7 +88,8 @@ public class Managers : MonoBehaviour
 
                 DontDestroyOnLoad(go);
                 instance = go.GetComponent<Managers>();
-                instance.updateManager = go.AddComponent<UpdateManager>();
+                instance.updateManager  = go.AddComponent<UpdateManager>();
+                instance.firebaseManager = go.AddComponent<FirebaseManager>();
                 instance.soundManager.Init(go);
             }
 

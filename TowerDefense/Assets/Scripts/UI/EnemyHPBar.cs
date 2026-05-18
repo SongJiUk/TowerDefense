@@ -11,6 +11,7 @@ public class EnemyHPBar : MonoBehaviour
 
     private Camera _cam;
     private Transform _target;
+    private Transform _hpBarPos;
     private Vector3 _offset;
 
     void Awake()
@@ -18,15 +19,31 @@ public class EnemyHPBar : MonoBehaviour
         _cam = Camera.main;
     }
 
+    public void Follow(Transform target, Transform hpBarPos)
+    {
+        _target = target;
+        _hpBarPos = hpBarPos;
+        _offset = Vector3.zero;
+    }
+
     public void Follow(Transform target, Vector3 offset)
     {
         _target = target;
+        _hpBarPos = null;
         _offset = offset;
+    }
+
+    void OnDisable()
+    {
+        _target = null;
+        _hpBarPos = null;
     }
 
     void LateUpdate()
     {
-        if (_target != null)
+        if (_hpBarPos != null)
+            transform.position = _hpBarPos.position;
+        else if (_target != null)
             transform.position = _target.position + _offset;
 
         if (_cam != null)

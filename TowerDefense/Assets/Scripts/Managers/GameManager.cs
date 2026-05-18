@@ -35,6 +35,12 @@ public class GameManager
         }
     }
 
+    public void DebugLevelUp()
+    {
+        if (LevelData == null || Level >= LevelData.MaxLevel) return;
+        AddExp(LevelData.GetRequiredExp(Level) - CurrentExp);
+    }
+
     public void ResetLevel()
     {
         Level = 1;
