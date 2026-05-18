@@ -99,3 +99,14 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 TowerDefense/Library
 TowerDefense/Temp
+
+# Firebase editor-only desktop binaries (not needed for mobile builds)
+/TowerDefense/Assets/Firebase/Plugins/x86_64/
+/TowerDefense/Assets/Firebase/Plugins/x86/
+
+# Large unitypackage files (source assets, not needed in repo)
+*.unitypackage
+
+# Large texture source files
+*.psd
+*.tga
