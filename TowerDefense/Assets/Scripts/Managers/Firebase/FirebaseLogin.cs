@@ -137,9 +137,18 @@ public partial class FirebaseManager
         if (data == null) return;
 
         data.IsGuest = user.IsAnonymous;
-        data.PlayerName = user.IsAnonymous
-            ? "용사의 탑"
-            : (!string.IsNullOrEmpty(user.DisplayName) ? user.DisplayName
-               : (!string.IsNullOrEmpty(user.Email) ? user.Email : "용사의 탑"));
+
+        if (user.IsAnonymous)
+        {
+            // 기존 닉네임이 기본값이면 랜덤 생성, 아니면 유지
+            if (string.IsNullOrEmpty(data.PlayerName) || data.PlayerName == "용사의 탑")
+                data.PlayerName = NicknameGenerator.Generate();
+        }
+        else
+        {
+            data.PlayerName = !string.IsNullOrEmpty(user.DisplayName) ? user.DisplayName
+                            : !string.IsNullOrEmpty(user.Email)       ? user.Email
+                            : data.PlayerName;
+        }
     }
 }

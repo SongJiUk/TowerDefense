@@ -62,6 +62,7 @@ public class UI_TitleScene : UI_Base
         BindObject(typeof(GameObjects));
         BindImage(typeof(Images));
 
+
         // 탭투스타트 버튼 — 로딩 완료 전까지 비활성
         var tapBtn = GetButton(typeof(Buttons), (int)Buttons.Button_TapToStart);
         tapBtn.onClick.AddListener(OpenMenu);
@@ -189,6 +190,9 @@ public class UI_TitleScene : UI_Base
 
         Managers.GameM.LevelData = Managers.ResourceM.Load<LevelData>("LevelData");
         Managers.CardM.Init();
+
+        await InitFirebase();
+
         Managers.SaveM.ApplyToGame();
 
         // 스테이지 결정 + WaveM 초기화 — 로딩 완료 시점에 모두 끝냄
@@ -196,6 +200,28 @@ public class UI_TitleScene : UI_Base
 
         Debug.Log("[TitleScene] 로딩 완료");
         OnLoadComplete();
+    }
+
+    private async UniTask InitFirebase()
+    {
+        await Managers.FirebaseM.Init();
+
+        if (Managers.FirebaseM.IsLoggedIn())
+        {
+            await Managers.FirebaseM.ReadData();
+            return;
+        }
+
+        var loginPanel = Managers.ObjectM.SpawnUI<UI_Login>("UI_Login", transform);
+        if (loginPanel == null) return;
+
+        bool done = false;
+        loginPanel.OnLoginSuccess = () => done = true;
+        await loginPanel.Init();
+
+        await UniTask.WaitUntil(() => done);
+
+        Managers.ResourceM.Destroy(loginPanel.gameObject);
     }
 
     private void OnLoadComplete()
