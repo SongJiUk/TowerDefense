@@ -16,8 +16,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class UI_TitleScene : UI_Base
 {
-    enum Texts { Text_TapToStart, Text_LogoRealm, Text_Subtitle, Text_BestRecord }
-    enum Buttons { Button_TapToStart, Button_Start, Button_Difficulty, Button_Achievement, Button_Settings, Button_Quit }
+    enum Texts { Text_TapToStart, Text_LogoRealm, Text_Subtitle, Text_BestRecord, Text_PlayerName }
+    enum Buttons { Button_TapToStart, Button_Start, Button_Difficulty, Button_Achievement, Button_Settings, Button_Quit, Button_SwitchAccount }
     enum GameObjects { Panel_Logo, Panel_Title, Panel_Menu, TextObject, Panel_Record, Panel_Fade }
     enum Images { Image_Crown }
 
@@ -65,7 +65,7 @@ public class UI_TitleScene : UI_Base
 
         // 탭투스타트 버튼 — 로딩 완료 전까지 비활성
         var tapBtn = GetButton(typeof(Buttons), (int)Buttons.Button_TapToStart);
-        tapBtn.onClick.AddListener(OpenMenu);
+        tapBtn.onClick.AddListener(OnTapToStart);
         tapBtn.gameObject.SetActive(false);
 
         // 메뉴 버튼
@@ -74,6 +74,7 @@ public class UI_TitleScene : UI_Base
         GetButton(typeof(Buttons), (int)Buttons.Button_Achievement).onClick.AddListener(OnAchievementClicked);
         GetButton(typeof(Buttons), (int)Buttons.Button_Settings).onClick.AddListener(OnSettingsClicked);
         GetButton(typeof(Buttons), (int)Buttons.Button_Quit).onClick.AddListener(OnQuitClicked);
+        GetButton(typeof(Buttons), (int)Buttons.Button_SwitchAccount).onClick.AddListener(OnSwitchAccountClicked);
 
         _logoRect = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Logo).GetComponent<RectTransform>();
         _menuRect = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu).GetComponent<RectTransform>();
@@ -207,30 +208,18 @@ public class UI_TitleScene : UI_Base
         await Managers.FirebaseM.Init();
 
         if (Managers.FirebaseM.IsLoggedIn())
-        {
             await Managers.FirebaseM.ReadData();
-            return;
-        }
-
-        var loginPanel = Managers.ObjectM.SpawnUI<UI_Login>("UI_Login", transform);
-        if (loginPanel == null) return;
-
-        bool done = false;
-        loginPanel.OnLoginSuccess = () => done = true;
-        await loginPanel.Init();
-
-        await UniTask.WaitUntil(() => done);
-
-        Managers.ResourceM.Destroy(loginPanel.gameObject);
     }
 
     private void OnLoadComplete()
     {
-        var bestText = GetText(typeof(Texts), (int)Texts.Text_BestRecord);
         var data = Managers.SaveM.Data;
-        bestText.text = data.BestWave > 0
+
+        GetText(typeof(Texts), (int)Texts.Text_BestRecord).text = data.BestWave > 0
             ? $"최고기록 : 스테이지 {data.BestStage} - 웨이브 {data.BestWave}"
             : "최고기록 : -";
+
+        GetText(typeof(Texts), (int)Texts.Text_PlayerName).text = data.PlayerName;
 
         _loadComplete = true;
         TryActivateTapButton();
@@ -244,29 +233,31 @@ public class UI_TitleScene : UI_Base
 
     // ─── 메뉴 전환 ────────────────────────────────────────────────────────────
 
-    private void OpenMenu()
+    private void SlideInMenuPanel()
     {
-        if (_menuOpen) return;
-        _menuOpen = true;
-        _tapBlink?.Kill();
-
-        GetButton(typeof(Buttons), (int)Buttons.Button_TapToStart).gameObject.SetActive(false);
-        GetObject(typeof(GameObjects), (int)GameObjects.Panel_Title).SetActive(false);
-
-        // 로고 왼쪽으로
-        _logoRect.DOAnchorPosX(_logoOriginPos.x - 350f, 0.4f).SetEase(Ease.OutCubic);
-
-        // 메뉴 오른쪽에서 슬라이드인
         var menuGo = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu);
         menuGo.SetActive(true);
         _menuRect.anchoredPosition = new Vector2(_menuOriginPos.x + 800f, _menuOriginPos.y);
         _menuRect.DOAnchorPosX(_menuOriginPos.x, 0.4f).SetEase(Ease.OutCubic);
 
-        // Panel_Record 퍼지며 등장 (메뉴 슬라이드 끝난 후)
         var record = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Record);
         record.transform.localScale = Vector3.zero;
         record.SetActive(true);
         record.transform.DOScale(1f, 0.35f).SetEase(Ease.OutBack).SetDelay(0.35f);
+    }
+
+    private void SlideInLoginPanel()
+    {
+        var loginPanel = Managers.ObjectM.SpawnUI<UI_Login>("UI_Login", transform);
+        if (loginPanel == null) return;
+
+        var loginRect = loginPanel.GetComponent<RectTransform>();
+        Vector2 origin = loginRect.anchoredPosition + new Vector2(200f, 50f);
+        loginRect.anchoredPosition = new Vector2(origin.x + 800f, origin.y);
+        loginRect.DOAnchorPosX(origin.x, 0.4f).SetEase(Ease.OutCubic);
+
+        loginPanel.OnLoginSuccess = () => SlideInMenuPanel();
+        loginPanel.Init().Forget();
     }
 
     // ─── 버튼 ─────────────────────────────────────────────────────────────────
@@ -330,6 +321,31 @@ public class UI_TitleScene : UI_Base
 
     private void OnDifficultyClicked() => Managers.UIM.ShowPopup<UI_DifficultySelectPopup>("UI_DifficultySelectPopup");
     private void OnAchievementClicked() => Managers.UIM.ShowPopup<UI_AchievementPopup>("UI_AchievementPopup");
-    private void OnSettingsClicked() => Managers.UIM.ShowPopup<UI_SettingsPopup>("UI_SettingsPopup");
-    private void OnQuitClicked() => Application.Quit();
+    private void OnSettingsClicked()    => Managers.UIM.ShowPopup<UI_SettingsPopup>("UI_SettingsPopup");
+    private void OnQuitClicked()        => Application.Quit();
+
+    private void OnTapToStart()
+    {
+        if (_menuOpen) return;
+        _menuOpen = true;
+        _tapBlink?.Kill();
+
+        GetButton(typeof(Buttons), (int)Buttons.Button_TapToStart).gameObject.SetActive(false);
+        GetObject(typeof(GameObjects), (int)GameObjects.Panel_Title).SetActive(false);
+        _logoRect.DOAnchorPosX(_logoOriginPos.x - 350f, 0.4f).SetEase(Ease.OutCubic);
+
+        if (Managers.FirebaseM != null && Managers.FirebaseM.IsLoggedIn())
+            SlideInMenuPanel();
+        else
+            SlideInLoginPanel();
+    }
+
+    private void OnSwitchAccountClicked()
+    {
+        Managers.FirebaseM.SignOut();
+        GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu).SetActive(false);
+        GetObject(typeof(GameObjects), (int)GameObjects.Panel_Record).SetActive(false);
+        _menuOpen = false;
+        SlideInLoginPanel();
+    }
 }

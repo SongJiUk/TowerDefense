@@ -73,9 +73,10 @@ public class UI_Base : MonoBehaviour
     protected void BindImage(Type _type)    => Bind<Image>(_type);
     protected void BindText(Type _type)     => Bind<TextMeshProUGUI>(_type);
     protected void BindButton(Type _type)   => Bind<Button>(_type);
-    protected void BindToggle(Type _type)   => Bind<Toggle>(_type);
-    protected void BindSlider(Type _type)   => Bind<Slider>(_type);
-    protected void BindDropdown(Type _type) => Bind<TMPro.TMP_Dropdown>(_type);
+    protected void BindToggle(Type _type)      => Bind<Toggle>(_type);
+    protected void BindSlider(Type _type)      => Bind<Slider>(_type);
+    protected void BindDropdown(Type _type)    => Bind<TMPro.TMP_Dropdown>(_type);
+    protected void BindInputField(Type _type)  => Bind<TMPro.TMP_InputField>(_type);
 
     #endregion
 
@@ -93,7 +94,8 @@ public class UI_Base : MonoBehaviour
     protected Button          GetButton(Type _type, int _index) => Get<Button>(_type, _index);
     protected Toggle             GetToggle(Type _type, int _index)    => Get<Toggle>(_type, _index);
     protected Slider             GetSlider(Type _type, int _index)    => Get<Slider>(_type, _index);
-    protected TMPro.TMP_Dropdown GetDropdown(Type _type, int _index)  => Get<TMPro.TMP_Dropdown>(_type, _index);
+    protected TMPro.TMP_Dropdown  GetDropdown(Type _type, int _index)   => Get<TMPro.TMP_Dropdown>(_type, _index);
+    protected TMPro.TMP_InputField GetInputField(Type _type, int _index) => Get<TMPro.TMP_InputField>(_type, _index);
 
     #endregion
 
