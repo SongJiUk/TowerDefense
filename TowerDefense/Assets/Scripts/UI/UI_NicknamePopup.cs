@@ -16,6 +16,8 @@ public class UI_NicknamePopup : UI_Base
     private const int MAX_LENGTH = 12;
     private const int MIN_LENGTH = 2;
 
+    public System.Action OnComplete;
+
     public override async UniTask<bool> Init()
     {
         if (!await base.Init()) return false;
@@ -92,6 +94,8 @@ public class UI_NicknamePopup : UI_Base
             Managers.SaveM.SaveCurrent();
         }
 
+        Managers.AchievementM?.AddProgress("set_nickname");
+        OnComplete?.Invoke();
         Managers.ResourceM.Destroy(gameObject);
     }
 

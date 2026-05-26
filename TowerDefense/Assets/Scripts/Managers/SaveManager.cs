@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -26,19 +27,29 @@ public class SaveManager
     public void OnStageClear(int stage)
     {
         if (stage >= 1 && stage <= 4)
+        {
             Data.SetStageCleared(stage);
+            Managers.AchievementM?.AddProgress($"stage_{stage}");
+        }
         Data.Level = Managers.GameM.Level;
-        Data.Exp   = Managers.GameM.CurrentExp;
+        Data.Exp = Managers.GameM.CurrentExp;
 
         int wave = Managers.WaveM.TotalWaves;
         if (IsBetter(stage, wave, Data.BestStage, Data.BestWave))
         {
-            Data.BestWave  = wave;
+            Data.BestWave = wave;
             Data.BestStage = stage;
+            Data.BestDifficulty = Managers.DifficultyM.Selected;
         }
 
         if (stage == 4)
+        {
             Managers.DifficultyM.OnGameClear();
+            var diff = Managers.DifficultyM.Selected;
+            if (diff == Define.Difficulty.Normal) Managers.AchievementM?.Unlock("clear_normal");
+            else if (diff == Define.Difficulty.Hard) Managers.AchievementM?.Unlock("clear_hard");
+            else if (diff == Define.Difficulty.Hell) Managers.AchievementM?.Unlock("clear_hell");
+        }
 
         _storage.Save(Data);
     }
@@ -46,14 +57,15 @@ public class SaveManager
     public void OnGameOver()
     {
         Data.Level = Managers.GameM.Level;
-        Data.Exp   = Managers.GameM.CurrentExp;
+        Data.Exp = Managers.GameM.CurrentExp;
 
         int wave = Managers.WaveM.CurrentWave;
         int stage = Managers.SelectedStage;
         if (IsBetter(stage, wave, Data.BestStage, Data.BestWave))
         {
-            Data.BestWave  = wave;
+            Data.BestWave = wave;
             Data.BestStage = stage;
+            Data.BestDifficulty = Managers.DifficultyM.Selected;
         }
         _storage.Save(Data);
     }
@@ -68,6 +80,7 @@ public class SaveManager
     public void ApplyToGame()
     {
         Managers.GameM.SetLevel(Data.Level, Data.Exp);
+        Managers.DifficultyM.Init(Data);
     }
 }
 
@@ -75,7 +88,7 @@ public class SaveManager
 
 public interface ISaveStorage
 {
-    void     Save(SaveData data);
+    void Save(SaveData data);
     SaveData Load();
 }
 
@@ -106,23 +119,34 @@ public class PlayerPrefsSaveStorage : ISaveStorage
 // ─── 데이터 ───────────────────────────────────────────────────────────────────
 
 [Serializable]
+public class AchievementSaveEntry
+{
+    public string id;
+    public int progress;
+    public bool unlocked;
+}
+
+[Serializable]
 public class SaveData
 {
-    public string PlayerName   = "용사의 탑";
-    public bool   IsGuest      = true;
-    public int    Level        = 1;
-    public int    Exp          = 0;
-    public int    BestWave       = 0;
-    public int    BestStage      = 0;
+    public string PlayerName = "용사의 탑";
+    public bool IsGuest = true;
+    public int Level = 1;
+    public int Exp = 0;
+    public int BestWave = 0;
+    public int BestStage = 0;
     public Define.Difficulty BestDifficulty = Define.Difficulty.Easy;
-    public bool   Stage1Cleared;
-    public bool   Stage2Cleared;
-    public bool   Stage3Cleared;
-    public bool   Stage4Cleared;
+    public int UnlockedDifficulty = 0;
+    public int SelectedDifficulty = 0;
+    public bool Stage1Cleared;
+    public bool Stage2Cleared;
+    public bool Stage3Cleared;
+    public bool Stage4Cleared;
+    public List<AchievementSaveEntry> Achievements = new List<AchievementSaveEntry>();
 
     public void SetStageCleared(int stage)
     {
-        if      (stage == 1) Stage1Cleared = true;
+        if (stage == 1) Stage1Cleared = true;
         else if (stage == 2) Stage2Cleared = true;
         else if (stage == 3) Stage3Cleared = true;
         else if (stage == 4) Stage4Cleared = true;

@@ -1,35 +1,43 @@
 using UnityEngine;
 
 /// <summary>
-/// 난이도 선택 및 해금 상태 관리. PlayerPrefs로 영구 저장.
+/// 난이도 선택 및 해금 상태 관리. SaveData에 저장되어 Firebase로 동기화.
 /// Easy만 해금된 상태로 시작, 클리어 시 다음 난이도 해금.
 /// </summary>
 public class DifficultyManager
 {
-    private const string PREF_KEY = "UnlockedDifficulty";
-
     public Define.Difficulty Selected { get; private set; } = Define.Difficulty.Easy;
 
-    public int MaxUnlocked => PlayerPrefs.GetInt(PREF_KEY, 0);
+    public int MaxUnlocked => Managers.SaveM?.Data.UnlockedDifficulty ?? 0;
 
     public bool IsUnlocked(Define.Difficulty d) => (int)d <= MaxUnlocked;
+
+    public void Init(SaveData data)
+    {
+        int maxIdx = System.Enum.GetValues(typeof(Define.Difficulty)).Length - 1;
+        Selected = (Define.Difficulty)Mathf.Clamp(data.SelectedDifficulty, 0, data.UnlockedDifficulty);
+    }
 
     public void Select(Define.Difficulty d)
     {
         if (!IsUnlocked(d)) return;
         Selected = d;
+        var data = Managers.SaveM?.Data;
+        if (data == null) return;
+        data.SelectedDifficulty = (int)d;
+        Managers.SaveM.SaveCurrent();
     }
 
-    /// <summary>게임 클리어 시 호출. 현재 난이도가 최고 해금 단계면 다음 단계 해금.</summary>
     public void OnGameClear()
     {
-        int unlocked = MaxUnlocked;
-        int selected = (int)Selected;
+        var data = Managers.SaveM?.Data;
+        if (data == null) return;
         int maxIndex = System.Enum.GetValues(typeof(Define.Difficulty)).Length - 1;
-        if (selected == unlocked && unlocked < maxIndex)
+        int selected = (int)Selected;
+        if (selected == data.UnlockedDifficulty && data.UnlockedDifficulty < maxIndex)
         {
-            PlayerPrefs.SetInt(PREF_KEY, selected + 1);
-            PlayerPrefs.Save();
+            data.UnlockedDifficulty = selected + 1;
+            Managers.SaveM.SaveCurrent();
         }
     }
 
@@ -80,10 +88,6 @@ public class DifficultyManager
         _ => 10
     };
 
-    /// <summary>
-    /// 중간보스가 enemyPool에 등장하기 시작하는 웨이브.
-    /// Easy는 후반에만, Hell은 1웨이브부터 등장.
-    /// </summary>
     public int MiddleBossFromWave => Selected switch
     {
         Define.Difficulty.Easy   => 8,

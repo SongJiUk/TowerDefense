@@ -126,7 +126,13 @@ public class UI_Login : UI_Base
     private void OnClickEditNickname()
     {
         var popup = Managers.ObjectM.SpawnUI<UI_NicknamePopup>("UI_NicknamePopup", transform.parent);
-        popup?.Init().Forget();
+        if (popup == null) return;
+        popup.OnComplete = () =>
+        {
+            RefreshPanel();
+            UI_TitleScene.Instance?.RefreshPlayerName();
+        };
+        popup.Init().Forget();
     }
 
     private void OnClickSwitch()

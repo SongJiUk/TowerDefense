@@ -34,6 +34,13 @@ public class BossEnemyController : EnemyController
         base.Die();
     }
 
+    protected override void OnDeathComplete()
+    {
+        base.OnDeathComplete();
+        Managers.AchievementM?.AddProgress("boss_1");
+        Managers.AchievementM?.AddProgress("boss_10");
+    }
+
     protected override void OnReachCore()
     {
         if (_isDead) return;

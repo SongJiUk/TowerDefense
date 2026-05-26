@@ -23,6 +23,9 @@ public class UI_TitleScene : UI_Base
 
     public static UI_TitleScene Instance { get; private set; }
 
+    private Vector2 _loginPanelPos;
+    private bool _loginPanelPosSet;
+
     private RectTransform _logoRect;
     private RectTransform _menuRect;
     private Vector2 _logoOriginPos;
@@ -190,6 +193,7 @@ public class UI_TitleScene : UI_Base
         }
 
         Managers.GameM.LevelData = Managers.ResourceM.Load<LevelData>("LevelData");
+        Managers.AchievementM.Init(Managers.ResourceM.Load<AchievementDatabase>("AchievementDatabase"));
         Managers.CardM.Init();
 
         await InitFirebase();
@@ -225,6 +229,11 @@ public class UI_TitleScene : UI_Base
         TryActivateTapButton();
     }
 
+    public void RefreshPlayerName()
+    {
+        GetText(typeof(Texts), (int)Texts.Text_PlayerName).text = Managers.SaveM.Data.PlayerName;
+    }
+
     private void TryActivateTapButton()
     {
         if (!_introComplete || !_loadComplete) return;
@@ -252,11 +261,19 @@ public class UI_TitleScene : UI_Base
         if (loginPanel == null) return;
 
         var loginRect = loginPanel.GetComponent<RectTransform>();
-        Vector2 origin = loginRect.anchoredPosition + new Vector2(200f, 50f);
-        loginRect.anchoredPosition = new Vector2(origin.x + 800f, origin.y);
-        loginRect.DOAnchorPosX(origin.x, 0.4f).SetEase(Ease.OutCubic);
+        if (!_loginPanelPosSet)
+        {
+            _loginPanelPos = loginRect.anchoredPosition + new Vector2(200f, 50f);
+            _loginPanelPosSet = true;
+        }
+        loginRect.anchoredPosition = new Vector2(_loginPanelPos.x + 800f, _loginPanelPos.y);
+        loginRect.DOAnchorPosX(_loginPanelPos.x, 0.4f).SetEase(Ease.OutCubic);
 
-        loginPanel.OnLoginSuccess = () => SlideInMenuPanel();
+        loginPanel.OnLoginSuccess = () =>
+        {
+            RefreshPlayerName();
+            SlideInMenuPanel();
+        };
         loginPanel.Init().Forget();
     }
 

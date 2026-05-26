@@ -183,6 +183,9 @@ public class EnemyController : MonoBehaviour, IDamageable
         Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));
         Managers.GameM.AddExp(_data.rewardExp);
         Managers.GameM.AddKill();
+        Managers.AchievementM?.AddProgress("kill_100");
+        Managers.AchievementM?.AddProgress("kill_500");
+        Managers.AchievementM?.AddProgress("kill_1000");
         Managers.ResourceM.Destroy(gameObject);
     }
 

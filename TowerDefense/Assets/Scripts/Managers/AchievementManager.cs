@@ -3,50 +3,74 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 업적 진행도 추적 및 달성 알림. Managers.AchievementM으로 접근.
-/// 진행도는 PlayerPrefs에 "ACH_{id}_progress" 키로 저장.
+/// 업적 진행도 추적 및 달성 알림. SaveData에 저장되어 Firebase로 동기화.
 /// </summary>
 public class AchievementManager
 {
-    private const string PREFIX = "ACH_";
-    private const string UNLOCKED_SUFFIX = "_unlocked";
-    private const string PROGRESS_SUFFIX = "_progress";
-
     public event Action<AchievementData> OnAchievementUnlocked;
+
+    private AchievementDatabase _db;
+
+    public void Init(AchievementDatabase db) => _db = db;
 
     // ─── 공개 API ─────────────────────────────────────────────────────────────
 
-    public bool IsUnlocked(string id)
-        => PlayerPrefs.GetInt(PREFIX + id + UNLOCKED_SUFFIX, 0) == 1;
+    public bool IsUnlocked(string id) => GetOrCreate(id).unlocked;
 
-    public int GetProgress(string id)
-        => PlayerPrefs.GetInt(PREFIX + id + PROGRESS_SUFFIX, 0);
+    public int GetProgress(string id) => GetOrCreate(id).progress;
 
-    /// <summary>특정 업적의 진행도를 delta만큼 증가. 목표 달성 시 OnAchievementUnlocked 발행.</summary>
+    public void AddProgress(string id, int delta = 1)
+    {
+        if (_db == null) return;
+        var data = _db.Get(id);
+        if (data != null) AddProgress(data, delta);
+    }
+
+    public void Unlock(string id)
+    {
+        if (_db == null) return;
+        var data = _db.Get(id);
+        if (data != null) Unlock(data);
+    }
+
     public void AddProgress(AchievementData data, int delta = 1)
     {
         if (data == null || IsUnlocked(data.id)) return;
 
-        int current = GetProgress(data.id) + delta;
-        PlayerPrefs.SetInt(PREFIX + data.id + PROGRESS_SUFFIX, current);
+        var entry = GetOrCreate(data.id);
+        entry.progress += delta;
 
-        if (current >= data.targetValue)
+        if (entry.progress >= data.targetValue)
             Unlock(data);
         else
-            PlayerPrefs.Save();
+            Managers.SaveM.SaveCurrent();
     }
 
-    /// <summary>진행도와 무관하게 즉시 달성.</summary>
     public void Unlock(AchievementData data)
     {
         if (data == null || IsUnlocked(data.id)) return;
-        PlayerPrefs.SetInt(PREFIX + data.id + UNLOCKED_SUFFIX, 1);
-        PlayerPrefs.Save();
+
+        var entry = GetOrCreate(data.id);
+        entry.unlocked = true;
+        Managers.SaveM.SaveCurrent();
+
         OnAchievementUnlocked?.Invoke(data);
         ShowPopup(data);
     }
 
     // ─── 내부 ─────────────────────────────────────────────────────────────────
+
+    private AchievementSaveEntry GetOrCreate(string id)
+    {
+        var list = Managers.SaveM.Data.Achievements;
+        var entry = list.Find(e => e.id == id);
+        if (entry == null)
+        {
+            entry = new AchievementSaveEntry { id = id };
+            list.Add(entry);
+        }
+        return entry;
+    }
 
     private void ShowPopup(AchievementData data)
     {

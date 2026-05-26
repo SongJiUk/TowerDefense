@@ -172,6 +172,9 @@ public class WaveManager
         Managers.GameM.nextWaveEnemyHpMultiplier = Managers.GameM.pendingEnemyHpMultiplier;
         Managers.GameM.pendingEnemyHpMultiplier = 1f;
 
+        Managers.AchievementM?.AddProgress("wave_10");
+        Managers.AchievementM?.AddProgress("wave_30");
+        Managers.AchievementM?.AddProgress("wave_50");
         OnWaveComplete?.Invoke(cleared, waveBonus);
 
         if (_currentWaveIndex >= _stageData.totalWaves)

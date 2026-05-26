@@ -50,6 +50,7 @@ public partial class FirebaseManager
 
             CurrentUser = result;
             ApplyUserToSaveData(CurrentUser);
+            Managers.AchievementM?.AddProgress("first_login");
 
             PlayerPrefs.SetInt("HasSeenLogin", 1);
             PlayerPrefs.Save();
@@ -82,6 +83,7 @@ public partial class FirebaseManager
 
             CurrentUser = user;
             ApplyUserToSaveData(CurrentUser);
+            Managers.AchievementM?.AddProgress("first_login");
 
             PlayerPrefs.SetInt("HasSeenLogin", 1);
             PlayerPrefs.Save();
@@ -116,6 +118,7 @@ public partial class FirebaseManager
 
             CurrentUser = result;
             ApplyUserToSaveData(CurrentUser);
+            Managers.SaveM.SaveCurrent();
 
             Debug.Log("[Firebase] 구글 계정 연동 성공");
             return true;

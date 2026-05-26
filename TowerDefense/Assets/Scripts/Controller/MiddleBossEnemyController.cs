@@ -14,4 +14,11 @@ public class MiddleBossEnemyController : EnemyController
             Camera.main?.transform.DOShakePosition(0.3f, 0.15f, 15, 90, false).SetUpdate(true);
         base.Die();
     }
+
+    protected override void OnDeathComplete()
+    {
+        base.OnDeathComplete();
+        Managers.AchievementM?.AddProgress("boss_1");
+        Managers.AchievementM?.AddProgress("boss_10");
+    }
 }
