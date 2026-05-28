@@ -11,6 +11,8 @@ public class AchievementManager
 
     private AchievementDatabase _db;
 
+    public AchievementDatabase Database => _db;
+
     public void Init(AchievementDatabase db) => _db = db;
 
     // ─── 공개 API ─────────────────────────────────────────────────────────────

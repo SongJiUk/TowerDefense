@@ -17,6 +17,30 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1253833c425234d93a6399de33c6fefb
   m_SerializeEntries:
+  - m_GUID: 0b3a232294d244b49ba72122ba6ce005
+    m_Address: AchievementDatabase
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ff09793b7913478fb50763b70c4cf33
+    m_Address: UI_AchievementCategoryHeader
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 557d15b7907ce4be8b1b76789947aa34
+    m_Address: UI_AchievementItem
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56309a927e5be4977ab38815efdac490
+    m_Address: UI_AchievementPanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6098628b22dd09a4aa13e8728529d462
     m_Address: Atlas
     m_ReadOnly: 0

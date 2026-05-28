@@ -337,7 +337,7 @@ public class UI_TitleScene : UI_Base
     }
 
     private void OnDifficultyClicked() => Managers.UIM.ShowPopup<UI_DifficultySelectPopup>("UI_DifficultySelectPopup");
-    private void OnAchievementClicked() => Managers.UIM.ShowPopup<UI_AchievementPopup>("UI_AchievementPopup");
+    private void OnAchievementClicked() => Managers.UIM.ShowPopup<UI_AchievementPanel>("UI_AchievementPanel");
     private void OnSettingsClicked()    => Managers.UIM.ShowPopup<UI_SettingsPopup>("UI_SettingsPopup");
     private void OnQuitClicked()        => Application.Quit();
 
