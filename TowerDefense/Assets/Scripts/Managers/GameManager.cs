@@ -32,8 +32,9 @@ public class GameManager
             CurrentExp -= required;
             Level++;
             OnLevelUp?.Invoke(Level, CurrentExp);
-            if (Level == 5 || Level == 10 || Level == 20)
-                Managers.AchievementM?.AddProgress($"level_{Level}");
+            Managers.AchievementM?.SetProgress("level_5",  Level);
+            Managers.AchievementM?.SetProgress("level_10", Level);
+            Managers.AchievementM?.SetProgress("level_20", Level);
         }
     }
 

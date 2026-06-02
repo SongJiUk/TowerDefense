@@ -28,6 +28,19 @@ public class AchievementManager
         if (data != null) AddProgress(data, delta);
     }
 
+    public void SetProgress(string id, int value)
+    {
+        if (_db == null) return;
+        var data = _db.Get(id);
+        if (data == null || IsUnlocked(id)) return;
+        var entry = GetOrCreate(id);
+        entry.progress = value;
+        if (entry.progress >= data.targetValue)
+            Unlock(data);
+        else
+            Managers.SaveM.SaveCurrent();
+    }
+
     public void Unlock(string id)
     {
         if (_db == null) return;
@@ -57,7 +70,6 @@ public class AchievementManager
         Managers.SaveM.SaveCurrent();
 
         OnAchievementUnlocked?.Invoke(data);
-        ShowPopup(data);
     }
 
     // ─── 내부 ─────────────────────────────────────────────────────────────────
@@ -74,13 +86,5 @@ public class AchievementManager
         return entry;
     }
 
-    private void ShowPopup(AchievementData data)
-    {
-        var popup = Managers.ObjectM?.SpawnUI<UI_AchievementPopup>("UI_AchievementPopup", null);
-        if (popup != null)
-        {
-            _ = popup.Init();
-            popup.Show(data);
-        }
-    }
+
 }

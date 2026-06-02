@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ using UnityEngine;
 /// </summary>
 public class UI_AchievementPanel : UI_Base
 {
-    enum Texts       { Text_Count }
+    enum Texts       { Text_Count, Text_FillPercent }
     enum Images      { Image_OverallFill }
     enum Buttons     { Button_Close }
     enum GameObjects { Object_Content }
@@ -92,8 +93,8 @@ public class UI_AchievementPanel : UI_Base
                 header.Setup(label, unlockedCount, entries.Count);
             }
 
-            // 달성된 항목 먼저 정렬
-            entries.Sort((a, b) => b.unlocked.CompareTo(a.unlocked));
+            // 달성된 항목 먼저 (안정 정렬 — 카테고리 내 원본 순서 유지)
+            entries = entries.OrderByDescending(e => e.unlocked ? 1 : 0).ToList();
 
             foreach (var (data, progress, unlocked) in entries)
             {
@@ -116,10 +117,12 @@ public class UI_AchievementPanel : UI_Base
         foreach (var a in db.achievements)
             if (Managers.AchievementM.IsUnlocked(a.id)) unlocked++;
 
-        GetText(typeof(Texts), (int)Texts.Text_Count).text = $"{unlocked} / {total}";
-        GetImage(typeof(Images), (int)Images.Image_OverallFill).fillAmount =
-            total > 0 ? (float)unlocked / total : 0f;
+        float ratio = total > 0 ? (float)unlocked / total : 0f;
+
+        GetText(typeof(Texts), (int)Texts.Text_Count).text = $"{unlocked}";
+        GetText(typeof(Texts), (int)Texts.Text_FillPercent).text = $"{Mathf.RoundToInt(ratio * 100)}%";
+        GetImage(typeof(Images), (int)Images.Image_OverallFill).fillAmount = ratio;
     }
 
-    private void OnClose() => Managers.ResourceM.Destroy(gameObject);
+    private void OnClose() => Managers.UIM.ClosePopup();
 }

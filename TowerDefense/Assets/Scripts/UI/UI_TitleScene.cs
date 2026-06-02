@@ -23,8 +23,6 @@ public class UI_TitleScene : UI_Base
 
     public static UI_TitleScene Instance { get; private set; }
 
-    private Vector2 _loginPanelPos;
-    private bool _loginPanelPosSet;
 
     private RectTransform _logoRect;
     private RectTransform _menuRect;
@@ -247,12 +245,12 @@ public class UI_TitleScene : UI_Base
         var menuGo = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu);
         menuGo.SetActive(true);
         _menuRect.anchoredPosition = new Vector2(_menuOriginPos.x + 800f, _menuOriginPos.y);
-        _menuRect.DOAnchorPosX(_menuOriginPos.x, 0.4f).SetEase(Ease.OutCubic);
+        _menuRect.DOAnchorPosX(_menuOriginPos.x, 0.4f).SetEase(Ease.OutCubic).SetUpdate(true);
 
         var record = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Record);
         record.transform.localScale = Vector3.zero;
         record.SetActive(true);
-        record.transform.DOScale(1f, 0.35f).SetEase(Ease.OutBack).SetDelay(0.35f);
+        record.transform.DOScale(1f, 0.35f).SetEase(Ease.OutBack).SetDelay(0.35f).SetUpdate(true);
     }
 
     private void SlideInLoginPanel()
@@ -260,21 +258,21 @@ public class UI_TitleScene : UI_Base
         var loginPanel = Managers.ObjectM.SpawnUI<UI_Login>("UI_Login", transform);
         if (loginPanel == null) return;
 
-        var loginRect = loginPanel.GetComponent<RectTransform>();
-        if (!_loginPanelPosSet)
-        {
-            _loginPanelPos = loginRect.anchoredPosition + new Vector2(200f, 50f);
-            _loginPanelPosSet = true;
-        }
-        loginRect.anchoredPosition = new Vector2(_loginPanelPos.x + 800f, _loginPanelPos.y);
-        loginRect.DOAnchorPosX(_loginPanelPos.x, 0.4f).SetEase(Ease.OutCubic);
-
         loginPanel.OnLoginSuccess = () =>
         {
             RefreshPlayerName();
             SlideInMenuPanel();
         };
         loginPanel.Init().Forget();
+
+        SlideInLoginPanelAsync(loginPanel.GetComponent<RectTransform>()).Forget();
+    }
+
+    private async UniTaskVoid SlideInLoginPanelAsync(RectTransform loginRect)
+    {
+        loginRect.anchoredPosition = new Vector2(0f + 1200f, 0f);
+        await UniTask.NextFrame(cancellationToken: destroyCancellationToken);
+        loginRect.DOAnchorPosX(0f, 0.4f).SetEase(Ease.OutCubic).SetUpdate(true);
     }
 
     // ─── 버튼 ─────────────────────────────────────────────────────────────────
@@ -326,8 +324,8 @@ public class UI_TitleScene : UI_Base
         var group = fadeGo.GetComponent<CanvasGroup>();
         if (group == null) group = fadeGo.AddComponent<CanvasGroup>();
         group.alpha = 0f;
-        group.DOFade(1f, 0.4f).SetEase(Ease.InQuad);
-        await UniTask.Delay(400, cancellationToken: destroyCancellationToken);
+        group.DOFade(1f, 0.4f).SetEase(Ease.InQuad).SetUpdate(true);
+        await UniTask.Delay(400, ignoreTimeScale: true, cancellationToken: destroyCancellationToken);
         Managers.GameM.Reset();
         Managers.CardM.Clear();
         Managers.PoolM.Clear();

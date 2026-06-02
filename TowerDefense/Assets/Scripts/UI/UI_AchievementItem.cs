@@ -21,7 +21,7 @@ using UnityEngine;
 public class UI_AchievementItem : UI_Base
 {
     enum Texts       { Text_Title, Text_Desc, Text_ProgressCount, Text_NotDone }
-    enum Images      { Image_ProgressFill, Image_CardBorder }
+    enum Images      { Image_ProgressFill, Image_CardBorder, Image_Icon }
     enum GameObjects { Object_DoneBadge, Object_ProgressBar, Object_Check }
 
     private static readonly Color COLOR_DONE   = new Color(1f, 0.78f, 0.2f);
@@ -43,7 +43,11 @@ public class UI_AchievementItem : UI_Base
         GetText(typeof(Texts), (int)Texts.Text_Title).text = data.title;
         GetText(typeof(Texts), (int)Texts.Text_Desc).text  = data.description;
 
-        bool trackable = data.targetValue > 1;
+        var icon = Managers.ResourceM.GetAtlas(data.id);
+        if (icon != null)
+            GetImage(typeof(Images), (int)Images.Image_Icon).sprite = icon;
+
+        bool trackable = data.targetValue >= 1;
 
         GetObject(typeof(GameObjects), (int)GameObjects.Object_DoneBadge).SetActive(unlocked);
         GetObject(typeof(GameObjects), (int)GameObjects.Object_Check).SetActive(unlocked);
