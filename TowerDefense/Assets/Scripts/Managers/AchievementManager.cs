@@ -68,6 +68,7 @@ public class AchievementManager
         var entry = GetOrCreate(data.id);
         entry.unlocked = true;
         Managers.SaveM.SaveCurrent();
+        Managers.SaveM.SyncToFirebase();
 
         OnAchievementUnlocked?.Invoke(data);
     }

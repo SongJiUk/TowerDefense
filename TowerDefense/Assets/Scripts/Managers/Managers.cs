@@ -97,6 +97,12 @@ public class Managers : MonoBehaviour
         }
     }
 
+    void OnApplicationPause(bool pause)
+    {
+        if (pause)
+            SaveM?.SyncToFirebase();
+    }
+
     /// <summary>씬 전환 시 Pool·Resource·UI 매니저를 초기화.</summary>
     public static void Clear()
     {

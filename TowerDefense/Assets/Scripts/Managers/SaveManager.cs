@@ -52,6 +52,7 @@ public class SaveManager
         }
 
         _storage.Save(Data);
+        SyncToFirebase();
     }
 
     public void OnGameOver()
@@ -68,9 +69,12 @@ public class SaveManager
             Data.BestDifficulty = Managers.DifficultyM.Selected;
         }
         _storage.Save(Data);
+        SyncToFirebase();
     }
 
     public void SaveCurrent() => _storage.Save(Data);
+
+    public void SyncToFirebase() => _storage.Sync();
 
     private static bool IsBetter(int newStage, int newWave, int bestStage, int bestWave)
         => newStage > bestStage || (newStage == bestStage && newWave > bestWave);
@@ -90,6 +94,7 @@ public interface ISaveStorage
 {
     void Save(SaveData data);
     SaveData Load();
+    void Sync();
 }
 
 // ─── PlayerPrefs 구현 (임시) ──────────────────────────────────────────────────
@@ -114,6 +119,8 @@ public class PlayerPrefsSaveStorage : ISaveStorage
         }
         return new SaveData();
     }
+
+    public void Sync() { }
 }
 
 // ─── 데이터 ───────────────────────────────────────────────────────────────────

@@ -7,11 +7,9 @@ public class FirebaseSaveStorage : ISaveStorage
 {
     private readonly PlayerPrefsSaveStorage _local = new();
 
-    public void Save(SaveData data)
-    {
-        _local.Save(data);
-        Managers.FirebaseM?.WriteData().Forget();
-    }
+    public void Save(SaveData data) => _local.Save(data);
 
     public SaveData Load() => _local.Load();
+
+    public void Sync() => Managers.FirebaseM?.WriteData().Forget();
 }
