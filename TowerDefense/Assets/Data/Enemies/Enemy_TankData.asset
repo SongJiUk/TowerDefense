@@ -19,5 +19,8 @@ MonoBehaviour:
   baseMoveSpeed: 1.5
   baseReward: 8
   rewardExp: 15
+  hitEffectKey: FX_Hit_Basic
+  deathEffectKey: FX_Death_Normal
+  deathEffectDuration: 1.5
   prefabKey: Enemy_Tank
   icon: {fileID: 0}

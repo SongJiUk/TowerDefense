@@ -60,10 +60,12 @@ MonoBehaviour:
     cost: 320
     multiplier: 2.2
   buildCost: 70
+  hitEffectKey: FX_Hit_Slow
+  shootEffectKey: 
   addressableKey: SlowTower
   iconKey: SlowTower
-  towerUIColor: {r: 0.50196078, g: 0.84705882, b: 1, a: 1}
-  towerBorderColor: {r: 0.50196078, g: 0.84705882, b: 1, a: 1}
+  towerUIColor: {r: 0.50196075, g: 0.84705883, b: 1, a: 1}
+  towerBorderColor: {r: 0.50196075, g: 0.84705883, b: 1, a: 1}
   towerBGColor: {r: 0.03921569, g: 0.10196078, b: 0.18039216, a: 1}
   synergies:
   - "\uB454\uD654 \uC2DC\uB108\uC9C0"

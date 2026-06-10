@@ -12,6 +12,7 @@ public class Managers : MonoBehaviour
 
     readonly PoolManager poolManager = new();
     readonly ResourceManager resourceManager = new();
+    readonly EffectManager effectManager = new();
     readonly UIManager uiManager = new();
     readonly GameManager gameManager = new();
     readonly ObjectManager objectManager = new();
@@ -56,6 +57,7 @@ public class Managers : MonoBehaviour
 
     public static PoolManager PoolM { get { return Instance?.poolManager; } }
     public static ResourceManager ResourceM { get { return Instance?.resourceManager; } }
+    public static EffectManager EffectM { get { return Instance?.effectManager; } }
     public static UIManager UIM { get { return Instance?.uiManager; } }
     public static UpdateManager UpdateM { get { return Instance?.updateManager; } }
     public static GameManager GameM { get { return Instance?.gameManager; } }

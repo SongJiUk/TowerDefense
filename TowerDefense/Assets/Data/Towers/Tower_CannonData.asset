@@ -60,6 +60,8 @@ MonoBehaviour:
     cost: 480
     multiplier: 2
   buildCost: 90
+  hitEffectKey: FX_Hit_Cannon
+  shootEffectKey: FX_Shoot_Cannon
   addressableKey: CannonTower
   iconKey: CannonTower
   towerUIColor: {r: 1, g: 0.42745098, b: 0, a: 1}

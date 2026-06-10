@@ -22,6 +22,7 @@ MonoBehaviour:
   cooldown: 20
   effectValue: 0
   skillPrefabkey: ArrowRain
+  effectKey: FX_Skill_ArrowRain_Hit
   isTargeted: 1
   upgradeSteps:
   - damageMultiplier: 1

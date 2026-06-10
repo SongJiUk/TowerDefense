@@ -60,10 +60,12 @@ MonoBehaviour:
     cost: 320
     multiplier: 2.3
   buildCost: 80
+  hitEffectKey: FX_Hit_Poison
+  shootEffectKey: 
   addressableKey: PoisonTower
   iconKey: PoisonTower
-  towerUIColor: {r: 0.46274510, g: 1, b: 0.01176471, a: 1}
-  towerBorderColor: {r: 0.46274510, g: 1, b: 0.01176471, a: 1}
+  towerUIColor: {r: 0.4627451, g: 1, b: 0.01176471, a: 1}
+  towerBorderColor: {r: 0.4627451, g: 1, b: 0.01176471, a: 1}
   towerBGColor: {r: 0.05882353, g: 0.13333333, b: 0, a: 1}
   synergies:
   - "\uC911\uB3C5 \uC2DC\uB108\uC9C0"

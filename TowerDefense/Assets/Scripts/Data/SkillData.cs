@@ -21,6 +21,7 @@ public class SkillData : ScriptableObject
 
     [Header("오브젝트")]
     public string skillPrefabkey;
+    public string effectKey;
 
     [Header("타겟팅")]
     public bool isTargeted;

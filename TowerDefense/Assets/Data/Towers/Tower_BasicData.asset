@@ -60,6 +60,8 @@ MonoBehaviour:
     cost: 320
     multiplier: 2.2
   buildCost: 50
+  hitEffectKey: FX_Hit_Basic
+  shootEffectKey: 
   addressableKey: BasicTower
   iconKey: BasicTower
   towerUIColor: {r: 0.54509807, g: 0.7647059, b: 0.2901961, a: 1}

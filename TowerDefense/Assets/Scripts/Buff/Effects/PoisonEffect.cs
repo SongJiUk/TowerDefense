@@ -7,6 +7,7 @@ public class PoisonEffect : BuffEffect
 {
     private readonly float _hpRatio;
     private IDamageable _target;
+    private GameObject _vfx;
     public override Type EffectType => typeof(PoisonEffect);
     private float _tickTimer = 0.5f; // 첫 틱: 적중 0.5초 뒤
 
@@ -18,9 +19,21 @@ public class PoisonEffect : BuffEffect
         AllowStack = false;
     }
 
-    public override void OnApply(BuffHandler handler) { }
+    public override void OnApply(BuffHandler handler)
+    {
+        _vfx = Managers.PoolM.Pop("FX_Buff_Poison");
+        if (_vfx != null) _vfx.transform.SetParent(handler.transform, false);
+    }
 
-    public override void OnRemove(BuffHandler handler) { }
+    public override void OnRemove(BuffHandler handler)
+    {
+        if (_vfx != null)
+        {
+            _vfx.transform.SetParent(null);
+            Managers.PoolM.Push(_vfx);
+            _vfx = null;
+        }
+    }
 
     public override void Refresh()
     {

@@ -19,6 +19,10 @@ MonoBehaviour:
   baseMoveSpeed: 2.5
   baseReward: 8
   rewardExp: 12
+  hitEffectKey: FX_Hit_Basic
+  deathEffectKey: FX_Death_Normal
+  deathEffectDuration: 1.5
   prefabKey: Enemy_Revive
   icon: {fileID: 0}
   reviveHpRatio: 0.4
+  reviveEffectKey: FX_Revive

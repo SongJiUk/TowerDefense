@@ -24,6 +24,10 @@ public class TowerData : ScriptableObject
     [Header("비용")]
     public int buildCost;
 
+    [Header("이펙트")]
+    public string hitEffectKey;
+    public string shootEffectKey;
+
     [Header("아트")]
     public string addressableKey;
     public string iconKey;

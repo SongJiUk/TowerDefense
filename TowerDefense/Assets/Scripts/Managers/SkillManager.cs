@@ -214,6 +214,7 @@ public class SkillManager
         switch (skill.skillType)
         {
             case Define.SkillType.ArrowRain:
+                Managers.EffectM?.Play(skill.effectKey, targetPos, 2f);
                 var hits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[ArrowRain] targetPos={targetPos}, range={range}, hits={hits.Length}");
                 foreach (var hit in hits)
@@ -235,6 +236,7 @@ public class SkillManager
                 break;
 
             case Define.SkillType.Freeze:
+                Managers.EffectM?.Play(skill.effectKey, targetPos, duration > 0f ? duration : 3f);
                 var freezeHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[Freeze] targetPos={targetPos}, range={range}, hits={freezeHits.Length}");
                 foreach (var hit in freezeHits)
@@ -242,12 +244,14 @@ public class SkillManager
                 break;
 
             case Define.SkillType.LightningStorm:
+                Managers.EffectM?.Play(skill.effectKey, targetPos, 2f);
                 var stormHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 foreach (var hit in stormHits)
                     hit.GetComponent<IDamageable>()?.TakeDamage(damage, false);
                 break;
 
             case Define.SkillType.PoisonMist:
+                Managers.EffectM?.Play(skill.effectKey, targetPos, duration > 0f ? duration : 10f);
                 GameObject mistGo = Managers.PoolM.Pop(skill.skillPrefabkey);
                 if (mistGo == null) break;
                 mistGo.transform.position = targetPos;

@@ -58,6 +58,7 @@ public class ReviveEnemyController : EnemyController
             _isDead = false;
             _hp = _maxHp * _reviveData.reviveHpRatio;
             _hpBar?.SetHP(_hp, _maxHp);
+            Managers.EffectM?.Play(_reviveData?.reviveEffectKey, transform.position, 1.5f);
             SetTint(new Color(0.55f, 0.55f, 0.55f));
             if (_animator != null)
             {

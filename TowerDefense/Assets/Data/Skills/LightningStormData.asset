@@ -22,6 +22,7 @@ MonoBehaviour:
   cooldown: 25
   effectValue: 3
   skillPrefabkey: LightningStorm
+  effectKey: FX_Hit_Lightning
   isTargeted: 1
   upgradeSteps:
   - damageMultiplier: 1

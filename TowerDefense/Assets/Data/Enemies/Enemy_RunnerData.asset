@@ -19,5 +19,8 @@ MonoBehaviour:
   baseMoveSpeed: 5
   baseReward: 4
   rewardExp: 6
+  hitEffectKey: FX_Hit_Basic
+  deathEffectKey: FX_Death_Normal
+  deathEffectDuration: 1.5
   prefabKey: Enemy_Runner
   icon: {fileID: 0}

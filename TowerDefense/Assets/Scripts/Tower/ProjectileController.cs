@@ -18,8 +18,9 @@ public class ProjectileController : MonoBehaviour
     private BuffEffect _onHitEffect;
 
     private System.Action<Transform> _onHit;
+    private string _hitEffectKey;
 
-    public void Init(Transform target, float damage, float speed, bool isCritical = false, BuffEffect onHitEffect = null, System.Action<Transform> onHit = null)
+    public void Init(Transform target, float damage, float speed, bool isCritical = false, BuffEffect onHitEffect = null, System.Action<Transform> onHit = null, string hitEffectKey = null)
     {
         _target = target;
         _damage = damage;
@@ -29,6 +30,7 @@ public class ProjectileController : MonoBehaviour
         _buffHandler = _target.GetComponent<BuffHandler>();
         _onHitEffect = onHitEffect;
         _onHit = onHit;
+        _hitEffectKey = hitEffectKey;
     }
 
     void Update()
@@ -53,6 +55,8 @@ public class ProjectileController : MonoBehaviour
             _IDamage?.TakeDamage(_damage, _isCritical);
             if (_onHitEffect != null) _buffHandler?.AddEffect(_onHitEffect);
             _onHit?.Invoke(_target);
+            if (!string.IsNullOrEmpty(_hitEffectKey))
+                Managers.EffectM?.Play(_hitEffectKey, _target.position, 0.5f);
             Managers.ResourceM.Destroy(gameObject);
         }
     }

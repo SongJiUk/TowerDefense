@@ -140,6 +140,8 @@ public class TowerPlacer : MonoBehaviour
         go.transform.position = _pendingNode.WorldPosition;
         go.transform.rotation = Quaternion.identity;
 
+        Managers.EffectM?.Play("FX_Tower_Place", _pendingNode.WorldPosition, 1f);
+
         if (go.TryGetComponent(out TowerController tower))
             tower.Init(data);
 

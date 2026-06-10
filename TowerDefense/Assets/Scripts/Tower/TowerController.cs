@@ -15,16 +15,16 @@ public class TowerController : MonoBehaviour
     public TowerData Data { get; private set; }
 
     public int DamageLevel { get; private set; }
-    public int RangeLevel  { get; private set; }
-    public int SpeedLevel  { get; private set; }
+    public int RangeLevel { get; private set; }
+    public int SpeedLevel { get; private set; }
 
     private float _currentDamage;
     private float _currentAttackSpeed;
     private float _currentRange;
 
-    public float CurrentRange  => _currentRange;
+    public float CurrentRange => _currentRange;
     public float CurrentDamage => _currentDamage;
-    public float CurrentSpeed  => _currentAttackSpeed;
+    public float CurrentSpeed => _currentAttackSpeed;
 
     private float _attackTimer;
     private Transform _currentTarget;
@@ -153,8 +153,8 @@ public class TowerController : MonoBehaviour
     {
         Data = data;
         DamageLevel = 0;
-        RangeLevel  = 0;
-        SpeedLevel  = 0;
+        RangeLevel = 0;
+        SpeedLevel = 0;
         Managers.SynergyM?.Register(data.towerType);
         ApplyStats();
     }
@@ -185,8 +185,8 @@ public class TowerController : MonoBehaviour
     {
         int total = Data.buildCost;
         total += SumSpentCost(Data.damageUpgrades, DamageLevel);
-        total += SumSpentCost(Data.rangeUpgrades,  RangeLevel);
-        total += SumSpentCost(Data.speedUpgrades,  SpeedLevel);
+        total += SumSpentCost(Data.rangeUpgrades, RangeLevel);
+        total += SumSpentCost(Data.speedUpgrades, SpeedLevel);
         return Mathf.RoundToInt(total * 0.8f);
     }
 
@@ -238,8 +238,8 @@ public class TowerController : MonoBehaviour
         if (Data == null) return;
 
         float damage = Data.baseDamage;
-        float speed  = Data.baseAttackSpeed;
-        float range  = Data.baseRange;
+        float speed = Data.baseAttackSpeed;
+        float range = Data.baseRange;
 
         if (DamageLevel > 0 && Data.damageUpgrades != null && DamageLevel <= Data.damageUpgrades.Length)
             damage *= Data.damageUpgrades[DamageLevel - 1].multiplier;
@@ -258,11 +258,11 @@ public class TowerController : MonoBehaviour
             Debug.Log($"[Synergy:집중사격] {Data.towerType} 공격속도 {speedMult:F2}배 → {speed:F2}");
         }
 
-        _currentDamage      = damage * Managers.GameM.globalDamageMultiplier;
-        _currentAttackSpeed = speed  * Managers.GameM.globalAttackSpeedMultiplier;
-        _currentRange       = range  + Managers.GameM.globalRangeBonus;
+        _currentDamage = damage * Managers.GameM.globalDamageMultiplier;
+        _currentAttackSpeed = speed * Managers.GameM.globalAttackSpeedMultiplier;
+        _currentRange = range + Managers.GameM.globalRangeBonus;
 
-        UpdateVisualEffect();
+        //UpdateVisualEffect();
     }
 
     // 세 스탯을 균등하게 올려야 단계 상승 (한 스탯 몰빵 방지)
@@ -272,16 +272,16 @@ public class TowerController : MonoBehaviour
 
     private void UpdateVisualEffect()
     {
-        //int stage = UniqueEffectStage;
-        //_effectLow?.SetActive(stage == 1);
-        //_effectMid?.SetActive(stage == 2);
-        //_effectHigh?.SetActive(stage == 3);
+        int stage = UniqueEffectStage;
+        _effectLow?.SetActive(stage == 1);
+        _effectMid?.SetActive(stage == 2);
+        _effectHigh?.SetActive(stage == 3);
     }
 
     protected virtual Transform FindTarget()
     {
         Vector3 bottom = new Vector3(transform.position.x, -50f, transform.position.z);
-        Vector3 top    = new Vector3(transform.position.x,  50f, transform.position.z);
+        Vector3 top = new Vector3(transform.position.x, 50f, transform.position.z);
         Collider[] hits = Physics.OverlapCapsule(bottom, top, _currentRange, _enemyMask, QueryTriggerInteraction.Collide);
         if (hits.Length == 0) return null;
 
@@ -298,6 +298,9 @@ public class TowerController : MonoBehaviour
         return best;
     }
 
+    protected virtual string HitEffectKey => Data?.hitEffectKey;
+    protected virtual string ShootEffectKey => Data?.shootEffectKey;
+
     private void Fire(Transform target)
     {
         if (Data.projectilePrefabKey == null) return;
@@ -307,9 +310,13 @@ public class TowerController : MonoBehaviour
         if (isCritical) damage *= 2f;
 
         Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position + Vector3.up * 2f;
+
+        if (!string.IsNullOrEmpty(ShootEffectKey))
+            Managers.EffectM?.Play(ShootEffectKey, spawnPos, 0.5f);
+
         GameObject go = Managers.PoolM.Pop(Data.projectilePrefabKey);
         go.transform.position = spawnPos;
-        go.GetComponent<ProjectileController>()?.Init(target, damage, Data.projectileSpeed, isCritical, onHit: OnHit);
+        go.GetComponent<ProjectileController>()?.Init(target, damage, Data.projectileSpeed, isCritical, onHit: OnHit, hitEffectKey: HitEffectKey);
     }
 
     protected virtual void OnHit(Transform target) { }
@@ -321,16 +328,16 @@ public class TowerController : MonoBehaviour
     private TowerStatUpgrade[] GetUpgradeSteps(Define.UpgradeType type) => type switch
     {
         Define.UpgradeType.Damage => Data?.damageUpgrades,
-        Define.UpgradeType.Range  => Data?.rangeUpgrades,
-        Define.UpgradeType.Speed  => Data?.speedUpgrades,
+        Define.UpgradeType.Range => Data?.rangeUpgrades,
+        Define.UpgradeType.Speed => Data?.speedUpgrades,
         _ => null
     };
 
     private int GetLevel(Define.UpgradeType type) => type switch
     {
         Define.UpgradeType.Damage => DamageLevel,
-        Define.UpgradeType.Range  => RangeLevel,
-        Define.UpgradeType.Speed  => SpeedLevel,
+        Define.UpgradeType.Range => RangeLevel,
+        Define.UpgradeType.Speed => SpeedLevel,
         _ => 0
     };
 
@@ -339,8 +346,8 @@ public class TowerController : MonoBehaviour
         switch (type)
         {
             case Define.UpgradeType.Damage: DamageLevel = value; break;
-            case Define.UpgradeType.Range:  RangeLevel  = value; break;
-            case Define.UpgradeType.Speed:  SpeedLevel  = value; break;
+            case Define.UpgradeType.Range: RangeLevel = value; break;
+            case Define.UpgradeType.Speed: SpeedLevel = value; break;
         }
     }
 

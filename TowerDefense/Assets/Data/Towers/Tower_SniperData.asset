@@ -60,10 +60,12 @@ MonoBehaviour:
     cost: 560
     multiplier: 1.9
   buildCost: 110
+  hitEffectKey: FX_Hit_Sniper
+  shootEffectKey: 
   addressableKey: SniperTower
   iconKey: SniperTower
-  towerUIColor: {r: 0.37647059, g: 0.49019608, b: 0.54509804, a: 1}
-  towerBorderColor: {r: 0.37647059, g: 0.49019608, b: 0.54509804, a: 1}
+  towerUIColor: {r: 0.3764706, g: 0.49019608, b: 0.54509807, a: 1}
+  towerBorderColor: {r: 0.3764706, g: 0.49019608, b: 0.54509807, a: 1}
   towerBGColor: {r: 0.10196078, g: 0.13333333, b: 0.14901961, a: 1}
   synergies:
   - "\uCE58\uBA85\uD0C0 \uC2DC\uB108\uC9C0"

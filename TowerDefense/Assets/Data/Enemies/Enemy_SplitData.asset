@@ -19,6 +19,9 @@ MonoBehaviour:
   baseMoveSpeed: 2.5
   baseReward: 5
   rewardExp: 10
+  hitEffectKey: FX_Hit_Basic
+  deathEffectKey: FX_Death_Split
+  deathEffectDuration: 1.5
   prefabKey: Enemy_BeforeSplit
   icon: {fileID: 0}
   afterSplitKey: Enemy_SplitData

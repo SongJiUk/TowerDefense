@@ -22,6 +22,7 @@ MonoBehaviour:
   cooldown: 30
   effectValue: 0
   skillPrefabkey: Freeze
+  effectKey: FX_Skill_Freeze
   isTargeted: 1
   upgradeSteps:
   - damageMultiplier: 1

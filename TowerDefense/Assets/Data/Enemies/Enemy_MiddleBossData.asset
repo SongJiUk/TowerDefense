@@ -19,5 +19,8 @@ MonoBehaviour:
   baseMoveSpeed: 1.8
   baseReward: 25
   rewardExp: 50
+  hitEffectKey: FX_Hit_Basic
+  deathEffectKey: FX_Death_MiddleBoss
+  deathEffectDuration: 2
   prefabKey: Enemy_MiddleBoss
   icon: {fileID: 0}

@@ -21,6 +21,10 @@ public class EnemyData : ScriptableObject
     public int baseReward;
     public float rewardExp;
 
+    [Header("이펙트")]
+    public string deathEffectKey;
+    public float deathEffectDuration = 1.5f;
+
     [Header("아트")]
     public string prefabKey;
     public UnityEngine.Sprite icon;

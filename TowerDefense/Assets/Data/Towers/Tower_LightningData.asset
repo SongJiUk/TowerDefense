@@ -60,11 +60,13 @@ MonoBehaviour:
     cost: 400
     multiplier: 2.2
   buildCost: 130
+  hitEffectKey: FX_Hit_Lightning
+  shootEffectKey: 
   addressableKey: LightningTower
   iconKey: LightningTower
-  towerUIColor: {r: 1, g: 0.83921569, b: 0, a: 1}
-  towerBorderColor: {r: 1, g: 0.83921569, b: 0, a: 1}
-  towerBGColor: {r: 0.16470588, g: 0.12549020, b: 0, a: 1}
+  towerUIColor: {r: 1, g: 0.8392157, b: 0, a: 1}
+  towerBorderColor: {r: 1, g: 0.8392157, b: 0, a: 1}
+  towerBGColor: {r: 0.16470589, g: 0.1254902, b: 0, a: 1}
   synergies:
   - "\uC5F0\uC1C4 \uC2DC\uB108\uC9C0"
   chainCount: 2

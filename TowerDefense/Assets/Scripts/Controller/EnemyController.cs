@@ -127,6 +127,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     // ─── 전투 ─────────────────────────────────────────────────────────────────
 
+    protected virtual string DeathEffectKey => _data?.deathEffectKey;
+    protected virtual float DeathEffectDuration => _data?.deathEffectDuration ?? 1.5f;
+
     public virtual void TakeDamage(float damage, bool isCritical = false, bool isPoison = false)
     {
         if (_isDead) return;
@@ -178,6 +181,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     protected virtual void OnDeathComplete()
     {
+        Managers.EffectM?.Play(DeathEffectKey, transform.position, DeathEffectDuration);
         OnDeathEvent?.Invoke();
         Managers.WaveM.OnEnemyRemoved();
         Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));
