@@ -107,6 +107,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6839a8d6998e86d4282063ffdacb0c15
+    m_Address: FX_Chain_Lightning
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6f34ef0d986e9db4199cf75805f79753
     m_Address: FX_Hit_Slow
     m_ReadOnly: 0

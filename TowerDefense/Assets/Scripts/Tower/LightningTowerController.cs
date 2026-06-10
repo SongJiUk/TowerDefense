@@ -61,6 +61,10 @@ public class LightningTowerController : TowerController
             bool isCritical = UnityEngine.Random.value < Managers.GameM.criticalChanceBonus + GetBonusCritChance(next);
             if (isCritical) damage *= 2f;
             next.GetComponent<IDamageable>()?.TakeDamage(damage, isCritical);
+
+            Transform prev = _chainTargets[_chainTargets.Count - 1];
+            Managers.EffectM?.PlayLine(_lightningTowerData.chainEffectKey, prev.position, next.position);
+
             _chainTargets.Add(next);
         }
     }

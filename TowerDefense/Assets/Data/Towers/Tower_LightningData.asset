@@ -72,4 +72,5 @@ MonoBehaviour:
   chainCount: 2
   chainRange: 3
   chainDamageFalloff: 0.65
+  chainEffectKey: FX_Chain_Lightning
   stageChainCountBonus: 00000000010000000100000002000000
