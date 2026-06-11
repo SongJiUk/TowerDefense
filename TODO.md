@@ -114,12 +114,19 @@
 
 ## 8단계 — 게임 이펙트
 
-- [ ] 타워별 발사 이펙트 (파티클)
-- [ ] 적 피격 이펙트
-- [ ] 적 사망 이펙트
+- [x] EffectManager 구현 (Pool 기반 Play / PlayLine)
+- [x] TowerData / EnemyData / SkillData 이펙트 키 필드 추가
+- [x] 타워별 발사 이펙트 (hitEffectKey / shootEffectKey)
+- [x] 적 피격 이펙트 (투사체 착탄 위치에 재생)
+- [x] 적 사망 이펙트 (deathEffectKey / deathEffectDuration)
+- [x] 보스 / 중간보스 / 분열 / 부활 이펙트 분리
+- [x] 버프 상태 이펙트 (FX_Buff_Slow / FX_Buff_Poison — 적 자식으로 루프)
+- [x] 스킬 발동 이펙트 (skill.effectKey)
+- [x] 타워 설치 이펙트 (FX_Tower_Place)
+- [x] 타워 업그레이드 단계별 이펙트 (FX_Stage_Green/Blue/Red — child SetActive)
+- [x] 번개 체인 이펙트 (chainEffectKey)
 - [ ] 보스 등장 연출 (카메라 줌인 등)
 - [ ] 웨이브 클리어 이펙트
-- [ ] 스킬 발동 이펙트 (ArrowRain, Freeze 등)
 - [ ] 코어 피격 이펙트
 
 ---
@@ -177,53 +184,42 @@
 - [x] ForceClose double-release 버그 수정 (_closed 플래그)
 - [x] UI_SkillSlot 바인드 후 CoolDown 초기 비활성화
 
----
+## 세션 (2026-06-10 ~ 2026-06-11) — 완료 항목
 
-## 다음 세션 시작 순서 (2026-05-06 기준)
-
-### ✅ 이번 세션 완료 (코드)
-- UI_NextWavePanel — 다음 웨이브 예고 패널 (타입별 색상, 적 구성, 카운트다운, 즉시 시작)
-- WaveManager — PrepareNextWave / RequestEarlyStart / OnNextWaveReady / OnBossSpawned
-- WaveStarter — 딜레이 CTS 분리, OnEarlyStartRequested 처리
-- EnemyController — OnHpChanged / OnDeathEvent 이벤트 추가
-- UI_BossHPBar — 보스 등장 시 자동 표시, HP 실시간 반영
-- UI_TitleScene — 페이드 아웃 후 GameScene 로드 (FadeAndLoad)
-- UI_StageSelectPopup — 스테이지 테마 색 적용 (잠금 시 회색)
-- UI_DifficultySelectPopup — 씬 로드 권한을 TitleScene으로 위임
-
-### ⚠️ 다음 세션 시작 전 Unity 에디터 작업 (먼저 해야 코드가 동작함)
-
-**① TitleScene — Panel_Fade 추가**
-- Canvas > UI_TitleScene 하위 맨 마지막에 `Panel_Fade` 추가
-- Image: 검정(0,0,0,255), Raycast Target OFF
-- CanvasGroup 컴포넌트 추가
-
-**② GameScene — UI_BossHPBar 배치**
-- Canvas 하위에 `UI_BossHPBar` GameObject 추가 (상단 중앙)
-- 하위: `Text_BossName`(TMP), `Image_HPFill`(Image, Filled/Horizontal)
-- UI_BossHPBar 컴포넌트 연결, 초기 비활성화
-
-**③ GameScene — UI_NextWavePanel 프리팹 (이미 만들었으면 확인만)**
-- `UI_NextWavePanel` 컴포넌트의 enum 순서와 하위 오브젝트 이름 일치 여부 확인
-- 에디터에서 N키 눌러 패널 표시 테스트
-
-### 🔜 다음 코드 작업 순서
-
-**1. FloatingText 프리팹** ← Unity 에디터 작업
-- TMP 오브젝트 생성, 위로 올라가며 FadeOut (DOTween)
-- Addressables PrevLoad 그룹, 키 `FloatingText`로 등록
-
-**2. 저장/불러오기 완성**
-- 게임 시작 시 레벨·경험치 불러오기 (`SaveM.ApplyToGame` 이미 있음 → 적용 확인)
-- 스테이지 클리어 후 다음 스테이지 이어서 레벨 누적
-
-**3. SFX 연결**
-- 타워 공격 / 적 사망 / 웨이브 시작·클리어 / 카드·스킬
-
-**4. 씬 전환 로딩 화면 (선택)**
-- 현재는 TitleScene 백그라운드 로딩 후 직접 GameScene 진입
-- 필요 시 LoadingScene 추가
+- [x] EffectManager 신규 구현 (Pool 기반 Play / PlayLine)
+- [x] ScriptableObject 이펙트 키 필드 추가 (TowerData / EnemyData / SkillData / LightningTowerData / ReviveEnemyData)
+- [x] 투사체 히트 이펙트 (ProjectileController — aimPos 기준 재생)
+- [x] 적 사망 이펙트 전 계층 분리 (Normal / Boss / MiddleBoss / Split / Revive)
+- [x] 버프 상태 VFX (SlowEffect / PoisonEffect — OnApply SetParent, OnRemove 풀 반환)
+- [x] 스킬 이펙트 (SkillManager — skill.effectKey)
+- [x] 타워 설치 이펙트 (TowerPlacer)
+- [x] 타워 업그레이드 단계 이펙트 활성화 (UpdateVisualEffect 주석 해제)
+- [x] 번개 체인 이펙트 (chainEffectKey / chainEffectHeightOffset)
 
 ---
 
-> 마지막 업데이트: 2026-05-06
+## 🗓️ 이번 주 목표 (2026-06-11 ~ 2026-06-15)
+
+### Day 1-2 (목~금) — 사운드
+- [ ] 타워 공격 SFX 연결 (Basic / Cannon / Slow / Sniper / Poison / Lightning)
+- [ ] 적 사망 SFX 연결
+- [ ] 웨이브 시작 / 클리어 SFX 연결
+- [ ] 카드 선택 SFX 연결
+- [ ] 스킬 발동 SFX 연결
+- [ ] 인게임 BGM 설정
+- [ ] 타이틀 BGM 설정
+
+### Day 3 (토) — 타이틀씬 + 에디터 마무리
+- [ ] 타이틀씬 배경 + 게임 로고 배치
+- [ ] TitleScene Panel_Fade 추가 (CanvasGroup, 검정 Image, Raycast OFF)
+- [ ] UI_BossHPBar 프리팹 배치 (Text_BossName, Image_HPFill)
+
+### Day 4-5 (일) — 빌드 + 포트폴리오
+- [ ] Android APK 빌드 (ETC2 텍스처, 60fps 프레임 캡)
+- [ ] 실기기 테스트
+- [ ] 포트폴리오용 스크린샷 캡처
+- [ ] 플레이 영상 촬영 (1~2분)
+
+---
+
+> 마지막 업데이트: 2026-06-11
