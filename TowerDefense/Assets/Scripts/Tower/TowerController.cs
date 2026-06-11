@@ -262,7 +262,7 @@ public class TowerController : MonoBehaviour
         _currentAttackSpeed = speed * Managers.GameM.globalAttackSpeedMultiplier;
         _currentRange = range + Managers.GameM.globalRangeBonus;
 
-        //UpdateVisualEffect();
+        UpdateVisualEffect();
     }
 
     // 세 스탯을 균등하게 올려야 단계 상승 (한 스탯 몰빵 방지)

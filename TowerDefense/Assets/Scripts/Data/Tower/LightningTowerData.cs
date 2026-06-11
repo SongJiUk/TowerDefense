@@ -10,6 +10,7 @@ public class LightningTowerData : TowerData
     public float chainRange;
     public float chainDamageFalloff;
     public string chainEffectKey;
+    public float chainEffectHeightOffset = 1f;
 
     [Header("단계별 강화 (score 0 / 1-3 / 4-6 / 7-9)")]
     public int[] stageChainCountBonus = { 0, 1, 1, 2 };

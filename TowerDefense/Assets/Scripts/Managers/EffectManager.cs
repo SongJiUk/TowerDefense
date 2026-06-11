@@ -12,7 +12,7 @@ public class EffectManager
         ReturnAsync(go, duration).Forget();
     }
 
-    // 시작점에서 목표 방향으로 향하는 방향성 이펙트 (체인 번개용)
+    // 시작점에서 목표 방향으로 향하는 방향성 이펙트
     public void PlayLine(string key, Vector3 from, Vector3 to, float duration = 0.3f)
     {
         if (string.IsNullOrEmpty(key)) return;

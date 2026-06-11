@@ -56,7 +56,7 @@ public class ProjectileController : MonoBehaviour
             if (_onHitEffect != null) _buffHandler?.AddEffect(_onHitEffect);
             _onHit?.Invoke(_target);
             if (!string.IsNullOrEmpty(_hitEffectKey))
-                Managers.EffectM?.Play(_hitEffectKey, _target.position, 0.5f);
+                Managers.EffectM?.Play(_hitEffectKey, aimPos, 0.5f);
             Managers.ResourceM.Destroy(gameObject);
         }
     }

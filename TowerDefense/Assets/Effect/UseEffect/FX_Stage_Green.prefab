@@ -14595,7 +14595,7 @@ GameObject:
   - component: {fileID: 3380849801404972442}
   - component: {fileID: 5127594227303921034}
   m_Layer: 0
-  m_Name: Crystal effect green
+  m_Name: FX_Stage_Green
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

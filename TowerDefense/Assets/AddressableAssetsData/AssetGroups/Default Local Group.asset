@@ -107,12 +107,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 6839a8d6998e86d4282063ffdacb0c15
-    m_Address: FX_Chain_Lightning
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PrevLoad
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6f34ef0d986e9db4199cf75805f79753
     m_Address: FX_Hit_Slow
     m_ReadOnly: 0
@@ -139,6 +133,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 99bc28c0d45f51c4fbac01080b73edc7
     m_Address: FX_Death_Split
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a164e676dbbd6e54587237e619372c98
+    m_Address: FX_Chain_Lightning
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
