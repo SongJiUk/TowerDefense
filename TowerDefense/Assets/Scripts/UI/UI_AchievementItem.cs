@@ -26,6 +26,10 @@ public class UI_AchievementItem : UI_Base
 
     private static readonly Color COLOR_DONE   = new Color(1f, 0.78f, 0.2f);
     private static readonly Color COLOR_NORMAL = new Color(0.3f, 0.3f, 0.3f, 0.8f);
+    private static readonly Color COLOR_BG_NORMAL = new Color(0.12f, 0.08f, 0.04f, 1f);
+    private static readonly Color COLOR_BG_DONE = new Color(0.14f, 0.08f, 0f, 1f);
+    private static readonly Color COLOR_BORDER_NORMAL = new Color(0.16f, 0.13f, 0.1f, 1f);
+    private static readonly Color COLOR_BORDER_DONE = new Color(0.57f, 0.39f, 0f, 1f);
 
     public override async UniTask<bool> Init()
     {

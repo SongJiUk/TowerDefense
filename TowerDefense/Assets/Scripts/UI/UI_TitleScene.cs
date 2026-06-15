@@ -270,9 +270,9 @@ public class UI_TitleScene : UI_Base
 
     private async UniTaskVoid SlideInLoginPanelAsync(RectTransform loginRect)
     {
-        loginRect.anchoredPosition = new Vector2(0f + 1200f, 0f);
+        loginRect.anchoredPosition = new Vector2(_menuOriginPos.x + 1200f, _menuOriginPos.y);
         await UniTask.NextFrame(cancellationToken: destroyCancellationToken);
-        loginRect.DOAnchorPosX(0f, 0.4f).SetEase(Ease.OutCubic).SetUpdate(true);
+        loginRect.DOAnchorPosX(_menuOriginPos.x, 0.4f).SetEase(Ease.OutCubic).SetUpdate(true);
     }
 
     // ─── 버튼 ─────────────────────────────────────────────────────────────────

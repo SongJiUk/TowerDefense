@@ -127,7 +127,7 @@ public class TowerController : MonoBehaviour
             dir.y = 0;
             _turnObject.transform.rotation = Quaternion.RotateTowards(
                 _turnObject.transform.rotation,
-                Quaternion.LookRotation(dir),
+                Quaternion.LookRotation(dir) * Quaternion.Euler(0f, 90f, 0f),
                 Time.deltaTime * 360f);
         }
 
