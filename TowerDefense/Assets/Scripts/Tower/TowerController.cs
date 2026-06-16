@@ -123,11 +123,11 @@ public class TowerController : MonoBehaviour
                 return;
             }
 
-            var dir = _currentTarget.position - _turnObject.transform.position;
+            var dir = _currentTarget.position - GetRotationOrigin();
             dir.y = 0;
             _turnObject.transform.rotation = Quaternion.RotateTowards(
                 _turnObject.transform.rotation,
-                Quaternion.LookRotation(dir) * Quaternion.Euler(0f, 90f, 0f),
+                Quaternion.LookRotation(dir) * RotationOffset,
                 Time.deltaTime * 360f);
         }
 
@@ -269,6 +269,12 @@ public class TowerController : MonoBehaviour
     public int UniqueEffectStage => Mathf.Min(DamageLevel, RangeLevel, SpeedLevel);
 
     public virtual string GetUniqueEffectText() => "";
+
+    /// <summary>회전 방향 계산 기준점. 서브클래스에서 override 가능.</summary>
+    protected virtual Vector3 GetRotationOrigin() => _turnObject.transform.position;
+
+    /// <summary>LookRotation에 곱할 추가 회전 오프셋. 모델 정면이 +Z가 아닌 경우 override.</summary>
+    protected virtual Quaternion RotationOffset => Quaternion.identity;
 
     private void UpdateVisualEffect()
     {

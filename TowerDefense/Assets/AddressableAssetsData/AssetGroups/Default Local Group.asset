@@ -48,7 +48,7 @@ MonoBehaviour:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 390cc74915d4a054bbd897e1885047a4
-    m_Address: FX_Hit_Lightning
+    m_Address: FX_Skill_Lightning
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -85,6 +85,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 56309a927e5be4977ab38815efdac490
     m_Address: UI_AchievementPanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 57b163755ace1464393b9fe83bf55fdd
+    m_Address: FX_Hit_Lightning
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad

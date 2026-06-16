@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 일시정지 팝업.
-/// 오브젝트 이름: Button_Resume, Button_Quit, Image_BG
+/// 오브젝트 이름: Button_Resume, Button_Retry, Button_Quit, Image_BG
 /// </summary>
 public class UI_PausePopup : UI_Base
 {
-    enum Buttons { Button_Resume, Button_Quit }
+    enum Buttons { Button_Resume, Button_Retry, Button_Quit }
     enum Images  { Image_BG }
 
     private bool _initialized;
@@ -26,6 +26,7 @@ public class UI_PausePopup : UI_Base
         BindImage(typeof(Images));
 
         GetButton(typeof(Buttons), (int)Buttons.Button_Resume).onClick.AddListener(OnResume);
+        GetButton(typeof(Buttons), (int)Buttons.Button_Retry).onClick.AddListener(OnRetry);
         GetButton(typeof(Buttons), (int)Buttons.Button_Quit).onClick.AddListener(OnQuit);
         return true;
     }
@@ -33,6 +34,19 @@ public class UI_PausePopup : UI_Base
     private void OnResume()
     {
         Managers.PoolM.Push(gameObject);
+    }
+
+    private void OnRetry()
+    {
+        Managers.WaveM.Init(Managers.WaveM.CurrentStage);
+        Managers.GameM.Reset();
+        Managers.SkillM.Clear();
+        Managers.CardM.Clear();
+        Managers.PoolM.Clear();
+        Managers.UIM.Clear();
+        Managers.SynergyM.Clear();
+        GameSceneBootstrap.ResetTask();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void OnQuit()

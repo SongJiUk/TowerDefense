@@ -89,6 +89,7 @@ public class UI_GameOverPopup : UI_Base
         Managers.PoolM.Clear();
         Managers.UIM.Clear();
         Managers.SynergyM.Clear();
+        GameSceneBootstrap.ResetTask();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

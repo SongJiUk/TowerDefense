@@ -244,10 +244,10 @@ public class SkillManager
                 break;
 
             case Define.SkillType.LightningStorm:
-                Managers.EffectM?.Play(skill.effectKey, targetPos, 2f);
                 var stormHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 foreach (var hit in stormHits)
                     hit.GetComponent<IDamageable>()?.TakeDamage(damage, false);
+                PlayLightningSequenceAsync(skill.effectKey, targetPos, range).Forget();
                 break;
 
             case Define.SkillType.PoisonMist:
@@ -258,6 +258,21 @@ public class SkillManager
                 if (mistGo.TryGetComponent(out PoisonMistZone mistZone))
                     mistZone.Init(range, skill.effectValue, duration > 0f ? duration : 10f);
                 break;
+        }
+    }
+
+    // ─── 번개 연속 연출 ──────────────────────────────────────────────────────
+
+    private async UniTaskVoid PlayLightningSequenceAsync(string effectKey, Vector3 center, float range)
+    {
+        const int STRIKE_COUNT = 5;
+        for (int i = 0; i < STRIKE_COUNT; i++)
+        {
+            Vector2 offset = UnityEngine.Random.insideUnitCircle * (range * 0.6f);
+            Vector3 pos = center + new Vector3(offset.x, 0f, offset.y);
+            Managers.EffectM?.Play(effectKey, pos, 0.6f);
+            int delayMs = UnityEngine.Random.Range(80, 160);
+            await UniTask.Delay(delayMs);
         }
     }
 

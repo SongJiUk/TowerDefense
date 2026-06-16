@@ -6,6 +6,9 @@ public class CannonTowerController : TowerController
 {
     private CannonTowerData _cannonTowerData;
 
+    protected override Vector3 GetRotationOrigin() => transform.position;
+    protected override Quaternion RotationOffset => Quaternion.Euler(0f, 90f, 0f);
+
     public override string GetUniqueEffectText()
     {
         if (_cannonTowerData == null) return "";

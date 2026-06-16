@@ -111,6 +111,8 @@ public class UI_GameScene : UI_Scene
 
         RefreshGold(Managers.GameM.Gold);
         RefreshWave(Managers.WaveM.CurrentWave);
+        RefreshExp(Managers.GameM.CurrentExp, Managers.GameM.LevelData?.GetRequiredExp(Managers.GameM.Level) ?? 100);
+        GetText(typeof(Texts), (int)Texts.Text_Level).text = Managers.GameM.Level.ToString();
         _prevSkillPoints = Managers.SkillM.SkillPoints;
         RefreshSkillPoints(Managers.SkillM.SkillPoints);
         if (Managers.ICore is Core core)

@@ -27,6 +27,8 @@ public class TowerPlacer : MonoBehaviour
     private UI_TowerSelectPopup _popup;
     private TowerData[] _allTowerData;
     private GridNode _pendingNode;
+    private bool _touchBeganOverUI;
+    private bool _inputBeganWhileTargeting;
 
     // ─── Unity 생명주기 ───────────────────────────────────────────────────────
 
@@ -67,13 +69,29 @@ public class TowerPlacer : MonoBehaviour
     void Update()
     {
         if (_popup == null) return;
-        if (!Input.GetMouseButtonUp(0)) return;
         if (CameraController.IsDragging) return;
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetMouseButtonDown(0))
+            _inputBeganWhileTargeting = Managers.SkillM != null && Managers.SkillM.IsTargeting;
+#else
+        // TouchPhase.Began 시점에만 IsPointerOverGameObject가 정확히 동작함 (Unity 모바일 버그)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            _touchBeganOverUI = EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+            _inputBeganWhileTargeting = Managers.SkillM != null && Managers.SkillM.IsTargeting;
+        }
+#endif
+
+        if (!Input.GetMouseButtonUp(0)) return;
+
+        // 스킬 타겟팅 중 클릭이었으면 타워 팝업 차단
+        if (_inputBeganWhileTargeting) return;
 
 #if UNITY_EDITOR || UNITY_STANDALONE
         if (EventSystem.current.IsPointerOverGameObject()) return;
 #else
-        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return;
+        if (_touchBeganOverUI) return;
 #endif
 
         GridNode node = GetNodeFromScreen(Input.mousePosition);

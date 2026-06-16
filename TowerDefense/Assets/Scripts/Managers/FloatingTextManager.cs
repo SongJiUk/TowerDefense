@@ -35,7 +35,7 @@ public class FloatingTextManager
         GameObject go = Managers.PoolM.Pop("FloatingText");
         if (go == null) return;
 
-        pos += new Vector3(Random.Range(-0.5f, 0.5f), HEAD_OFFSET_Y, 0f);
+        pos += new Vector3(Random.Range(-1.2f, 1.2f), HEAD_OFFSET_Y, Random.Range(-0.5f, 0.5f));
 
         if (go.TryGetComponent(out FloatingText ft))
             ft.Show(pos, text, color).Forget();

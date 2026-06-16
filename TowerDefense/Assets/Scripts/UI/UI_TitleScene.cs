@@ -28,6 +28,7 @@ public class UI_TitleScene : UI_Base
     private RectTransform _menuRect;
     private Vector2 _logoOriginPos;
     private Vector2 _menuOriginPos;
+    private Vector2 _menuOriginLocalPos;
 
     private Tween _tapBlink;
     private Tween _crownTween;
@@ -81,6 +82,7 @@ public class UI_TitleScene : UI_Base
         _menuRect = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu).GetComponent<RectTransform>();
         _logoOriginPos = _logoRect.anchoredPosition;
         _menuOriginPos = _menuRect.anchoredPosition;
+        _menuOriginLocalPos = _menuRect.localPosition;
 
         GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu).SetActive(false);
         GetObject(typeof(GameObjects), (int)GameObjects.Panel_Record).SetActive(false);
@@ -270,9 +272,9 @@ public class UI_TitleScene : UI_Base
 
     private async UniTaskVoid SlideInLoginPanelAsync(RectTransform loginRect)
     {
-        loginRect.anchoredPosition = new Vector2(_menuOriginPos.x + 1200f, _menuOriginPos.y);
+        loginRect.localPosition = new Vector3(1450f, _menuOriginLocalPos.y, 0f);
         await UniTask.NextFrame(cancellationToken: destroyCancellationToken);
-        loginRect.DOAnchorPosX(_menuOriginPos.x, 0.4f).SetEase(Ease.OutCubic).SetUpdate(true);
+        loginRect.DOLocalMoveX(250f, 0.4f).SetEase(Ease.OutCubic).SetUpdate(true);
     }
 
     // ─── 버튼 ─────────────────────────────────────────────────────────────────

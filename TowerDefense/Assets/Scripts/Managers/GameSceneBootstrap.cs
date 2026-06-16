@@ -14,6 +14,9 @@ public class GameSceneBootstrap : MonoBehaviour
     public static UniTask ReadyTask => _readyTcs.Task;
     private static UniTaskCompletionSource _readyTcs = new();
 
+    /// <summary>씬 재로드 전 호출 — SceneManager.LoadScene 직전에 사용</summary>
+    public static void ResetTask() => _readyTcs = new UniTaskCompletionSource();
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void ResetOnPlay() => _readyTcs = new();
 
