@@ -23,7 +23,18 @@ public class BuffHandler : MonoBehaviour, ITickable
     public event System.Action OnModifiersChanged;
 
     void OnEnable() => Managers.UpdateM.Register(this);
-    void OnDisable() => Managers.UpdateM.UnRegister(this);
+
+    void OnDisable()
+    {
+        Managers.UpdateM.UnRegister(this);
+
+        // 풀로 반환되기 전 활성 효과를 강제 정리 (VFX 자식 오브젝트 회수 포함)
+        foreach (var effect in _effects)
+            effect.OnRemove(this);
+        _effects.Clear();
+        _modifiers.Clear();
+        _expiredBuffer.Clear();
+    }
 
     /// <summary>
     /// 만료된 효과 제거

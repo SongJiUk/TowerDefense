@@ -130,13 +130,15 @@ public class EnemyController : MonoBehaviour, IDamageable
     protected virtual string DeathEffectKey => _data?.deathEffectKey;
     protected virtual float DeathEffectDuration => _data?.deathEffectDuration ?? 1.5f;
 
-    public virtual void TakeDamage(float damage, bool isCritical = false, bool isPoison = false)
+    public virtual void TakeDamage(float damage, bool isCritical = false, bool isPoison = false, Color? skillColor = null)
     {
         if (_isDead) return;
         _hp -= damage;
         _hpBar?.SetHP(_hp, _maxHp);
         OnHpChanged?.Invoke(_hp, _maxHp);
-        if (!isPoison)
+        if (skillColor.HasValue)
+            Managers.FloatingTextM?.ShowSkillDamage(transform.position, damage, skillColor.Value);
+        else if (!isPoison)
             Managers.FloatingTextM?.ShowDamage(transform.position, damage, isCritical);
         if (_hp <= 0f) Die();
     }

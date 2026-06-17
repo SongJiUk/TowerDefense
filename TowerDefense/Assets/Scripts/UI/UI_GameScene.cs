@@ -155,17 +155,18 @@ public class UI_GameScene : UI_Scene
         if (stage == null) return;
         GetImage(typeof(Images), (int)Images.Image_Top).color = stage.uiBGColor;
         GetImage(typeof(Images), (int)Images.Image_Bottom).color = stage.uiBGColor;
+        //GetImage(typeof(Images), (int)Images.Image_LevelFillBG).color = stage.uiBGColor;
 
         GetImage(typeof(Images), (int)Images.Image_TopGlow).color = stage.uiBorderColor;
         GetImage(typeof(Images), (int)Images.Image_BottomGlow).color = stage.uiBorderColor;
         GetImage(typeof(Images), (int)Images.Image_WaveSlotGlow).color = stage.uiBorderColor;
-        GetImage(typeof(Images), (int)Images.Image_LevelFillBG).color = stage.uiBorderColor;
+
         GetImage(typeof(Images), (int)Images.Image_WaveFillBG).color = stage.uiBorderColor;
         GetImage(typeof(Images), (int)Images.Top_Screen).color = stage.uiBorderColor;
         GetImage(typeof(Images), (int)Images.Bottom_Screen).color = stage.uiBorderColor;
         GetImage(typeof(Images), (int)Images.Image_SkillPointGlow).color = stage.uiBorderColor;
         GetText(typeof(Texts), (int)Texts.Text_Wave).color = stage.uiBorderColor;
-        GetText(typeof(Texts), (int)Texts.Text_SkillPoint).color = stage.uiBorderColor;
+        //GetText(typeof(Texts), (int)Texts.Text_SkillPoint).color = stage.uiBorderColor;
         GetText(typeof(Texts), (int)Texts.Text_Level).color = stage.uiBorderColor;
 
         GetImage(typeof(Images), (int)Images.Image_WaveSlot).color = stage.uiTextColor;

@@ -20,8 +20,8 @@ MonoBehaviour:
   baseRange: 4
   baseDuration: 1
   cooldown: 18
-  effectValue: 0
-  skillPrefabkey: PoisonMist
+  effectValue: 0.05
+  skillPrefabkey: 
   effectKey: FX_Skill_PoisonMist
   isTargeted: 1
   upgradeSteps:

@@ -27,6 +27,9 @@ public class FloatingTextManager
     public void ShowSplash(Vector3 pos, float damage)
         => Spawn(pos, ((int)damage).ToString(), COLOR_SPLASH);
 
+    public void ShowSkillDamage(Vector3 pos, float damage, Color skillColor)
+        => Spawn(pos, ((int)damage).ToString(), skillColor);
+
     private const float HEAD_OFFSET_Y = 2.2f;
 
     private void Spawn(Vector3 pos, string text, Color color)

@@ -105,7 +105,6 @@ public class SkillManager
             if (_slots[i] == null)
             {
                 SetSlot(i, skillData);
-                Activate(i);
                 return true;
             }
         }
@@ -218,7 +217,7 @@ public class SkillManager
                 var hits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[ArrowRain] targetPos={targetPos}, range={range}, hits={hits.Length}");
                 foreach (var hit in hits)
-                    hit.GetComponent<IDamageable>()?.TakeDamage(damage, false);
+                    hit.GetComponent<IDamageable>()?.TakeDamage(damage, false, skillColor: skill.color);
                 break;
 
             case Define.SkillType.Block:
@@ -246,17 +245,14 @@ public class SkillManager
             case Define.SkillType.LightningStorm:
                 var stormHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 foreach (var hit in stormHits)
-                    hit.GetComponent<IDamageable>()?.TakeDamage(damage, false);
+                    hit.GetComponent<IDamageable>()?.TakeDamage(damage, false, skillColor: skill.color);
                 PlayLightningSequenceAsync(skill.effectKey, targetPos, range).Forget();
                 break;
 
             case Define.SkillType.PoisonMist:
-                Managers.EffectM?.Play(skill.effectKey, targetPos, duration > 0f ? duration : 10f);
-                GameObject mistGo = Managers.PoolM.Pop(skill.skillPrefabkey);
-                if (mistGo == null) break;
-                mistGo.transform.position = targetPos;
-                if (mistGo.TryGetComponent(out PoisonMistZone mistZone))
-                    mistZone.Init(range, skill.effectValue, duration > 0f ? duration : 10f);
+                float mistDuration = duration > 0f ? duration : 10f;
+                Managers.EffectM?.Play(skill.effectKey, targetPos, mistDuration);
+                PlayPoisonMistSequenceAsync(targetPos, range, skill.effectValue, mistDuration).Forget();
                 break;
         }
     }
@@ -273,6 +269,26 @@ public class SkillManager
             Managers.EffectM?.Play(effectKey, pos, 0.6f);
             int delayMs = UnityEngine.Random.Range(80, 160);
             await UniTask.Delay(delayMs);
+        }
+    }
+
+    // ─── 독안개 지속 틱 ──────────────────────────────────────────────────────
+
+    private async UniTaskVoid PlayPoisonMistSequenceAsync(Vector3 center, float range, float hpRatio, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            var hits = Physics.OverlapSphere(center, range, LayerMask.GetMask("Enemy"));
+            foreach (var hit in hits)
+            {
+                var damageable = hit.GetComponent<IDamageable>();
+                var buffHandler = hit.GetComponent<BuffHandler>();
+                if (damageable == null || buffHandler == null) continue;
+                buffHandler.AddEffect(new PoisonEffect(damageable, hpRatio, 1.5f));
+            }
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+            elapsed += 1f;
         }
     }
 

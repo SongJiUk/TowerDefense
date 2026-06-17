@@ -20,9 +20,9 @@ public class BossEnemyController : EnemyController
         base.Init(data, hpMultiplier, speedMultiplier);
     }
 
-    public override void TakeDamage(float damage, bool isCritical = false, bool isPoison = false)
+    public override void TakeDamage(float damage, bool isCritical = false, bool isPoison = false, Color? skillColor = null)
     {
-        base.TakeDamage(damage, isCritical, isPoison);
+        base.TakeDamage(damage, isCritical, isPoison, skillColor);
         if (!_isEnraged && !_isDead && _hp <= _maxHp * 0.5f)
             Enrage();
     }

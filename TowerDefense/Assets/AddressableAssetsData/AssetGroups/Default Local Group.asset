@@ -167,6 +167,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbeeb0ddc21369746aaaae5c5c1c09cf
+    m_Address: FX_Skill_PoisonMist
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bbf9e36a48d6c5648a13889afab076fd
     m_Address: FX_Tower_Place
     m_ReadOnly: 0
