@@ -9,6 +9,7 @@ public class UIManager
     public readonly Stack<UI_Base> popupStack = new();
 
     public event Action OnGamePaused;
+    public event Action<bool> OnFPSDisplayChanged;
 
     private int _pauseCount = 0;
 
@@ -18,6 +19,8 @@ public class UIManager
         Time.timeScale = 0f;
         OnGamePaused?.Invoke();
     }
+
+    public void NotifyFPSDisplayChanged(bool isOn) => OnFPSDisplayChanged?.Invoke(isOn);
 
     public void ReleasePause()
     {

@@ -37,6 +37,7 @@ public class Core : MonoBehaviour, IDamageable
     public void TakeDamage(float damage, bool isCritical = false, bool isPoison = false, Color? skillColor = null)
     {
         currentHp -= damage;
+        Managers.SettingsM.Vibrate();
         OnHpChanged?.Invoke(currentHp);
         if (currentHp <= 0f)
         {

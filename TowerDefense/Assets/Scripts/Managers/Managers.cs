@@ -93,6 +93,7 @@ public class Managers : MonoBehaviour
                 instance.updateManager  = go.AddComponent<UpdateManager>();
                 instance.firebaseManager = go.AddComponent<FirebaseManager>();
                 instance.soundManager.Init(go);
+                instance.settingsManager.ApplyGraphicsQuality(PlayerPrefs.GetInt("GraphicsQuality", 1));
             }
 
             return instance;

@@ -12,6 +12,7 @@ public class MiddleBossEnemyController : EnemyController
     {
         if (Managers.SettingsM.IsScreenShakeOn)
             Camera.main?.transform.DOShakePosition(0.3f, 0.15f, 15, 90, false).SetUpdate(true);
+        Managers.SettingsM.Vibrate();
         base.Die();
     }
 

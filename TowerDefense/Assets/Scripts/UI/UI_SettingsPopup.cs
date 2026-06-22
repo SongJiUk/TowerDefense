@@ -13,7 +13,6 @@ public class UI_SettingsPopup : UI_Base
     {
         Button_Close,
         Button_Tab_Sound, Button_Tab_Game, Button_Tab_Screen,
-        Button_Korean, Button_English,
         Button_Low, Button_Middle, Button_High,
         Button_Cancel, Button_Save
     }
@@ -29,13 +28,9 @@ public class UI_SettingsPopup : UI_Base
     // 팝업 열릴 때마다 저장되는 초기값 (Cancel 롤백용)
     private float  _initBGM, _initSFX;
     private int    _initVibration, _initDamage, _initFPS, _initScreenShake, _initParticle;
-    private string _initLanguage;
     private int    _initQuality;
 
     private bool _bound;
-
-    void OnEnable()  => Managers.UIM.RequestPause();
-    void OnDisable() => Managers.UIM.ReleasePause();
 
     public override async UniTask<bool> Init()
     {
@@ -79,12 +74,15 @@ public class UI_SettingsPopup : UI_Base
 
         SetupToggle(Toggles.Toggle_Vibration,   "Vibration");
         SetupToggle(Toggles.Toggle_Damage,       "DamageText");
-        SetupToggle(Toggles.Toggle_FPS,          "FPSDisplay");
         SetupToggle(Toggles.Toggle_Screen_Shake, "ScreenShake");
         SetupToggle(Toggles.Toggle_Particle,     "Particle");
 
-        GetButton(typeof(Buttons), (int)Buttons.Button_Korean) .onClick.AddListener(() => { PlayerPrefs.SetString("Language", "ko"); RefreshLanguageButtons(); });
-        GetButton(typeof(Buttons), (int)Buttons.Button_English).onClick.AddListener(() => { PlayerPrefs.SetString("Language", "en"); RefreshLanguageButtons(); });
+        GetToggle(typeof(Toggles), (int)Toggles.Toggle_FPS).onValueChanged.AddListener(isOn =>
+        {
+            PlayerPrefs.SetInt("FPSDisplay", isOn ? 1 : 0);
+            Managers.UIM.NotifyFPSDisplayChanged(isOn);
+        });
+
         GetButton(typeof(Buttons), (int)Buttons.Button_Low)   .onClick.AddListener(() => { SetQuality(0); RefreshQualityButtons(); });
         GetButton(typeof(Buttons), (int)Buttons.Button_Middle).onClick.AddListener(() => { SetQuality(1); RefreshQualityButtons(); });
         GetButton(typeof(Buttons), (int)Buttons.Button_High)  .onClick.AddListener(() => { SetQuality(2); RefreshQualityButtons(); });
@@ -114,7 +112,6 @@ public class UI_SettingsPopup : UI_Base
         _initFPS         = PlayerPrefs.GetInt("FPSDisplay",      0);
         _initScreenShake = PlayerPrefs.GetInt("ScreenShake",     1);
         _initParticle    = PlayerPrefs.GetInt("Particle",        1);
-        _initLanguage    = PlayerPrefs.GetString("Language",    "ko");
         _initQuality     = PlayerPrefs.GetInt("GraphicsQuality", 1);
     }
 
@@ -134,15 +131,7 @@ public class UI_SettingsPopup : UI_Base
         RefreshToggle(Toggles.Toggle_Screen_Shake, _initScreenShake == 1);
         RefreshToggle(Toggles.Toggle_Particle,     _initParticle    == 1);
 
-        RefreshLanguageButtons();
         RefreshQualityButtons();
-    }
-
-    private void RefreshLanguageButtons()
-    {
-        bool isKo = PlayerPrefs.GetString("Language", "ko") == "ko";
-        GetButton(typeof(Buttons), (int)Buttons.Button_Korean) .image.color = isKo  ? BTN_ACTIVE : BTN_INACTIVE;
-        GetButton(typeof(Buttons), (int)Buttons.Button_English).image.color = !isKo ? BTN_ACTIVE : BTN_INACTIVE;
     }
 
     private void RefreshQualityButtons()
@@ -200,19 +189,19 @@ public class UI_SettingsPopup : UI_Base
         PlayerPrefs.SetInt("Vibration",       _initVibration);
         PlayerPrefs.SetInt("DamageText",      _initDamage);
         PlayerPrefs.SetInt("FPSDisplay",      _initFPS);
+        Managers.UIM.NotifyFPSDisplayChanged(_initFPS == 1);
         PlayerPrefs.SetInt("ScreenShake",     _initScreenShake);
         PlayerPrefs.SetInt("Particle",        _initParticle);
-        PlayerPrefs.SetString("Language",     _initLanguage);
         PlayerPrefs.SetInt("GraphicsQuality", _initQuality);
-        QualitySettings.SetQualityLevel(_initQuality, true);
+        Managers.SettingsM.ApplyGraphicsQuality(_initQuality);
         OnClose();
     }
 
-    private void OnClose() => Managers.PoolM.Push(gameObject);
+    private void OnClose() => Managers.UIM.ClosePopup();
 
     private static void SetQuality(int index)
     {
-        QualitySettings.SetQualityLevel(index, true);
+        Managers.SettingsM.ApplyGraphicsQuality(index);
         PlayerPrefs.SetInt("GraphicsQuality", index);
     }
 }

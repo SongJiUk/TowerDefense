@@ -24,8 +24,11 @@ public class SlowEffect : BuffEffect
         if (handler.TryGetComponent(out MonoBehaviour mb))
         {
             Managers.FloatingTextM?.ShowSlow(mb.transform.position);
-            _vfx = Managers.PoolM.Pop("FX_Buff_Slow");
-            if (_vfx != null) _vfx.transform.SetParent(mb.transform, false);
+            if (Managers.SettingsM.IsParticleOn)
+            {
+                _vfx = Managers.PoolM.Pop("FX_Buff_Slow");
+                if (_vfx != null) _vfx.transform.SetParent(mb.transform, false);
+            }
         }
     }
 

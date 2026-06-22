@@ -4,16 +4,15 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 일시정지 팝업.
-/// 오브젝트 이름: Button_Resume, Button_Retry, Button_Quit, Image_BG
+/// 오브젝트 이름: Button_Resume, Button_Retry, Button_Settings, Button_Quit
 /// </summary>
 public class UI_PausePopup : UI_Base
 {
-    enum Buttons { Button_Resume, Button_Retry, Button_Quit }
-    enum Images  { Image_BG }
+    enum Buttons { Button_Resume, Button_Retry, Button_Settings, Button_Quit }
 
     private bool _initialized;
 
-    void OnEnable()  => Managers.UIM.RequestPause();
+    void OnEnable() => Managers.UIM.RequestPause();
     void OnDisable() => Managers.UIM.ReleasePause();
 
     public override async UniTask<bool> Init()
@@ -23,10 +22,10 @@ public class UI_PausePopup : UI_Base
         _initialized = true;
 
         BindButton(typeof(Buttons));
-        BindImage(typeof(Images));
 
         GetButton(typeof(Buttons), (int)Buttons.Button_Resume).onClick.AddListener(OnResume);
         GetButton(typeof(Buttons), (int)Buttons.Button_Retry).onClick.AddListener(OnRetry);
+        GetButton(typeof(Buttons), (int)Buttons.Button_Settings).onClick.AddListener(OnSettings);
         GetButton(typeof(Buttons), (int)Buttons.Button_Quit).onClick.AddListener(OnQuit);
         return true;
     }
@@ -34,6 +33,11 @@ public class UI_PausePopup : UI_Base
     private void OnResume()
     {
         Managers.PoolM.Push(gameObject);
+    }
+
+    private void OnSettings()
+    {
+        Managers.UIM.ShowPopup<UI_SettingsPopup>("UI_SettingsPopup");
     }
 
     private void OnRetry()

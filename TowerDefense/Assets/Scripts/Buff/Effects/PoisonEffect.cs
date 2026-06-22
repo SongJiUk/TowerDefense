@@ -21,6 +21,7 @@ public class PoisonEffect : BuffEffect
 
     public override void OnApply(BuffHandler handler)
     {
+        if (!Managers.SettingsM.IsParticleOn) return;
         _vfx = Managers.PoolM.Pop("FX_Buff_Poison");
         if (_vfx != null) _vfx.transform.SetParent(handler.transform, false);
     }

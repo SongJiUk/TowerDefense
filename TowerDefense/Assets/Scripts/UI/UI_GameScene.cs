@@ -53,6 +53,7 @@ public class UI_GameScene : UI_Scene
         Managers.SkillM.OnTargetingCancelled -= OnTargetingCancelled;
         Managers.WaveM.OnNextWaveReady -= ShowNextWavePanel;
         Managers.UIM.OnGamePaused -= ResetSpeed;
+        Managers.UIM.OnFPSDisplayChanged -= SetFPSDisplay;
         if (Managers.ICore is Core coreForUnsub) coreForUnsub.OnHpChanged -= RefreshCoreHp;
         _skillBtnRect?.DOKill();
     }
@@ -95,6 +96,7 @@ public class UI_GameScene : UI_Scene
 
         Managers.WaveM.OnNextWaveReady += ShowNextWavePanel;
         Managers.UIM.OnGamePaused += ResetSpeed;
+        Managers.UIM.OnFPSDisplayChanged += SetFPSDisplay;
 
         Managers.GameM.OnGoldChanged += RefreshGold;
         Managers.GameM.OnExpChanged += RefreshExp;
@@ -120,8 +122,7 @@ public class UI_GameScene : UI_Scene
 
         ApplyTheme(Managers.WaveM.CurrentStage);
 
-        GetObject(typeof(GameObjects), (int)GameObjects.Object_FPS)
-            .SetActive(Managers.SettingsM.IsFPSOn);
+        SetFPSDisplay(Managers.SettingsM.IsFPSOn);
 
         var bossAnnounceGo = Managers.ResourceM.Instantiate("UI_BossAnnounce", transform);
         var bossAnnounce = bossAnnounceGo?.GetComponent<UI_BossAnnounce>();
@@ -135,6 +136,11 @@ public class UI_GameScene : UI_Scene
         }
 
         return true;
+    }
+
+    private void SetFPSDisplay(bool isOn)
+    {
+        GetObject(typeof(GameObjects), (int)GameObjects.Object_FPS).SetActive(isOn);
     }
 
     void Update()
