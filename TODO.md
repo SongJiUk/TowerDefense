@@ -40,18 +40,18 @@
 
 ## 4단계 — 타이틀씬 / 스테이지 선택
 
-- [ ] 타이틀씬 배경 + 게임 로고 배치
+- [x] 타이틀씬 배경 + 게임 로고 배치
 - [x] "게임 시작" 버튼 → UI_StageSelectPopup → UI_DifficultySelectPopup → 페이드 → GameScene
 - [x] UI_StageSelectPopup 구현
   - [x] 스테이지 1~4 버튼
   - [x] 클리어 여부 자물쇠 표시
   - [x] 각 스테이지 테마 색 적용 (숲/사막/겨울/악마성)
-- [ ] 씬 전환 로딩 화면 (UI_LoadingScene)
+- [x] 씬 전환 로딩 화면 (UI_LoadingScene)
 - [x] 선택한 스테이지 Managers.SelectedStage에 저장 후 GameScene 로드
 
 ### ⚠️ Unity 에디터 작업 — 4단계
 
-- [ ] **TitleScene Canvas > UI_TitleScene** 하위에 `Panel_Fade` 추가
+- [x] **TitleScene Canvas > UI_TitleScene** 하위에 `Panel_Fade` 추가
   - RectTransform: 앵커 stretch 전체 화면 (Left/Right/Top/Bottom = 0)
   - Image 컴포넌트: Color = 검정 (0,0,0,255), Raycast Target = **OFF**
   - **CanvasGroup** 컴포넌트 추가
@@ -71,9 +71,9 @@
 
 - [x] SaveData 클래스 정의 (레벨, 경험치, 스테이지 클리어 여부)
 - [x] SaveManager 구현 (PlayerPrefs 또는 JSON 파일)
-- [ ] 게임 시작 시 불러오기
+- [x] 게임 시작 시 불러오기
 - [x] 스테이지 클리어 / 게임오버 시 저장
-- [ ] 레벨·경험치 스테이지 간 누적 유지
+- [x] 레벨·경험치 스테이지 간 누적 유지
 
 ---
 
@@ -85,7 +85,7 @@
 
 ### ⚠️ Unity 에디터 작업 — 보스 HP바
 
-- [ ] **GameScene Canvas** 하위에 `UI_BossHPBar` GameObject 추가
+- [x] **GameScene Canvas** 하위에 `UI_BossHPBar` GameObject 추가
   - 위치: 화면 상단 중앙
   - 하위 오브젝트:
     - `Text_BossName` — TMP 텍스트 (보스 이름)
@@ -97,15 +97,15 @@
 
 ## 7단계 — 데미지 숫자 표시
 
-- [ ] FloatingText 프리팹 생성 (TMP + 위로 올라가며 사라지는 애니메이션) ← Unity 에디터 작업
+- [x] FloatingText 프리팹 생성 (TMP + 위로 올라가며 사라지는 애니메이션) ← Unity 에디터 작업
 - [x] FloatingTextPool 구현 (ObjectPool)
 - [x] EnemyController.TakeDamage에서 FloatingText 호출
 - [x] 치명타 / 독 / 슬로우 색상 구분
-- [ ] FloatingText Addressables 등록
+- [x] FloatingText Addressables 등록
 
 ### ⚠️ Unity 에디터 작업 — FloatingText
 
-- [ ] Canvas (World Space) 또는 UI Canvas에 `FloatingText` 프리팹 생성
+- [x] Canvas (World Space) 또는 UI Canvas에 `FloatingText` 프리팹 생성
   - TMP 텍스트 오브젝트
   - Animator 또는 DOTween: 위로 1~1.5초 이동 + FadeOut
   - Addressables PrevLoad 그룹에 키 `FloatingText`로 등록
@@ -125,9 +125,9 @@
 - [x] 타워 설치 이펙트 (FX_Tower_Place)
 - [x] 타워 업그레이드 단계별 이펙트 (FX_Stage_Green/Blue/Red — child SetActive)
 - [x] 번개 체인 이펙트 (chainEffectKey)
-- [ ] 보스 등장 연출 (카메라 줌인 등)
-- [ ] 웨이브 클리어 이펙트
-- [ ] 코어 피격 이펙트
+- [x] 보스 등장 연출 (카메라 줌인 등)
+- [x] 웨이브 클리어 이펙트
+- [x] 코어 피격 이펙트
 
 ---
 
@@ -143,7 +143,7 @@
 
 ## 10단계 — 업적 시스템
 
-- [ ] 업적 목록 기획 (예: 타워 100개 설치, 웨이브 10연속 클리어 등)
+- [x] 업적 목록 기획 (예: 타워 100개 설치, 웨이브 10연속 클리어 등)
 - [x] AchievementData ScriptableObject
 - [x] AchievementManager 구현
 - [x] 업적 달성 시 팝업 알림
@@ -153,8 +153,8 @@
 
 ## 11단계 — 파이어베이스 / 랭킹 (선택)
 
-- [ ] Firebase SDK 설치 (Authentication + Firestore)
-- [ ] 익명 로그인 또는 구글 로그인
+- [x] Firebase SDK 설치 (Authentication + Firestore)
+- [x] 익명 로그인 또는 구글 로그인
 - [ ] 랭킹 데이터 구조 설계 (스테이지 클리어 시간, 점수)
 - [ ] UI_RankingPopup 구현
 - [ ] 점수 등록 / 조회 연동
@@ -210,9 +210,9 @@
 - [ ] 타이틀 BGM 설정
 
 ### Day 3 (토) — 타이틀씬 + 에디터 마무리
-- [ ] 타이틀씬 배경 + 게임 로고 배치
-- [ ] TitleScene Panel_Fade 추가 (CanvasGroup, 검정 Image, Raycast OFF)
-- [ ] UI_BossHPBar 프리팹 배치 (Text_BossName, Image_HPFill)
+- [x] 타이틀씬 배경 + 게임 로고 배치
+- [x] TitleScene Panel_Fade 추가 (CanvasGroup, 검정 Image, Raycast OFF)
+- [x] UI_BossHPBar 프리팹 배치 (Text_BossName, Image_HPFill)
 
 ### Day 4-5 (일) — 빌드 + 포트폴리오
 - [ ] Android APK 빌드 (ETC2 텍스처, 60fps 프레임 캡)
