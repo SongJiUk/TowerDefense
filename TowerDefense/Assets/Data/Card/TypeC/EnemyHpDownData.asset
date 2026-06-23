@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: EnemyHpDownData
   m_EditorClassIdentifier: 
   cardName: "\uCCB4\uB825 \uAC10\uC18C"
-  Description: "\uC801 HP 20% \uAC10\uC18C"
+  Description: "\uC801 HP 10% \uAC10\uC18C"
   iconKey: EnemyHpDown
   category: 2
   effectType: 9
-  effectValue: 0.2
+  effectValue: 0.1
   weight: 1
   maxStack: 2

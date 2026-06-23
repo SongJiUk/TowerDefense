@@ -139,10 +139,7 @@ public class CardManager
                 break;
 
             case CardEffectType.EnemyHpDown:
-                if (Managers.WaveM.IsRunning)
-                    Managers.GameM.pendingEnemyHpMultiplier -= cardData.effectValue;
-                else
-                    Managers.GameM.nextWaveEnemyHpMultiplier -= cardData.effectValue;
+                Managers.GameM.globalEnemyHpMultiplier -= cardData.effectValue;
                 break;
 
             case CardEffectType.SkillSelect:

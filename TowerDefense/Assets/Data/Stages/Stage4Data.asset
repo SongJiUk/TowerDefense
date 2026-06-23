@@ -29,6 +29,9 @@ MonoBehaviour:
   - enemyData: {fileID: 11400000, guid: 59b49c79eca34f049a6706008f9befdc, type: 2}
     fromWave: 3
     spawnWeight: 2
+  - enemyData: {fileID: 11400000, guid: 5ff4f7dfb06a34275a23c7285fa1b5c2, type: 2}
+    fromWave: 8
+    spawnWeight: 0.5
   bossEnemy: {fileID: 11400000, guid: dc8f8743d59615a49b242c3912369983, type: 2}
   bossWaveMinions: 8
   mapPrefabKey: Stage4

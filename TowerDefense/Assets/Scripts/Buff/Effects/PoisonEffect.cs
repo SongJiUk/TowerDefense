@@ -30,7 +30,6 @@ public class PoisonEffect : BuffEffect
     {
         if (_vfx != null)
         {
-            _vfx.transform.SetParent(null);
             Managers.PoolM.Push(_vfx);
             _vfx = null;
         }

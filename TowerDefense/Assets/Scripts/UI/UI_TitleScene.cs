@@ -44,6 +44,7 @@ public class UI_TitleScene : UI_Base
         Instance = this;
         await Init();
         StartLoadAsync().Forget();
+        await SceneFader.FadeIn();
     }
 
     void OnDestroy()

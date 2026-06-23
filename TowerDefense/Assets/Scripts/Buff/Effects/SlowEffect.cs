@@ -37,7 +37,6 @@ public class SlowEffect : BuffEffect
         handler.RemoveModifier(_modifier);
         if (_vfx != null)
         {
-            _vfx.transform.SetParent(null);
             Managers.PoolM.Push(_vfx);
             _vfx = null;
         }

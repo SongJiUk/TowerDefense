@@ -95,8 +95,7 @@ public class GameManager
     public float killRewardMultiplier = 1f;
     public float waveBonusMultiplier = 1f;
     public float buildCostMultiplier = 1f;
-    public float nextWaveEnemyHpMultiplier = 1f;
-    public float pendingEnemyHpMultiplier = 1f;
+    public float globalEnemyHpMultiplier = 1f;
     public float synergyMultiplier = 1f;
     public int   freeTowerCount = 0;
 
@@ -134,8 +133,7 @@ public class GameManager
         killRewardMultiplier        = 1f;
         waveBonusMultiplier         = 1f;
         buildCostMultiplier         = 1f;
-        nextWaveEnemyHpMultiplier   = 1f;
-        pendingEnemyHpMultiplier    = 1f;
+        globalEnemyHpMultiplier     = 1f;
         synergyMultiplier           = 1f;
         freeTowerCount              = 0;
         KillCount                   = 0;

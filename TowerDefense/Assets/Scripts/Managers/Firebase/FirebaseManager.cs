@@ -21,6 +21,9 @@ public partial class FirebaseManager : MonoBehaviour
 
     public async UniTask Init()
     {
+        if (IsReady)
+            return;
+
         var status = await FirebaseApp.CheckAndFixDependenciesAsync().AsUniTask();
         if (status != DependencyStatus.Available)
         {

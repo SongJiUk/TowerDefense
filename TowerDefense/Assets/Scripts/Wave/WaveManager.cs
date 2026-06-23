@@ -168,10 +168,6 @@ public class WaveManager
         Managers.GameM.AddGold(waveBonus);
         Managers.GameM.waveBonusMultiplier = 1f;
 
-        // 웨이브 중 뽑은 적 HP 감소 카드를 다음 웨이브에 반영, 이번 웨이브 효과는 리셋
-        Managers.GameM.nextWaveEnemyHpMultiplier = Managers.GameM.pendingEnemyHpMultiplier;
-        Managers.GameM.pendingEnemyHpMultiplier = 1f;
-
         Managers.AchievementM?.AddProgress("wave_10");
         Managers.AchievementM?.AddProgress("wave_30");
         Managers.AchievementM?.AddProgress("wave_50");
@@ -240,6 +236,10 @@ public class WaveManager
                 if (e != null) _preGenerated.Add(e);
             }
 
+            var middleBoss = GetMiddleBossForWave(waveNumber);
+            if (middleBoss != null)
+                _preGenerated.Add(middleBoss);
+
             float interval = _stageData.spawnInterval;
             if (waveNumber >= 7) interval = Mathf.Max(0.8f, interval - 0.5f);
 
@@ -293,7 +293,7 @@ public class WaveManager
 
         OnWaveSpawnStart?.Invoke();
 
-        float hpMult = CalcHpMultiplier(waveIndex) * Managers.GameM.nextWaveEnemyHpMultiplier;
+        float hpMult = CalcHpMultiplier(waveIndex) * Managers.GameM.globalEnemyHpMultiplier;
         float speedMult = CalcSpeedMultiplier(waveIndex);
         int waveNumber = waveIndex + 1;
 
@@ -404,7 +404,22 @@ public class WaveManager
         return result;
     }
 
-    /// <summary>현재 웨이브에서 등장 가능한 적 중 가중치 기반 랜덤 선택.</summary>
+    /// <summary>난이도별 등장 웨이브 이상이면 이 스테이지의 MiddleBoss를 웨이브당 정확히 1마리 반환.</summary>
+    private EnemyData GetMiddleBossForWave(int waveNumber)
+    {
+        int middleBossFromWave = Managers.DifficultyM?.MiddleBossFromWave ?? 5;
+        if (waveNumber < middleBossFromWave) return null;
+
+        foreach (var entry in _stageData.enemyPool)
+        {
+            if (entry.enemyData != null && entry.enemyData.enemyType == Define.EnemyType.MiddleBoss)
+                return entry.enemyData;
+        }
+        return null;
+    }
+
+    /// <summary>현재 웨이브에서 등장 가능한 적 중 가중치 기반 랜덤 선택.
+    /// MiddleBoss는 웨이브당 1마리만 별도 보장되므로 여기서는 제외한다 (GetMiddleBossForWave 참고).</summary>
     private EnemyData SelectEnemy(int waveNumber)
     {
         if (_stageData.enemyPool == null || _stageData.enemyPool.Length == 0) return null;
@@ -413,17 +428,12 @@ public class WaveManager
         float totalWeight = 0f;
         var available = new List<StageEnemyEntry>();
 
-        int middleBossFromWave = Managers.DifficultyM?.MiddleBossFromWave ?? 5;
-
         foreach (var entry in _stageData.enemyPool)
         {
             if (entry.enemyData == null) continue;
+            if (entry.enemyData.enemyType == Define.EnemyType.MiddleBoss) continue;
 
-            int effectiveFromWave = entry.enemyData.enemyType == Define.EnemyType.MiddleBoss
-                ? middleBossFromWave
-                : entry.fromWave;
-
-            if (effectiveFromWave <= waveNumber)
+            if (entry.fromWave <= waveNumber)
             {
                 available.Add(entry);
                 totalWeight += entry.spawnWeight;
