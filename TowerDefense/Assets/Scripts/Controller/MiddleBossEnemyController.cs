@@ -18,6 +18,7 @@ public class MiddleBossEnemyController : EnemyController
 
     protected override void OnDeathComplete()
     {
+        Managers.SoundM?.PlaySFX("SFX_Boss_Die");
         base.OnDeathComplete();
         Managers.AchievementM?.AddProgress("boss_1");
         Managers.AchievementM?.AddProgress("boss_10");

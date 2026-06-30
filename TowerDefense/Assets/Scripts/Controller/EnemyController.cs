@@ -181,9 +181,12 @@ public class EnemyController : MonoBehaviour, IDamageable
         _animator.SetBool(HASH_DIE, false);
     }
 
+    private static readonly string[] DIE_SOUNDS = { "SFX_Enemy_Die", "SFX_Enemy_Die2", "SFX_Enemy_Die3" };
+
     protected virtual void OnDeathComplete()
     {
         Managers.EffectM?.Play(DeathEffectKey, transform.position, DeathEffectDuration);
+        Managers.SoundM?.PlaySFX(DIE_SOUNDS[UnityEngine.Random.Range(0, DIE_SOUNDS.Length)]);
         OnDeathEvent?.Invoke();
         Managers.WaveM.OnEnemyRemoved();
         Managers.GameM.AddGold(Mathf.RoundToInt(_data.baseReward * Managers.GameM.killRewardMultiplier));

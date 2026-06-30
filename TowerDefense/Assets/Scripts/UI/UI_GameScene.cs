@@ -124,6 +124,8 @@ public class UI_GameScene : UI_Scene
 
         SetFPSDisplay(Managers.SettingsM.IsFPSOn);
 
+        Managers.SoundM?.PlayBGM("BGM_Game");
+
         var bossAnnounceGo = Managers.ResourceM.Instantiate("UI_BossAnnounce", transform);
         var bossAnnounce = bossAnnounceGo?.GetComponent<UI_BossAnnounce>();
         if (bossAnnounce != null) await bossAnnounce.Init();
@@ -221,6 +223,7 @@ public class UI_GameScene : UI_Scene
         _nextWavePanel?.ForceClose();
         _nextWavePanel = null;
         RefreshWave(wave);
+        Managers.SoundM?.PlaySFX("SFX_Wave_Start");
         Managers.WaveM.BeginSpawning();
     }
 
@@ -378,6 +381,7 @@ public class UI_GameScene : UI_Scene
 
     private void OnPauseClicked()
     {
+        Managers.SoundM?.PlaySFX("SFX_UI_Pause");
         var popup = Managers.ObjectM.SpawnUI<UI_PausePopup>("UI_PausePopup", transform);
         if (popup != null) _ = popup.Init();
     }
@@ -387,10 +391,13 @@ public class UI_GameScene : UI_Scene
         int total = Managers.WaveM.TotalWaves;
         if (total > 0)
             GetImage(typeof(Images), (int)Images.Image_WaveFill).fillAmount = (float)wave / total;
+        Managers.SoundM?.PlaySFX("SFX_Wave_Clear");
     }
 
     private async void OnAllWavesComplete()
     {
+        Managers.SoundM?.StopBGM();
+        Managers.SoundM?.PlaySFX("SFX_Stage_Clear");
         var popup = Managers.ObjectM.SpawnUI<UI_StageCompletePopup>("UI_StageCompletePopup", transform);
         await popup.Init();
         popup.Show(Managers.SelectedStage).Forget();
@@ -398,6 +405,8 @@ public class UI_GameScene : UI_Scene
 
     private async void OnGameOver()
     {
+        Managers.SoundM?.StopBGM();
+        Managers.SoundM?.PlaySFX("SFX_Game_Over");
         var popup = Managers.ObjectM.SpawnUI<UI_GameOverPopup>("UI_GameOverPopup", transform);
         await popup.Init();
         popup.Show(Managers.WaveM.CurrentWave, Managers.WaveM.TotalWaves).Forget();

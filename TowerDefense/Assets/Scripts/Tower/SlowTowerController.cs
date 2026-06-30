@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SlowTowerController : TowerController
 {
+    protected override string ShootSoundKey => "SFX_Tower_Slow";
     private SlowTowerData _slowTowerData;
     public override string GetUniqueEffectText()
     {

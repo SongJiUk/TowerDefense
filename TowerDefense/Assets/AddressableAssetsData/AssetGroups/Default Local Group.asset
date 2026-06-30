@@ -17,6 +17,18 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1253833c425234d93a6399de33c6fefb
   m_SerializeEntries:
+  - m_GUID: 015849f3bb8fe4fa5ad07121b528a9d3
+    m_Address: SFX_Skill_ArrowRain
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 02ebbdccd42744cb787f3bca820ee90b
+    m_Address: SFX_Skill_Block
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 05ce920d629922a4eb4795ef7494ce5c
     m_Address: FX_Skill_ArrowRain
     m_ReadOnly: 0
@@ -29,8 +41,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d74880bed4586644a16a79a2d9dc8af
+    m_Address: SFX_Tower_Slow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ed8fb76fc64e4e46847348138782234
+    m_Address: SFX_UI_Denied
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1ff09793b7913478fb50763b70c4cf33
     m_Address: UI_AchievementCategoryHeader
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21c4a490b24ba2045bc815f7626a40ef
+    m_Address: SFX_Wave_Start
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 262373203db174dda9ae441f7dfc84a2
+    m_Address: SFX_BOSS_ALRAM
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b21ef916f6943c439b71a7c74568878
+    m_Address: SFX_Tower_Poison
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2bef44c58e277b349992531b1fbab271
+    m_Address: SFX_MiddleBoss_Appear
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2de008673d5ac4b2daba9429915ca70e
+    m_Address: SFX_Game_Over
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -47,8 +101,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35cf7766e9e2aa542811e896fde57989
+    m_Address: SFX_UI_Click
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 390cc74915d4a054bbd897e1885047a4
     m_Address: FX_Skill_Lightning
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39184877571abd24489b543e6ea0d1da
+    m_Address: SFX_Enemy_Die2
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -65,14 +131,44 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4286e0f3bc57be8469430eb1eb7e10c4
+    m_Address: SFX_Boss_Appear
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 46009f57772e5e743bec9df57a49ed66
     m_Address: FX_Skill_Freeze
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 490bfbc72255342408984f60044487de
+    m_Address: SFX_Tower_Place
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49633201f9c137a46a22d01b399b938f
+    m_Address: SFX_Enemy_Tank_Die
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4bda94453d2ca7444a0fff05b2d425f5
     m_Address: FX_Shoot_Cannon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5212f39143cae4a688f7f1b2941f0179
+    m_Address: SFX_Skill_Freeze
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5270fce02f7724d639600a5b22ee407d
+    m_Address: SFX_Skill_PoisonMist
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -85,6 +181,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 56309a927e5be4977ab38815efdac490
     m_Address: UI_AchievementPanel
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 566d2ea6240b489479a6e9fd608c2621
+    m_Address: SFX_Boss_Die
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -119,14 +221,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71a53b12f7aea461e90063fb3d2cf5f5
+    m_Address: SFX_Stage_Clear
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c47b20bb9874304a809dc5580d403ba
+    m_Address: SFX_Core_Hit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7ec363c8df426644ea85f8d6d570561c
     m_Address: FX_Death_MiddleBoss
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83829ff414f47a048b5387e4ab33571c
+    m_Address: SFX_Debuff_Poison
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8765e25fe65b841779c8706213f01309
+    m_Address: SFX_Skill_LightningStorm
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 87ee7299dd44ed747af24dbb91bcd33b
     m_Address: FX_Boss_Appear
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88b1cbe3caa3fee4b8b103b5edd7aba9
+    m_Address: SFX_Tower_Basic
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8ba5ab2b780cb4c8aacb1263a6476bc6
+    m_Address: BGM_Title
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -155,14 +293,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a652877b012108e41871f867ada9f176
+    m_Address: SFX_Tower_Cannon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: abdbbfd33a46f4549987385f85c536b5
+    m_Address: SFX_Gold_Get
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: acbcb75601b0082458fda8807f67c813
+    m_Address: SFX_Debuff_Slow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: acdb90624a404aa438447006f1026065
     m_Address: FX_WaveClear
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b0e62ed71b1538648b719821f4f63b4c
+    m_Address: SFX_Tower_Upgrade
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b583cf9e703ac4ac68fe9b5d8ca94416
+    m_Address: SFX_Wave_Clear
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5c8ca7ed10b61e499cce8ec3b6e2e4c
     m_Address: FX_Revive
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b83bf8726a7fac349a54389f0c57cda6
+    m_Address: SFX_UI_Pause
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad
@@ -179,8 +353,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - PrevLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bec65274311aa5f4d97534392e70be60
+    m_Address: SFX_Tower_Lightning
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c4f829cb7dd4b864caf8832ec5b1ee55
     m_Address: FX_Death_Normal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5cb2ac29e89dbf43a9b644caaad45e6
+    m_Address: SFX_UI_Confirm
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6546a87ec8cd8e4d8cc50ea7b624513
+    m_Address: SFX_Enemy_Die3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1afd3f4d23c24f418ffc315afb04965
+    m_Address: SFX_Tower_Sniper
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d55296892cffb044e99edae1e22bd456
+    m_Address: SFX_Enemy_Die
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d654174ef194bd7479bf4b8d8f753318
+    m_Address: SFX_Enemy_Revive
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PrevLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fdeebf402b55845448520487dc70f6a0
+    m_Address: BGM_Game
     m_ReadOnly: 0
     m_SerializedLabels:
     - PrevLoad

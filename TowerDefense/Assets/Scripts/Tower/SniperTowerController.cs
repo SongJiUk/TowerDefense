@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SniperTowerController : TowerController
 {
+    protected override string ShootSoundKey => "SFX_Tower_Sniper";
     private SniperTowerData _sniperData;
 
     public override void Init(TowerData data)

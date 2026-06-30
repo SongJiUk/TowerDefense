@@ -178,6 +178,7 @@ public class TowerController : MonoBehaviour
 
         SetLevel(type, level + 1);
         ApplyStats();
+        Managers.SoundM?.PlaySFX("SFX_Tower_Upgrade");
         return true;
     }
 
@@ -306,6 +307,7 @@ public class TowerController : MonoBehaviour
 
     protected virtual string HitEffectKey => Data?.hitEffectKey;
     protected virtual string ShootEffectKey => Data?.shootEffectKey;
+    protected virtual string ShootSoundKey => "SFX_Tower_Basic";
 
     private void Fire(Transform target)
     {
@@ -319,6 +321,8 @@ public class TowerController : MonoBehaviour
 
         if (!string.IsNullOrEmpty(ShootEffectKey))
             Managers.EffectM?.Play(ShootEffectKey, spawnPos, 0.5f);
+
+        Managers.SoundM?.PlaySFX(ShootSoundKey);
 
         GameObject go = Managers.PoolM.Pop(Data.projectilePrefabKey);
         go.transform.position = spawnPos;

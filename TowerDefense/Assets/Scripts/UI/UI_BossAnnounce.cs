@@ -88,6 +88,8 @@ public class UI_BossAnnounce : UI_Base
     private void OnBossAppear(EnemyData data)
     {
         bool isFinal = data.enemyType == Define.EnemyType.Boss;
+        Managers.SoundM?.PlaySFX("SFX_Boss_Alarm");
+        Managers.SoundM?.PlaySFX(isFinal ? "SFX_Boss_Appear" : "SFX_MiddleBoss_Appear");
 
         Color theme   = isFinal ? BOSS_THEME   : MIDBOSS_THEME;
         Color overlay = isFinal ? BOSS_OVERLAY : MIDBOSS_OVERLAY;

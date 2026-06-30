@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PoisonTowerController : TowerController
 {
+    protected override string ShootSoundKey => "SFX_Tower_Poison";
     private PoisonTowerData _poisonTowerData;
 
     public override void Init(TowerData data)

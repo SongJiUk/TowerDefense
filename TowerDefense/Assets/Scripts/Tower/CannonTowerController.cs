@@ -6,6 +6,7 @@ public class CannonTowerController : TowerController
 {
     private CannonTowerData _cannonTowerData;
 
+    protected override string ShootSoundKey => "SFX_Tower_Cannon";
     protected override Vector3 GetRotationOrigin() => transform.position;
     protected override Quaternion RotationOffset => Quaternion.Euler(0f, 90f, 0f);
 

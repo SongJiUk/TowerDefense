@@ -159,6 +159,7 @@ public class TowerPlacer : MonoBehaviour
         go.transform.rotation = Quaternion.identity;
 
         Managers.EffectM?.Play("FX_Tower_Place", _pendingNode.WorldPosition, 1f);
+        Managers.SoundM?.PlaySFX("SFX_Tower_Place");
 
         if (go.TryGetComponent(out TowerController tower))
             tower.Init(data);

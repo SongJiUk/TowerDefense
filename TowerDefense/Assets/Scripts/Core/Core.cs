@@ -38,6 +38,7 @@ public class Core : MonoBehaviour, IDamageable
     {
         currentHp -= damage;
         Managers.SettingsM.Vibrate();
+        Managers.SoundM?.PlaySFX("SFX_Core_Hit");
         OnHpChanged?.Invoke(currentHp);
         if (currentHp <= 0f)
         {

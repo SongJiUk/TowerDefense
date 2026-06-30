@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LightningTowerController : TowerController
 {
+    protected override string ShootSoundKey => "SFX_Tower_Lightning";
     private LightningTowerData _lightningTowerData;
     private readonly List<Transform> _chainTargets = new List<Transform>();
 

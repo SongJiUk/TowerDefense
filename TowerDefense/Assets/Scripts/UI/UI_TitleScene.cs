@@ -227,6 +227,7 @@ public class UI_TitleScene : UI_Base
         GetText(typeof(Texts), (int)Texts.Text_PlayerName).text = data.PlayerName;
 
         _loadComplete = true;
+        Managers.SoundM?.PlayBGM("BGM_Title");
         TryActivateTapButton();
     }
 

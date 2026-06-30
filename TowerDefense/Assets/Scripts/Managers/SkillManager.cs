@@ -213,6 +213,7 @@ public class SkillManager
         switch (skill.skillType)
         {
             case Define.SkillType.ArrowRain:
+                Managers.SoundM?.PlaySFX("SFX_Skill_ArrowRain");
                 Managers.EffectM?.Play(skill.effectKey, targetPos, 2f);
                 var hits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[ArrowRain] targetPos={targetPos}, range={range}, hits={hits.Length}");
@@ -221,6 +222,7 @@ public class SkillManager
                 break;
 
             case Define.SkillType.Block:
+                Managers.SoundM?.PlaySFX("SFX_Skill_Block");
                 GridNode blockNode = Managers.Grid?.GetNode(targetPos);
                 if (blockNode == null || blockNode.NodeType != NodeType.Road || !blockNode.CanWalk) break;
 
@@ -235,6 +237,7 @@ public class SkillManager
                 break;
 
             case Define.SkillType.Freeze:
+                Managers.SoundM?.PlaySFX("SFX_Skill_Freeze");
                 Managers.EffectM?.Play(skill.effectKey, targetPos, duration > 0f ? duration : 3f);
                 var freezeHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 Debug.Log($"[Freeze] targetPos={targetPos}, range={range}, hits={freezeHits.Length}");
@@ -243,6 +246,7 @@ public class SkillManager
                 break;
 
             case Define.SkillType.LightningStorm:
+                Managers.SoundM?.PlaySFX("SFX_Skill_LightningStorm");
                 var stormHits = Physics.OverlapSphere(targetPos, range, LayerMask.GetMask("Enemy"));
                 foreach (var hit in stormHits)
                     hit.GetComponent<IDamageable>()?.TakeDamage(damage, false, skillColor: skill.color);
@@ -250,6 +254,7 @@ public class SkillManager
                 break;
 
             case Define.SkillType.PoisonMist:
+                Managers.SoundM?.PlaySFX("SFX_Skill_PoisonMist");
                 float mistDuration = duration > 0f ? duration : 10f;
                 Managers.EffectM?.Play(skill.effectKey, targetPos, mistDuration);
                 PlayPoisonMistSequenceAsync(targetPos, range, skill.effectValue, mistDuration).Forget();

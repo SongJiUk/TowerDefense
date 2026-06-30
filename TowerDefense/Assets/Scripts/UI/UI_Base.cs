@@ -72,7 +72,16 @@ public class UI_Base : MonoBehaviour
     protected void BindObject(Type _type)   => Bind<GameObject>(_type);
     protected void BindImage(Type _type)    => Bind<Image>(_type);
     protected void BindText(Type _type)     => Bind<TextMeshProUGUI>(_type);
-    protected void BindButton(Type _type)   => Bind<Button>(_type);
+    protected void BindButton(Type _type)
+    {
+        Bind<Button>(_type);
+        foreach (var name in Enum.GetNames(_type))
+        {
+            var btn = Utils.FindChild<Button>(gameObject, name, true);
+            if (btn != null)
+                btn.onClick.AddListener(() => Managers.SoundM?.PlaySFX("SFX_UI_Click"));
+        }
+    }
     protected void BindToggle(Type _type)      => Bind<Toggle>(_type);
     protected void BindSlider(Type _type)      => Bind<Slider>(_type);
     protected void BindDropdown(Type _type)    => Bind<TMPro.TMP_Dropdown>(_type);
