@@ -14,7 +14,7 @@
 
 | 인게임 | 카드 선택 | 보스 전투 |
 |--------|-----------|-----------|
-| ![gameplay](images/TowerDefense/GamePlay.PNG) | ![card](images/TowerDefense/CardSelect.PNG) | ![boss](images/TowerDefense/Boss.PNG) |
+| ![gameplay](https://raw.githubusercontent.com/SongJiUk/jiuk-portfolio/main/images/TowerDefense/GamePlay.PNG) | ![card](https://raw.githubusercontent.com/SongJiUk/jiuk-portfolio/main/images/TowerDefense/CardSelect.PNG) | ![boss](https://raw.githubusercontent.com/SongJiUk/jiuk-portfolio/main/images/TowerDefense/Boss.PNG) |
 
 ---
 
