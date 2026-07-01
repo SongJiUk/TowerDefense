@@ -53,9 +53,11 @@ public class UI_PausePopup : UI_Base
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void OnQuit()
+    private async void OnQuit()
     {
+        GetButton(typeof(Buttons), (int)Buttons.Button_Quit).interactable = false;
         UI_TitleScene.ReturnFromGame = true;
+        await SceneFader.FadeOut();
         Managers.GameM.Reset();
         Managers.CardM.Clear();
         Managers.Clear();

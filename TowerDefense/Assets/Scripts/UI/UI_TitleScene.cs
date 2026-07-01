@@ -46,6 +46,11 @@ public class UI_TitleScene : UI_Base
         Instance = this;
         await Init();
         StartLoadAsync().Forget();
+
+        // 게임에서 복귀 시 로드 완료까지 블랙 유지, 끝나면 한 번에 페이드인
+        if (ReturnFromGame)
+            await UniTask.WaitUntil(() => _loadComplete, cancellationToken: destroyCancellationToken);
+
         await SceneFader.FadeIn();
     }
 
@@ -118,6 +123,14 @@ public class UI_TitleScene : UI_Base
     {
         if (ReturnFromGame)
         {
+            // Init에서 숨겨둔 로고 요소들을 애니메이션 없이 즉시 완성 상태로 복원
+            GetObject(typeof(GameObjects), (int)GameObjects.TextObject).transform.localScale = Vector3.one;
+            GetImage(typeof(Images), (int)Images.Image_Crown).color = new Color(2.5f, 2.0f, 0.5f, 1f);
+            var sub = GetText(typeof(Texts), (int)Texts.Text_Subtitle);
+            sub.color = new Color(sub.color.r, sub.color.g, sub.color.b, 1f);
+            // 메뉴가 바로 열리므로 로고를 왼쪽 위치로 미리 이동
+            _logoRect.anchoredPosition = new Vector2(_logoOriginPos.x - 350f, _logoOriginPos.y);
+
             _introComplete = true;
             TryActivateTapButton();
             return;
@@ -254,10 +267,14 @@ public class UI_TitleScene : UI_Base
             ReturnFromGame = false;
             _menuOpen = true;
             GetObject(typeof(GameObjects), (int)GameObjects.Panel_Title).SetActive(false);
-            if (Managers.FirebaseM != null && Managers.FirebaseM.IsLoggedIn())
-                SlideInMenuPanel();
-            else
-                SlideInLoginPanel();
+
+            var menuGo = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Menu);
+            menuGo.SetActive(true);
+            _menuRect.anchoredPosition = _menuOriginPos;
+
+            var record = GetObject(typeof(GameObjects), (int)GameObjects.Panel_Record);
+            record.SetActive(true);
+            record.transform.localScale = Vector3.one;
             return;
         }
 
