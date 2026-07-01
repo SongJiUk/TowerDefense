@@ -55,8 +55,8 @@ public class UI_SkillItem : UI_Base
 
         GetText(typeof(Texts), (int)Texts.Text_SkillName).text    = _skillData.skillName;
         GetText(typeof(Texts), (int)Texts.Text_SkillType).text    = GetSkillTypeLabel(_skillData.skillType);
-        bool hasStep = _isUpgrade && _level < _skillData.upgradeSteps.Length;
-        SkillUpgradeStep step = hasStep ? _skillData.upgradeSteps[_level] : null;
+        bool hasStep = _isUpgrade && _level > 0 && _level <= _skillData.upgradeSteps.Length;
+        SkillUpgradeStep step = hasStep ? _skillData.upgradeSteps[_level - 1] : null;
 
         GetText(typeof(Texts), (int)Texts.Text_Description).text  = hasStep
             ? BuildStatDesc(_skillData, step)
@@ -138,7 +138,7 @@ public class UI_SkillItem : UI_Base
         if (step.rangeBonus > 0f)
             sb.AppendLine($"범위  {data.baseRange:F1} ->{data.baseRange + step.rangeBonus:F1}");
         if (step.skillDuration > 0f)
-            sb.AppendLine($"지속  {data.baseDuration:F1}초 ->{data.baseDuration + step.skillDuration:F1}초");
+            sb.AppendLine($"지속  {data.baseDuration:F1}초 ->{step.skillDuration:F1}초");
         return sb.Length > 0 ? sb.ToString().TrimEnd() : data.Description;
     }
 

@@ -88,12 +88,12 @@ public class DifficultyManager
         _ => 10
     };
 
-    public int MiddleBossFromWave => Selected switch
+    public int MiddleBossCount => Selected switch
     {
-        Define.Difficulty.Easy   => 8,
-        Define.Difficulty.Normal => 5,
+        Define.Difficulty.Easy   => 1,
+        Define.Difficulty.Normal => 2,
         Define.Difficulty.Hard   => 3,
-        Define.Difficulty.Hell   => 1,
-        _ => 5
+        Define.Difficulty.Hell   => 4,
+        _ => 1
     };
 }

@@ -23,6 +23,8 @@ public class UI_TitleScene : UI_Base
 
     public static UI_TitleScene Instance { get; private set; }
 
+    /// <summary>게임씬에서 복귀 시 true로 설정 — 인트로를 건너뛰고 메뉴로 직행.</summary>
+    public static bool ReturnFromGame;
 
     private RectTransform _logoRect;
     private RectTransform _menuRect;
@@ -114,6 +116,13 @@ public class UI_TitleScene : UI_Base
 
     private async UniTaskVoid PlayIntroAsync()
     {
+        if (ReturnFromGame)
+        {
+            _introComplete = true;
+            TryActivateTapButton();
+            return;
+        }
+
         await UniTask.Delay(300, cancellationToken: destroyCancellationToken);
 
         // 1. REALM GUARD 텍스트 스케일 0 → 1
@@ -239,6 +248,19 @@ public class UI_TitleScene : UI_Base
     private void TryActivateTapButton()
     {
         if (!_introComplete || !_loadComplete) return;
+
+        if (ReturnFromGame)
+        {
+            ReturnFromGame = false;
+            _menuOpen = true;
+            GetObject(typeof(GameObjects), (int)GameObjects.Panel_Title).SetActive(false);
+            if (Managers.FirebaseM != null && Managers.FirebaseM.IsLoggedIn())
+                SlideInMenuPanel();
+            else
+                SlideInLoginPanel();
+            return;
+        }
+
         GetButton(typeof(Buttons), (int)Buttons.Button_TapToStart).gameObject.SetActive(true);
     }
 

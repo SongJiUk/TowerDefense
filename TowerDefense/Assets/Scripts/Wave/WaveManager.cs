@@ -404,11 +404,14 @@ public class WaveManager
         return result;
     }
 
-    /// <summary>난이도별 등장 웨이브 이상이면 이 스테이지의 MiddleBoss를 웨이브당 정확히 1마리 반환.</summary>
+    /// <summary>
+    /// 난이도별 MiddleBossCount와 총 웨이브 수를 기준으로 등장 웨이브를 역산.
+    /// 마지막 비-보스 웨이브부터 gap 간격으로 count개 배치.
+    /// </summary>
     private EnemyData GetMiddleBossForWave(int waveNumber)
     {
-        int middleBossFromWave = Managers.DifficultyM?.MiddleBossFromWave ?? 5;
-        if (waveNumber < middleBossFromWave) return null;
+        int count = Managers.DifficultyM?.MiddleBossCount ?? 1;
+        if (!IsMiddleBossWave(waveNumber, _stageData.totalWaves, count)) return null;
 
         foreach (var entry in _stageData.enemyPool)
         {
@@ -416,6 +419,23 @@ public class WaveManager
                 return entry.enemyData;
         }
         return null;
+    }
+
+    /// <summary>
+    /// 예: totalWaves=10, count=2 → 웨이브 7, 9에 배치.
+    ///     totalWaves=15, count=3 → 웨이브 10, 12, 14에 배치.
+    /// </summary>
+    private static bool IsMiddleBossWave(int waveNumber, int totalWaves, int count)
+    {
+        if (count <= 0) return false;
+        int last = totalWaves - 1;              // 마지막 비-보스 웨이브
+        int gap  = Mathf.Max(1, (totalWaves / 2) / count);
+
+        for (int k = 0; k < count; k++)
+        {
+            if (waveNumber == last - k * gap) return true;
+        }
+        return false;
     }
 
     /// <summary>현재 웨이브에서 등장 가능한 적 중 가중치 기반 랜덤 선택.

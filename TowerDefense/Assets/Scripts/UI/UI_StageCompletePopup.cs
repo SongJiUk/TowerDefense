@@ -115,6 +115,7 @@ public class UI_StageCompletePopup : UI_Base
 
         await SceneFader.FadeOut();
 
+        UI_TitleScene.ReturnFromGame = true;
         Managers.GameM.Reset();
         Managers.CardM.Clear();
         Managers.PoolM.Clear();

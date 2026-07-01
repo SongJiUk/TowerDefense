@@ -28,7 +28,12 @@ public class SlowEffect : BuffEffect
             if (Managers.SettingsM.IsParticleOn)
             {
                 _vfx = Managers.PoolM.Pop("FX_Buff_Slow");
-                if (_vfx != null) _vfx.transform.SetParent(mb.transform, false);
+                if (_vfx != null)
+                {
+                    _vfx.transform.SetParent(mb.transform, false);
+                    Vector3 ps = mb.transform.lossyScale;
+                    _vfx.transform.localScale = new Vector3(1f / ps.x, 1f / ps.y, 1f / ps.z);
+                }
             }
         }
     }

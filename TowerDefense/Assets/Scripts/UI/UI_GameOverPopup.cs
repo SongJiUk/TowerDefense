@@ -95,9 +95,10 @@ public class UI_GameOverPopup : UI_Base
 
     private void OnMainMenuClicked()
     {
+        UI_TitleScene.ReturnFromGame = true;
         Managers.GameM.Reset();
         Managers.CardM.Clear();
         Managers.Clear();
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("TitleScene");
     }
 }

@@ -55,9 +55,10 @@ public class UI_PausePopup : UI_Base
 
     private void OnQuit()
     {
+        UI_TitleScene.ReturnFromGame = true;
         Managers.GameM.Reset();
         Managers.CardM.Clear();
         Managers.Clear();
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("TitleScene");
     }
 }
