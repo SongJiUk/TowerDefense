@@ -128,6 +128,15 @@ Easy만 기본 해금. 같은 난이도에서 스테이지 1→4를 모두 클�
 
 ---
 
+## 🔍 기술적 트레이드오프
+
+### A* Open 리스트 — List vs Min-Heap
+현재 Open 리스트를 `List<GridNode>`로 구현해 최솟값 탐색이 O(n).
+32×11 맵(352칸)에서는 성능 차이가 없어 그대로 유지했으나,
+맵 규모가 커질 경우 Min-Heap 기반 우선순위 큐로 O(log n)으로 개선 가능.
+
+---
+
 ## 🛠️ 기술 스택
 
 ![Unity](https://img.shields.io/badge/Unity_2022.3_LTS-000000?style=flat-square&logo=unity&logoColor=white)
