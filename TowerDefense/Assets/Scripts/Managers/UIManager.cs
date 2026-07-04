@@ -13,6 +13,9 @@ public class UIManager
 
     private int _pauseCount = 0;
 
+    public float BaseTimeScale { get; set; } = 1f;
+    public bool IsPaused => _pauseCount > 0;
+
     public void RequestPause()
     {
         _pauseCount++;
@@ -25,7 +28,7 @@ public class UIManager
     public void ReleasePause()
     {
         _pauseCount = Mathf.Max(0, _pauseCount - 1);
-        if (_pauseCount == 0) Time.timeScale = 1f;
+        if (_pauseCount == 0) Time.timeScale = BaseTimeScale;
     }
 
     UI_Scene sceneUI = null;
@@ -141,6 +144,7 @@ public class UIManager
     {
         CloseAllPopup();
         _pauseCount = 0;
+        BaseTimeScale = 1f;
         Time.timeScale = 1f;
         if (sceneUI != null)
         {

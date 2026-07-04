@@ -43,7 +43,7 @@ public class WaveManager
     // ─── 상태 ─────────────────────────────────────────────────────────────────
 
     public int CurrentWave => _currentWaveIndex + 1;
-    public int TotalWaves => _stageData?.totalWaves ?? 0;
+    public int TotalWaves => _totalWaves;
     public bool IsRunning { get; private set; }
     public bool IsInitialized => _stageData != null;
     public StageData CurrentStage => _stageData;
@@ -51,10 +51,12 @@ public class WaveManager
 
     private StageData _stageData;
     private int _currentWaveIndex;
+    private int _totalWaves;
     private int _aliveCount;
     private CancellationTokenSource _cts;
 
     private readonly List<EnemyData> _preGenerated = new();
+    private readonly List<EnemyController> _aliveEnemies = new();
 
     /// <summary>WaveStarter가 씬 준비 직후 설정. 카운트다운 UI 표시에 사용.</summary>
     public float NextWaveDelay { get; set; } = 5f;
@@ -76,7 +78,11 @@ public class WaveManager
         _currentWaveIndex = 0;
         _aliveCount = 0;
         IsRunning = false;
+        _totalWaves = Managers.DifficultyM != null
+            ? Managers.DifficultyM.WaveCount
+            : (_stageData?.totalWaves ?? 10);
         _preGenerated.Clear();
+        _aliveEnemies.Clear();
     }
 
 
@@ -92,7 +98,7 @@ public class WaveManager
             Debug.LogWarning("[WaveManager] 이미 웨이브가 진행 중입니다.");
             return;
         }
-        if (_currentWaveIndex >= _stageData.totalWaves)
+        if (_currentWaveIndex >= _totalWaves)
         {
             Debug.LogWarning("[WaveManager] 더 이상 웨이브가 없습니다.");
             return;
@@ -148,9 +154,20 @@ public class WaveManager
         if (go.TryGetComponent(out EnemyController enemy))
         {
             enemy.Init(data, hpMultiplier, speedMultiplier);
+            if (!_aliveEnemies.Contains(enemy)) _aliveEnemies.Add(enemy);
             return enemy;
         }
         return null;
+    }
+
+    public void ApplyEnemyHpReduction(float reductionRatio)
+    {
+        for (int i = _aliveEnemies.Count - 1; i >= 0; i--)
+        {
+            var e = _aliveEnemies[i];
+            if (e == null || e.IsDead) { _aliveEnemies.RemoveAt(i); continue; }
+            e.ApplyMaxHpReduction(reductionRatio);
+        }
     }
 
     /// <summary>EnemyController가 사망 or 코어 도달 시 호출.</summary>
@@ -173,7 +190,7 @@ public class WaveManager
         Managers.AchievementM?.AddProgress("wave_50");
         OnWaveComplete?.Invoke(cleared, waveBonus);
 
-        if (_currentWaveIndex >= _stageData.totalWaves)
+        if (_currentWaveIndex >= _totalWaves)
         {
             OnAllWavesComplete?.Invoke();
             Managers.GameM.TriggerGameClear();
@@ -200,7 +217,7 @@ public class WaveManager
 
         int waveIndex  = _currentWaveIndex;
         int waveNumber = waveIndex + 1;
-        bool isBoss    = waveIndex == _stageData.totalWaves - 1;
+        bool isBoss    = waveIndex == _totalWaves - 1;
 
         _preGenerated.Clear();
 
@@ -289,11 +306,11 @@ public class WaveManager
 
     private async UniTaskVoid RunWave(int waveIndex, CancellationToken token)
     {
-        bool isBossWave = (waveIndex == _stageData.totalWaves - 1);
+        bool isBossWave = (waveIndex == _totalWaves - 1);
 
         OnWaveSpawnStart?.Invoke();
 
-        float hpMult = CalcHpMultiplier(waveIndex) * Managers.GameM.globalEnemyHpMultiplier;
+        float hpMult = CalcHpMultiplier(waveIndex);
         float speedMult = CalcSpeedMultiplier(waveIndex);
         int waveNumber = waveIndex + 1;
 
@@ -339,7 +356,7 @@ public class WaveManager
         await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: token);
 
         // 잡몹 후속 스폰 — preGenerated[0]=보스, [1+]=잡몹
-        int waveNumber = _stageData.totalWaves;
+        int waveNumber = _totalWaves;
         for (int i = 0; i < minionCount; i++)
         {
             if (token.IsCancellationRequested) return;
@@ -374,6 +391,7 @@ public class WaveManager
         if (go.TryGetComponent(out EnemyController enemy))
         {
             enemy.Init(data, hpMultiplier, speedMultiplier);
+            if (!_aliveEnemies.Contains(enemy)) _aliveEnemies.Add(enemy);
             spawnedEnemy = enemy;
         }
 
@@ -411,7 +429,7 @@ public class WaveManager
     private EnemyData GetMiddleBossForWave(int waveNumber)
     {
         int count = Managers.DifficultyM?.MiddleBossCount ?? 1;
-        if (!IsMiddleBossWave(waveNumber, _stageData.totalWaves, count)) return null;
+        if (!IsMiddleBossWave(waveNumber, _totalWaves, count)) return null;
 
         foreach (var entry in _stageData.enemyPool)
         {

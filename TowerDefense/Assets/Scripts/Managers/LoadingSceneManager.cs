@@ -14,6 +14,7 @@ public class LoadingSceneManager : MonoBehaviour
         });
 
         Managers.GameM.LevelData = Managers.ResourceM.Load<LevelData>("LevelData");
+        Managers.AchievementM.Init(Managers.ResourceM.Load<AchievementDatabase>("AchievementDatabase"));
         Managers.CardM.Init();
 
         string stageKey = $"Stage{Managers.SelectedStage}";

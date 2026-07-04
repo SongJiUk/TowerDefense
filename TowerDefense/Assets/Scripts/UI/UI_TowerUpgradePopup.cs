@@ -194,10 +194,10 @@ public class UI_TowerUpgradePopup : UI_Base
 
     }
 
-    public void Show(TowerController tower)
+    public async UniTaskVoid Show(TowerController tower)
     {
         _tower = tower;
-        if (!_initialized) Init().Forget();
+        if (!await Init()) return;
         ApplyTheme(Managers.WaveM.CurrentStage);
         RefreshAll();
 
@@ -242,9 +242,6 @@ public class UI_TowerUpgradePopup : UI_Base
         RefreshColumn(1, data.rangeUpgrades, _tower.RangeLevel, Define.UpgradeType.Range);
         RefreshColumn(2, data.speedUpgrades, _tower.SpeedLevel, Define.UpgradeType.Speed);
         RefreshUniqueEffect();
-
-        var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
     }
 
     private void RefreshUniqueEffect()
@@ -304,11 +301,24 @@ public class UI_TowerUpgradePopup : UI_Base
 
     private async UniTaskVoid RebuildLayoutNextFrame()
     {
-        await UniTask.NextFrame(cancellationToken: destroyCancellationToken);
-        Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_rect);
         var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
+
+        await UniTask.NextFrame(PlayerLoopTiming.LastPostLateUpdate, destroyCancellationToken);
+        if (!gameObject.activeInHierarchy) return;
+
+        Canvas.ForceUpdateCanvases();
+        // 자식 LayoutGroup부터 역순으로 재계산(bottom-up)
+        var childLayouts = contentRect.GetComponentsInChildren<LayoutGroup>(true);
+        for (int i = childLayouts.Length - 1; i >= 0; i--)
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)childLayouts[i].transform);
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_rect);
+
+        // ContentSizeFitter가 있는 경우 한 프레임 더 기다려 2차 패스
+        await UniTask.NextFrame(PlayerLoopTiming.LastPostLateUpdate, destroyCancellationToken);
+        if (!gameObject.activeInHierarchy) return;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_rect);
     }
 
     private void OnGoldChanged(int gold)
@@ -318,15 +328,13 @@ public class UI_TowerUpgradePopup : UI_Base
 
     // ─── 버튼 핸들러 ─────────────────────────────────────────────────────────
 
-    private async void OnUpgradeClicked(Define.UpgradeType type)
+    private void OnUpgradeClicked(Define.UpgradeType type)
     {
         if (_tower == null) return;
         if (!_tower.TryUpgrade(type)) return;
 
         RefreshAll();
-        await Cysharp.Threading.Tasks.UniTask.NextFrame();
-        var contentRect = GetObject(typeof(GameObjects), (int)GameObjects.Content_Upgrade).GetComponent<RectTransform>();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        RebuildLayoutNextFrame().Forget();
     }
 
     private void AddHoverAnimation(Button btn)

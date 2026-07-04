@@ -17,6 +17,6 @@ MonoBehaviour:
   iconKey: FreeTower
   category: 2
   effectType: 8
-  effectValue: 0
+  effectValue: 1
   weight: 0.7
   maxStack: 99

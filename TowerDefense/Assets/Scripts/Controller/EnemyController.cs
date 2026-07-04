@@ -57,7 +57,9 @@ public class EnemyController : MonoBehaviour, IDamageable
         float diffHp = Managers.DifficultyM?.EnemyHpMultiplier ?? 1f;
         float diffSpeed = Managers.DifficultyM?.EnemySpeedMultiplier ?? 1f;
         _maxHp = data.baseHp * hpMultiplier * diffHp;
-        _hp = _maxHp;
+        bool isBoss = data.enemyType == Define.EnemyType.MiddleBoss || data.enemyType == Define.EnemyType.Boss;
+        float hpCardMult = isBoss ? 1f : (Managers.GameM?.globalEnemyHpMultiplier ?? 1f);
+        _hp = _maxHp * hpCardMult;
         _baseSpeed = data.baseMoveSpeed * speedMultiplier * diffSpeed;
         _speed = _baseSpeed;
         _currentTarget = transform.position;
@@ -144,6 +146,14 @@ public class EnemyController : MonoBehaviour, IDamageable
     }
 
     public void Heal(float amount) { }
+
+    public void ApplyMaxHpReduction(float reductionRatio)
+    {
+        if (_isDead) return;
+        _hp = Mathf.Max(1f, _hp * (1f - reductionRatio));
+        _hpBar?.SetHP(_hp, _maxHp);
+        OnHpChanged?.Invoke(_hp, _maxHp);
+    }
 
     protected virtual void Die()
     {
@@ -269,6 +279,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (_isDead) return;
         _isDead = true;
+        OnDeathEvent?.Invoke();
         Managers.ICore?.TakeDamage(_data.coreDamage);
         Managers.WaveM.OnEnemyRemoved();
         Managers.ResourceM.Destroy(gameObject);

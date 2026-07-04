@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_FPS, Text_Speed }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_FPS, Text_Speed, Text_WaveTotal }
     enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause, Button_DebugGold, Button_DebugHeal, Button_DebugLevel }
     enum Images
     {
@@ -52,7 +52,6 @@ public class UI_GameScene : UI_Scene
         Managers.SkillM.OnTargetingStarted -= OnTargetingStarted;
         Managers.SkillM.OnTargetingCancelled -= OnTargetingCancelled;
         Managers.WaveM.OnNextWaveReady -= ShowNextWavePanel;
-        Managers.UIM.OnGamePaused -= ResetSpeed;
         Managers.UIM.OnFPSDisplayChanged -= SetFPSDisplay;
         if (Managers.ICore is Core coreForUnsub) coreForUnsub.OnHpChanged -= RefreshCoreHp;
         _skillBtnRect?.DOKill();
@@ -95,7 +94,6 @@ public class UI_GameScene : UI_Scene
         Managers.SkillM.OnTargetingCancelled += OnTargetingCancelled;
 
         Managers.WaveM.OnNextWaveReady += ShowNextWavePanel;
-        Managers.UIM.OnGamePaused += ResetSpeed;
         Managers.UIM.OnFPSDisplayChanged += SetFPSDisplay;
 
         Managers.GameM.OnGoldChanged += RefreshGold;
@@ -113,6 +111,7 @@ public class UI_GameScene : UI_Scene
 
         RefreshGold(Managers.GameM.Gold);
         RefreshWave(Managers.WaveM.CurrentWave);
+        GetText(typeof(Texts), (int)Texts.Text_WaveTotal).text = $"/ {Managers.WaveM.TotalWaves}";
         RefreshExp(Managers.GameM.CurrentExp, Managers.GameM.LevelData?.GetRequiredExp(Managers.GameM.Level) ?? 100);
         GetText(typeof(Texts), (int)Texts.Text_Level).text = Managers.GameM.Level.ToString();
         _prevSkillPoints = Managers.SkillM.SkillPoints;
@@ -366,17 +365,12 @@ public class UI_GameScene : UI_Scene
     private void OnSpeedToggle()
     {
         _isDoubleSpeed = !_isDoubleSpeed;
-        Time.timeScale = _isDoubleSpeed ? 2f : 1f;
+        float speed = _isDoubleSpeed ? 2f : 1f;
+        Managers.UIM.BaseTimeScale = speed;
+        if (!Managers.UIM.IsPaused)
+            Time.timeScale = speed;
         var txt = GetText(typeof(Texts), (int)Texts.Text_Speed);
         if (txt != null) txt.text = _isDoubleSpeed ? "x2" : "x1";
-    }
-
-    private void ResetSpeed()
-    {
-        if (!_isDoubleSpeed) return;
-        _isDoubleSpeed = false;
-        var txt = GetText(typeof(Texts), (int)Texts.Text_Speed);
-        if (txt != null) txt.text = "x1";
     }
 
     private void OnPauseClicked()
@@ -396,6 +390,7 @@ public class UI_GameScene : UI_Scene
 
     private async void OnAllWavesComplete()
     {
+        Managers.SkillM?.CancelTargeting();
         Managers.SoundM?.StopBGM();
         Managers.SoundM?.PlaySFX("SFX_Stage_Clear");
         var popup = Managers.ObjectM.SpawnUI<UI_StageCompletePopup>("UI_StageCompletePopup", transform);
@@ -405,6 +400,7 @@ public class UI_GameScene : UI_Scene
 
     private async void OnGameOver()
     {
+        Managers.SkillM?.CancelTargeting();
         Managers.SoundM?.StopBGM();
         Managers.SoundM?.PlaySFX("SFX_Game_Over");
         var popup = Managers.ObjectM.SpawnUI<UI_GameOverPopup>("UI_GameOverPopup", transform);

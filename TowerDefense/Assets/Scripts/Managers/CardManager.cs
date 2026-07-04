@@ -140,6 +140,7 @@ public class CardManager
 
             case CardEffectType.EnemyHpDown:
                 Managers.GameM.globalEnemyHpMultiplier -= cardData.effectValue;
+                Managers.WaveM?.ApplyEnemyHpReduction(cardData.effectValue);
                 break;
 
             case CardEffectType.SkillSelect:
