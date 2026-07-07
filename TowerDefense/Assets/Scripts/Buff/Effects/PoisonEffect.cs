@@ -24,7 +24,12 @@ public class PoisonEffect : BuffEffect
         Managers.SoundM?.PlaySFX("SFX_Debuff_Poison");
         if (!Managers.SettingsM.IsParticleOn) return;
         _vfx = Managers.PoolM.Pop("FX_Buff_Poison");
-        if (_vfx != null) _vfx.transform.SetParent(handler.transform, false);
+        if (_vfx != null)
+        {
+            _vfx.transform.SetParent(handler.transform, false);
+            Vector3 ps = handler.transform.lossyScale;
+            _vfx.transform.localScale = new Vector3(1f / ps.x, 1f / ps.y, 1f / ps.z);
+        }
     }
 
     public override void OnRemove(BuffHandler handler)

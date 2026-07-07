@@ -160,6 +160,7 @@ public class SkillManager
         if (!IsTargeting) return;
         int slot = _pendingTargetSlot;
         _pendingTargetSlot = -1;
+        OnTargetingCancelled?.Invoke();
         StartCooldownAndExecute(slot, worldPos);
     }
 

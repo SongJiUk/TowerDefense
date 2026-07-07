@@ -192,6 +192,7 @@ public class WaveManager
 
         if (_currentWaveIndex >= _totalWaves)
         {
+            if (Managers.GameM.IsGameOver) return;
             OnAllWavesComplete?.Invoke();
             Managers.GameM.TriggerGameClear();
         }

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class UI_GameScene : UI_Scene
 {
     enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_FPS, Text_Speed, Text_WaveTotal }
-    enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause, Button_DebugGold, Button_DebugHeal, Button_DebugLevel }
+    enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause, Button_DebugGold, Button_DebugHeal, Button_DebugLevel, Button_Secret }
     enum Images
     {
         Image_Top, Image_Bottom, Image_LevelFillBG, Image_LevelFill, Image_TopGlow, Image_BottomGlow
@@ -83,12 +83,28 @@ public class UI_GameScene : UI_Scene
         GetButton(typeof(Buttons), (int)Buttons.Button_Speed).onClick.AddListener(OnSpeedToggle);
         GetButton(typeof(Buttons), (int)Buttons.Button_Pause).onClick.AddListener(OnPauseClicked);
 
-        GetButton(typeof(Buttons), (int)Buttons.Button_DebugGold).onClick.AddListener(() => Managers.GameM.AddGold(500));
-        GetButton(typeof(Buttons), (int)Buttons.Button_DebugHeal).onClick.AddListener(() =>
+        var debugGold = GetButton(typeof(Buttons), (int)Buttons.Button_DebugGold);
+        debugGold.onClick.AddListener(() => Managers.GameM.AddGold(500));
+        debugGold.gameObject.SetActive(false);
+
+        var debugHeal = GetButton(typeof(Buttons), (int)Buttons.Button_DebugHeal);
+        debugHeal.onClick.AddListener(() =>
         {
             if (Managers.ICore is Core c) c.Heal(c.MaxHp);
         });
-        GetButton(typeof(Buttons), (int)Buttons.Button_DebugLevel).onClick.AddListener(() => Managers.GameM.DebugLevelUp());
+        debugHeal.gameObject.SetActive(false);
+
+        var debugLevel = GetButton(typeof(Buttons), (int)Buttons.Button_DebugLevel);
+        debugLevel.onClick.AddListener(() => Managers.GameM.DebugLevelUp());
+        debugLevel.gameObject.SetActive(false);
+
+        GetButton(typeof(Buttons), (int)Buttons.Button_Secret).onClick.AddListener(() =>
+        {
+            bool next = !debugGold.gameObject.activeSelf;
+            debugGold.gameObject.SetActive(next);
+            debugHeal.gameObject.SetActive(next);
+            debugLevel.gameObject.SetActive(next);
+        });
 
         Managers.SkillM.OnTargetingStarted += OnTargetingStarted;
         Managers.SkillM.OnTargetingCancelled += OnTargetingCancelled;

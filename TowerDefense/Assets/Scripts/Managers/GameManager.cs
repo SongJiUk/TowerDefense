@@ -116,14 +116,21 @@ public class GameManager
 
     // ─── 게임오버 / 클리어 ───────────────────────────────────────────────────
 
+    public bool IsGameOver { get; private set; }
+
     public event Action OnGameOver;
-    public void TriggerGameOver() => OnGameOver?.Invoke();
+    public void TriggerGameOver()
+    {
+        IsGameOver = true;
+        OnGameOver?.Invoke();
+    }
 
     public event Action OnGameClear;
     public void TriggerGameClear() => OnGameClear?.Invoke();
 
     public void Reset()
     {
+        IsGameOver = false;
         ResetLevel();
         ResetGold();
         globalDamageMultiplier      = 1f;
