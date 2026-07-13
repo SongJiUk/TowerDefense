@@ -9,7 +9,7 @@
 **시점:** 2.5D (카메라 45도 고정)
 
 [![YouTube](https://img.shields.io/badge/플레이_영상-FF0000?style=flat-square&logo=youtube&logoColor=white)](https://youtu.be/FdYyia92yyo)
-[![Portfolio](https://img.shields.io/badge/포트폴리오-000000?style=flat-square&logo=github&logoColor=white)](https://songjiuk.github.io/jiuk-portfolio/projects/tower-defense.html)
+[![Portfolio](https://img.shields.io/badge/포트폴리오-000000?style=flat-square&logo=github&logoColor=white)](https://jiuk.dev/projects/tower-defense.html)
 
 ---
 
