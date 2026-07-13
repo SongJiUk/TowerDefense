@@ -45,6 +45,8 @@ public class TowerPlacer : MonoBehaviour
         await GameSceneBootstrap.ReadyTask;
         if (this == null) return;
 
+        Managers.SkillM.OnTargetingCancelled += OnSkillTargetingCancelled;
+
         GameObject popupGo = Managers.ResourceM.Instantiate("UI_TowerSelectPopup", _pooling: false);
         popupGo.transform.SetParent(Managers.UIM.Root.transform, false);
         _popup = popupGo.GetOrAddComponent<UI_TowerSelectPopup>();
@@ -63,8 +65,13 @@ public class TowerPlacer : MonoBehaviour
         if (_popup != null)
             _popup.OnTowerSelected -= HandleTowerSelected;
 
+        if (Managers.SkillM != null)
+            Managers.SkillM.OnTargetingCancelled -= OnSkillTargetingCancelled;
+
         if (Instance == this) Instance = null;
     }
+
+    private void OnSkillTargetingCancelled() => _inputBeganWhileTargeting = true;
 
     void Update()
     {

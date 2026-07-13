@@ -3,7 +3,12 @@
     "allow": [
       "mcp__UnityMCP__manage_scene",
       "mcp__UnityMCP__batch_execute",
-      "mcp__UnityMCP__manage_camera"
+      "mcp__UnityMCP__manage_camera",
+      "Bash(ls /Users/songjiuk/.claude/projects/ | grep -i portfolio; echo \"---\"; ls -la /Users/songjiuk/.claude/projects/)",
+      "Read(//Users/songjiuk/.claude/projects/**)",
+      "Bash(grep -rl \"촬영\\\\|영상.*순서\\\\|녹화\" /Users/songjiuk/.claude/projects/*/*.jsonl 2>/dev/null | grep -v \"978a4a9d-071c-4164-b163-12b12c82c2ce\")",
+      "Bash(grep -o '\"timestamp\":\"[^\"]*\"[^}]*\"text\":\"# 포트폴리오 영상 촬영 가이드' /Users/songjiuk/.claude/projects/-Users-songjiuk/bc358b77-7139-401a-bcb3-4e6483a37787.jsonl 2>/dev/null | head -c 300 *)",
+      "Read(//Users/songjiuk/.claude/projects/-Users-songjiuk/**)"
     ]
   }
 }

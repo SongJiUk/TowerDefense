@@ -72,6 +72,7 @@ public class TowerController : MonoBehaviour
     void OnMouseUp()
     {
         if (CameraController.IsDragging) return;
+        if (Managers.SkillM != null && Managers.SkillM.IsTargeting) return;
 #if UNITY_EDITOR || UNITY_STANDALONE
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
 #else

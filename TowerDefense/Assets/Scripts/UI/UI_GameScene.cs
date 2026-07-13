@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameScene : UI_Scene
 {
-    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_FPS, Text_Speed, Text_WaveTotal }
+    enum Texts { Text_Gold, Text_Wave, Text_HP, Text_Level, Text_Exp, Text_SkillPoint, Text_FPS, Text_Speed, Text_WaveTotal, Text_Difficulty }
     enum Buttons { Button_SkillUpgrade, Button_SkillCancel, Button_Speed, Button_Pause, Button_DebugGold, Button_DebugHeal, Button_DebugLevel, Button_Secret }
     enum Images
     {
@@ -128,6 +128,23 @@ public class UI_GameScene : UI_Scene
         RefreshGold(Managers.GameM.Gold);
         RefreshWave(Managers.WaveM.CurrentWave);
         GetText(typeof(Texts), (int)Texts.Text_WaveTotal).text = $"/ {Managers.WaveM.TotalWaves}";
+        string diffColor = (Managers.DifficultyM?.Selected ?? Define.Difficulty.Easy) switch
+        {
+            Define.Difficulty.Easy   => "#44DD44",
+            Define.Difficulty.Normal => "#FFDD00",
+            Define.Difficulty.Hard   => "#FF8800",
+            Define.Difficulty.Hell   => "#FF3333",
+            _                        => "#FFFFFF"
+        };
+        string diffName = (Managers.DifficultyM?.Selected ?? Define.Difficulty.Easy) switch
+        {
+            Define.Difficulty.Easy   => "EASY",
+            Define.Difficulty.Normal => "NORMAL",
+            Define.Difficulty.Hard   => "HARD",
+            Define.Difficulty.Hell   => "HELL",
+            _                        => ""
+        };
+        GetText(typeof(Texts), (int)Texts.Text_Difficulty).text = $"<color={diffColor}>{diffName}</color>";
         RefreshExp(Managers.GameM.CurrentExp, Managers.GameM.LevelData?.GetRequiredExp(Managers.GameM.Level) ?? 100);
         GetText(typeof(Texts), (int)Texts.Text_Level).text = Managers.GameM.Level.ToString();
         _prevSkillPoints = Managers.SkillM.SkillPoints;

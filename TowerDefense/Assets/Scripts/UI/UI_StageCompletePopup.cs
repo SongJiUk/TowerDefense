@@ -101,6 +101,7 @@ public class UI_StageCompletePopup : UI_Base
             Debug.LogError($"[StageComplete] StageData 로드 실패: '{stageKey}'");
 
         Managers.GameM.ResetGold();
+        Managers.SkillM.Clear();
         Managers.CardM.Clear();
         Managers.PoolM.Clear();
         Managers.UIM.Clear();

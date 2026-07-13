@@ -15,6 +15,7 @@ public class DifficultyManager
     public void Init(SaveData data)
     {
         int maxIdx = System.Enum.GetValues(typeof(Define.Difficulty)).Length - 1;
+        data.UnlockedDifficulty = maxIdx; // DEBUG: 전체 해금
         Selected = (Define.Difficulty)Mathf.Clamp(data.SelectedDifficulty, 0, data.UnlockedDifficulty);
     }
 
